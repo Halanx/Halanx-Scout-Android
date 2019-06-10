@@ -35,9 +35,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.HomesViewHolde
     public void onBindViewHolder(final HomesViewHolder holder, final int position) {
 
         if (position%2==0){
-            holder.mssg_send_box.setText("Hi... How are you?");
+
+            holder.mssg_send_box.setVisibility(View.GONE);
+            holder.mssg_rcv_box.setVisibility(View.VISIBLE);
+            holder.mssg_rcv_box.setText("Hi... How are you?");
         }
         else{
+            holder.mssg_send_box.setVisibility(View.VISIBLE);
+            holder.mssg_rcv_box.setVisibility(View.GONE);
             holder.mssg_send_box.setText("Hi... i m fine");
 
         }

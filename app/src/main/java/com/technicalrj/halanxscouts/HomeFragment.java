@@ -1,6 +1,7 @@
 package com.technicalrj.halanxscouts;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.technicalrj.halanxscouts.Adapters.TaskAdapter;
 
@@ -44,7 +48,17 @@ public class HomeFragment extends Fragment {
         task_recycler.setLayoutManager(lm);
         task_recycler.setAdapter(adapter);
 
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.dialog_scout_schedule);
+
+        dialog.show();
+        dialog.dismiss();
+
+
         return v;
+
 
 
     }

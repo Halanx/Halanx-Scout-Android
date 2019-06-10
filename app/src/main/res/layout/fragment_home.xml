@@ -34,6 +34,7 @@
     </RelativeLayout>
     
     <ScrollView
+        android:layout_marginTop="15dp"
         android:layout_width="match_parent"
         android:layout_height="60dp">
         <LinearLayout
@@ -49,15 +50,50 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/redcircle"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:src="@drawable/calender"/>
+                android:src="@drawable/schedule_group"/>
 
 
         </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                >
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/schedule_circle"
+                />
+                <TextView
+                    android:id="@+id/time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="12 PM"
+                    android:textSize="9dp"
+                    android:textColor="@color/colorWhite"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="5dp"/>
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="3"
+                    android:textSize="28dp"
+                    android:textColor="@color/colorWhite"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="5dp"/>
+
+                <TextView
+                    android:id="@+id/month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:text="MAY"
+                    android:layout_below="@id/date"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="9dp" />
+
+            </RelativeLayout>
         </LinearLayout>
     </ScrollView>
     

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:cardCornerRadius="11dp"
     android:layout_margin="15dp"
-    tools:context=".MoveIn">
+    tools:context=".MoveInActivity">
 
 
     <LinearLayout
@@ -109,13 +109,17 @@
 
         </RelativeLayout>
 
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="125dp"
-            android:layout_marginTop="14dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginEnd="5dp"
-
+            android:elevation="5dp"
             android:background="@drawable/button_border">
 
             <ImageView
@@ -124,6 +128,7 @@
                 android:layout_height="105dp"
                 android:text="24 AUG"
                 android:textStyle="bold"
+                android:layout_marginStart="10dp"
                 android:textColor="#8B8B8B"
                 android:layout_centerVertical="true"
                 android:src="@drawable/bed_icon"
@@ -184,20 +189,28 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginEnd="5dp"
                     android:layout_alignParentEnd="true"
+                    android:elevation="5dp"
                     android:background="@drawable/home_icon_group" />
 
 
 
         </RelativeLayout>
 
+        </android.support.v7.widget.CardView>
+        <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
 
+            android:layout_marginTop="20dp"
+            android:elevation="10dp">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
             android:background="@drawable/button_border"
-            android:layout_marginTop="20dp"
             android:layout_height="wrap_content">
 
 
@@ -206,6 +219,7 @@
                 android:layout_width="45dp"
                 android:layout_height="46dp"
                 android:layout_marginTop="5dp"
+                android:layout_marginStart="10dp"
                 android:background="@drawable/photo_icon" />
 
             <TextView
@@ -213,6 +227,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Janvi Kapoor"
+                android:layout_marginStart="10dp"
                 android:layout_toRightOf="@id/user_icon"
                 android:textColor="#8B8B8B"
                 android:textSize="16dp"
@@ -250,6 +265,8 @@
 
         </RelativeLayout>
 
+        </android.support.v7.widget.CardView>
+
 
 
         <TextView
@@ -274,8 +291,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Show room to the tenant and give keys"
-                android:textSize="12dp"
-                android:layout_marginTop="5dp"
+                android:textSize="14dp"
+                android:layout_gravity="center"
                 android:textColor="#8B8B8B"
                 android:layout_marginStart="10dp"/>
         </LinearLayout>
@@ -288,7 +305,7 @@
 
             android:background="@drawable/button_border"
             android:textColor="#8B8B8B"
-            android:text=" Description"
+            android:text=" Remarks:"
             android:paddingTop="5dp"
             android:paddingStart="5dp"
             android:layout_gravity="center_horizontal"
@@ -298,18 +315,30 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="DONE"
-            android:layout_gravity="center"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold"
-            android:layout_marginBottom="20dp"
-            android:background="@drawable/Done_button"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DONE"
+                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold"
+                android:layout_above="@id/cancel_action"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/done_button"/>
+            <TextView
+                android:id="@+id/cancel_action"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CANCEL TASK"
+                android:layout_gravity="center"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:textColor="#707070"
+                android:textStyle="bold"
+                android:layout_marginBottom="20dp"/>
         </RelativeLayout>
 
     </LinearLayout>

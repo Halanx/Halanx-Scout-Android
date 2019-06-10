@@ -3,7 +3,7 @@ package com.technicalrj.halanxscouts;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class MoveIn extends AppCompatActivity {
+public class MoveInActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

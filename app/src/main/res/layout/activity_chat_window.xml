@@ -54,12 +54,14 @@
         android:id="@+id/rv_chat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rl_top_bar">
+        android:layout_below="@id/rl_top_bar"
+        android:layout_above="@id/rl_send_mssg">
 
     </android.support.v7.widget.RecyclerView>
 
 
     <RelativeLayout
+        android:id="@+id/rl_send_mssg"
         android:layout_width="match_parent"
         android:layout_height="46dp"
         android:layout_alignParentBottom="true"
