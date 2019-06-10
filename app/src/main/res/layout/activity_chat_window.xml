@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    tools:context=".ChatWindow">
+    
+    
+    <RelativeLayout
+        android:id="@+id/rl_top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:background="#FFFFFF"
+        >
+        <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/backbutton"
+            android:layout_marginStart="10dp"
+            />
+        <ImageView
+            android:id="@+id/profile_image"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/photo_icon"
+            android:layout_marginStart="10dp"
+            android:layout_toRightOf="@id/back_button"
+            />
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Janvi Kapoor"
+            android:textSize="17dp"
+            android:gravity="center"
+            android:textColor="#8B8B8B"
+            />
+        <ImageView
+            android:id="@+id/call_icon"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@drawable/call_icon_group"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            />
+
+
+    </RelativeLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_chat"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/rl_top_bar">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/chat_send_border"
+        android:layout_margin="7dp">
+
+        <EditText
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:background="@android:color/transparent"/>
+
+        <ImageView
+            android:layout_width="77dp"
+            android:layout_height="40dp"
+            android:src="@drawable/chat_send_button_group"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp"
+            />
+
+    </RelativeLayout>
+    
+
+</RelativeLayout>

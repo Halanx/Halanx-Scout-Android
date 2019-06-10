@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.technicalrj.halanxscouts.Adapters.taskAdapter;
+import com.technicalrj.halanxscouts.Adapters.TaskAdapter;
 
 
 /**
@@ -38,7 +38,7 @@ public class HomeFragment extends Fragment {
 
         RecyclerView task_recycler = v.findViewById(R.id.task_recycler);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
-        taskAdapter adapter = new taskAdapter(getActivity());
+        TaskAdapter adapter = new TaskAdapter(getActivity());
 
 
         task_recycler.setLayoutManager(lm);

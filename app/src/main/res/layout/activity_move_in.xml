@@ -36,12 +36,12 @@
             android:textStyle="bold"
             android:text="Move In" />
 
-        
+
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true">
-            
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -49,11 +49,14 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="230"
-                android:layout_centerInParent="true"
+                android:text="₹ 230"
+                android:textSize="11dp"
+                android:layout_marginEnd="10dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
                 android:textColor="@color/colorWhite"/>
         </RelativeLayout>
-        
+
     </RelativeLayout>
 
         <View
@@ -132,7 +135,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="109D 80 ft. Road Karol Bagh"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
 
@@ -144,7 +147,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:layout_below="@id/textView14"
-                android:textSize="10dp"
+                android:textSize="12sp"
+                android:layout_marginTop="5dp"
+                android:textColor="#B8B8B8"
                 android:layout_toRightOf="@id/bed_icon"
                 android:text="In Front of Pillar Number 243" />
 
@@ -153,9 +158,11 @@
                 android:layout_marginStart="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/bed_icon"
                 android:text="Room 1( First Floor)"
                 android:layout_below="@id/textView15"
+                android:textColor="#B8B8B8"
                 android:textSize="11dp"
                 />
 
@@ -173,34 +180,16 @@
                 />
 
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginBottom="10dp"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="6dp">
-
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/button_shape"
-                    android:tint="#7F83FE" />
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/home_icon_group" />
 
-                <ImageView
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
-                    android:layout_centerInParent="true"
-                    android:elevation="0.1dp"
-                    android:src="@drawable/homeicon" />
 
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:src="@drawable/button_shape"
-                    android:tint="#7F83FE" />
 
-            </RelativeLayout>
         </RelativeLayout>
 
 
@@ -240,13 +229,7 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/button_shape"
-                    android:tint="#7F83FE"/>
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/phone-receiver-1"
-                    android:layout_centerInParent="true"/>
+                    android:src="@drawable/call_icon_group"/>
 
 
             </RelativeLayout>
@@ -261,15 +244,7 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:src="@drawable/button_shape"
-                    android:tint="#7F83FE"/>
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:background="@drawable/chat_icon"
-                    android:elevation="0dp"
-                    android:layout_centerInParent="true"/>
-
+                    android:src="@drawable/chat_icon_group"/>
 
             </RelativeLayout>
 

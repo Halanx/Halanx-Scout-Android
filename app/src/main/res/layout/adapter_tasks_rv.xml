@@ -92,20 +92,8 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/button_shape"
-                        android:tint="#7F83FE"/>
-                    <ImageView
-                        android:layout_width="16dp"
-                        android:layout_height="16dp"
-                        android:src="@drawable/homeicon"
-                        android:elevation="0.1dp"
-                        android:layout_centerInParent="true"/>
-                    <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:src="@drawable/home_icon_group"/>
 
-                        android:src="@drawable/button_shape"
-                        android:tint="#7F83FE"/>
 
                 </RelativeLayout>
 
@@ -151,14 +139,7 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/button_shape"
-                        android:tint="#7F83FE"/>
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:background="@drawable/phone-receiver-1"
-                        android:layout_centerInParent="true"/>
-
+                        android:src="@drawable/call_icon_group"/>
 
                 </RelativeLayout>
 
@@ -172,15 +153,7 @@
                     <ImageView
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:src="@drawable/button_shape"
-                        android:tint="#7F83FE"/>
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:background="@drawable/chat_icon"
-                        android:elevation="0dp"
-                        android:layout_centerInParent="true"/>
-
+                        android:src="@drawable/chat_icon_group"/>
 
                 </RelativeLayout>
 
