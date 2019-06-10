@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="11dp"
+    android:layout_margin="15dp"
+    tools:context=".MoveIn">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:paddingStart="15dp"
+        android:paddingTop="15dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/backbutton"
+            android:layout_centerVertical="true"
+            />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textSize="17dp"
+            android:textStyle="bold"
+            android:text="Move In" />
+
+        
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true">
+            
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/move_in_cost"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="230"
+                android:layout_centerInParent="true"
+                android:textColor="@color/colorWhite"/>
+        </RelativeLayout>
+        
+    </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#D6D6D6"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+
+
+            android:background="@drawable/button_border">
+
+            <TextView
+                android:id="@+id/date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="24 AUG"
+                android:textStyle="bold"
+                android:layout_marginStart="10dp"
+                android:textColor="#8B8B8B"
+                android:textSize="22dp"/>
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2:30 PM"
+                android:layout_below="@id/date"
+                android:layout_marginStart="10dp"
+
+                android:textSize="17dp"/>
+
+            <TextView
+                android:id="@+id/reminder"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Set Reminder"
+                android:textColor="#7F83FE"
+                android:layout_marginEnd="10dp"/>
+
+
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="125dp"
+            android:layout_marginTop="14dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+
+            android:background="@drawable/button_border">
+
+            <ImageView
+                android:id="@+id/bed_icon"
+                android:layout_width="105dp"
+                android:layout_height="105dp"
+                android:text="24 AUG"
+                android:textStyle="bold"
+                android:textColor="#8B8B8B"
+                android:layout_centerVertical="true"
+                android:src="@drawable/bed_icon"
+
+                android:textSize="22dp"/>
+
+            <TextView
+                android:id="@+id/textView14"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="109D 80 ft. Road Karol Bagh"
+                android:textSize="14dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="10dp"
+
+                android:layout_toRightOf="@id/bed_icon"/>
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_below="@id/textView14"
+                android:textSize="10dp"
+                android:layout_toRightOf="@id/bed_icon"
+                android:text="In Front of Pillar Number 243" />
+
+            <TextView
+                android:id="@+id/textView16"
+                android:layout_marginStart="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/bed_icon"
+                android:text="Room 1( First Floor)"
+                android:layout_below="@id/textView15"
+                android:textSize="11dp"
+                />
+
+            <TextView
+                android:id="@+id/textView17"
+                android:layout_marginStart="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/bed_icon"
+                android:text="More Info"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:textColor="#7F83FE"
+                android:textSize="13dp"
+                />
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="10dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="6dp">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/button_shape"
+                    android:tint="#7F83FE" />
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_centerInParent="true"
+                    android:elevation="0.1dp"
+                    android:src="@drawable/homeicon" />
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/button_shape"
+                    android:tint="#7F83FE" />
+
+            </RelativeLayout>
+        </RelativeLayout>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/button_border"
+            android:layout_marginTop="20dp"
+            android:layout_height="wrap_content">
+
+
+            <ImageView
+                android:id="@+id/user_icon"
+                android:layout_width="45dp"
+                android:layout_height="46dp"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/photo_icon" />
+
+            <TextView
+                android:id="@+id/textView9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Janvi Kapoor"
+                android:layout_toRightOf="@id/user_icon"
+                android:textColor="#8B8B8B"
+                android:textSize="16dp"
+
+                android:layout_centerVertical="true"/>
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_toLeftOf="@id/chat_layout"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/button_shape"
+                    android:tint="#7F83FE"/>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/phone-receiver-1"
+                    android:layout_centerInParent="true"/>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/chat_layout"
+                android:layout_width="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/button_shape"
+                    android:tint="#7F83FE"/>
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/chat_icon"
+                    android:elevation="0dp"
+                    android:layout_centerInParent="true"/>
+
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+
+        <TextView
+            android:layout_marginTop="40dp"
+            android:layout_marginStart="40dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tasks Assigned"
+            android:textSize="17dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:layout_marginTop="15dp">
+            <ImageView
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:src="@drawable/button_border"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Show room to the tenant and give keys"
+                android:textSize="12dp"
+                android:layout_marginTop="5dp"
+                android:textColor="#8B8B8B"
+                android:layout_marginStart="10dp"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="57dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+
+            android:background="@drawable/button_border"
+            android:textColor="#8B8B8B"
+            android:text=" Description"
+            android:paddingTop="5dp"
+            android:paddingStart="5dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"/>
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DONE"
+            android:layout_gravity="center"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/Done_button"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

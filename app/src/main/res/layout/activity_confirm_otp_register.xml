@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWhiteBackground"
+    tools:context=".ConfirmOtpRegisterActivity">
+
+
+    <ImageView
+        android:layout_width="97dp"
+        android:layout_height="40dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:id="@+id/halanx_logo"
+        android:src="@drawable/app_logo_welcome" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="120dp"
+        android:fontFamily="@font/montserrat_regular"
+        android:text="Enter OTP"
+        android:textStyle="bold" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="150dp">
+
+
+        <EditText
+            android:id="@+id/otp1"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/edittext_border"
+            android:inputType="number"
+            android:maxLength="1"
+            android:padding="20dp" />
+
+        <EditText
+            android:id="@+id/otp2"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/edittext_border"
+            android:inputType="number"
+            android:maxLength="1"
+            android:padding="20dp" />
+
+        <EditText
+            android:id="@+id/otp3"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/edittext_border"
+            android:inputType="number"
+            android:maxLength="1"
+            android:padding="20dp" />
+
+        <EditText
+            android:id="@+id/otp4"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/edittext_border"
+            android:inputType="number"
+            android:maxLength="1"
+            android:padding="20dp" />
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="250dp"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/montserrat_regular"
+        android:text="Didn't Get the OTP?"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="290dp"
+        android:layout_centerHorizontal="true"
+        android:fontFamily="@font/montserrat_regular"
+        android:text="@string/resend"
+        android:onClick="resentOtp"
+        android:textColor="@color/colorTextButtonColor"
+        android:textStyle="bold" />
+
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginRight="40dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_shape"
+        android:fontFamily="@font/montserrat_regular"
+        android:onClick="confirmOtp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="Confirm OTP"
+        android:textAllCaps="false"
+        android:textColor="@color/colorWhite"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+
+
+</RelativeLayout>
