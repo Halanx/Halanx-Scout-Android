@@ -22,6 +22,8 @@
             android:layout_height="wrap_content"
             android:textSize="15dp"
             android:textColor="#707070"
+            android:fontFamily="@font/montserrat_regular"
+            android:textStyle="bold"
             android:text="Rs 1500 Credited in your Bank Account"/>
         <TextView
             android:id="@+id/time"
@@ -29,6 +31,8 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/notification"
             android:textColor="#B8B8B8"
+            android:fontFamily="@font/montserrat_regular"
+            android:textStyle="bold"
             android:layout_marginTop="5dp"
             android:textSize="11dp"
             android:text="12:09 PM"/>
@@ -41,6 +45,8 @@
             android:layout_marginEnd="10dp"
             android:layout_below="@id/notification"
             android:textColor="#B8B8B8"
+            android:fontFamily="@font/montserrat_regular"
+            android:textStyle="bold"
             android:textSize="11dp"
             android:layout_marginTop="5dp"
             android:text="25 May 2019"/>

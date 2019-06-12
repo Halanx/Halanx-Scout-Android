@@ -33,6 +33,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textSize="17dp"
+            android:fontFamily="@font/montserrat_regular"
             android:textStyle="bold"
             android:text="Move In" />
 
@@ -52,6 +53,8 @@
                 android:text="₹ 230"
                 android:textSize="11dp"
                 android:layout_marginEnd="10dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textStyle="bold"
                 android:layout_centerVertical="true"
                 android:layout_alignParentEnd="true"
                 android:textColor="@color/colorWhite"/>
@@ -81,6 +84,7 @@
                 android:layout_height="wrap_content"
                 android:text="24 AUG"
                 android:textStyle="bold"
+                android:fontFamily="@font/montserrat_regular"
                 android:layout_marginStart="10dp"
                 android:textColor="#8B8B8B"
                 android:textSize="22dp"/>
@@ -91,6 +95,8 @@
                 android:layout_height="wrap_content"
                 android:text="2:30 PM"
                 android:layout_below="@id/date"
+                android:fontFamily="@font/montserrat_regular"
+                android:textStyle="bold"
                 android:layout_marginStart="10dp"
 
                 android:textSize="17dp"/>
@@ -102,6 +108,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Set Reminder"
+                android:fontFamily="@font/montserrat_regular"
+                android:textStyle="bold"
                 android:textColor="#7F83FE"
                 android:layout_marginEnd="10dp"/>
 
@@ -141,6 +149,8 @@
                 android:layout_height="wrap_content"
                 android:text="109D 80 ft. Road Karol Bagh"
                 android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textStyle="bold"
                 android:layout_marginTop="10dp"
                 android:layout_marginStart="10dp"
 
@@ -153,6 +163,8 @@
                 android:layout_marginStart="10dp"
                 android:layout_below="@id/textView14"
                 android:textSize="12sp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textStyle="bold"
                 android:layout_marginTop="5dp"
                 android:textColor="#B8B8B8"
                 android:layout_toRightOf="@id/bed_icon"
@@ -166,6 +178,8 @@
                 android:layout_marginTop="10dp"
                 android:layout_toRightOf="@id/bed_icon"
                 android:text="Room 1( First Floor)"
+                android:fontFamily="@font/montserrat_regular"
+                android:textStyle="bold"
                 android:layout_below="@id/textView15"
                 android:textColor="#B8B8B8"
                 android:textSize="11dp"
@@ -178,6 +192,8 @@
                 android:layout_height="wrap_content"
                 android:layout_toRightOf="@id/bed_icon"
                 android:text="More Info"
+                android:fontFamily="@font/montserrat_regular"
+                android:textStyle="bold"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="10dp"
                 android:textColor="#7F83FE"
@@ -230,6 +246,8 @@
                 android:layout_marginStart="10dp"
                 android:layout_toRightOf="@id/user_icon"
                 android:textColor="#8B8B8B"
+                android:fontFamily="@font/montserrat_regular"
+                android:textStyle="bold"
                 android:textSize="16dp"
 
                 android:layout_centerVertical="true"/>
@@ -274,6 +292,8 @@
             android:layout_marginStart="40dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/montserrat_regular"
+            android:textStyle="bold"
             android:text="Tasks Assigned"
             android:textSize="17dp"/>
 
@@ -292,6 +312,8 @@
                 android:layout_height="wrap_content"
                 android:text="Show room to the tenant and give keys"
                 android:textSize="14dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:textStyle="bold"
                 android:layout_gravity="center"
                 android:textColor="#8B8B8B"
                 android:layout_marginStart="10dp"/>
@@ -306,6 +328,8 @@
             android:background="@drawable/button_border"
             android:textColor="#8B8B8B"
             android:text=" Remarks:"
+            android:fontFamily="@font/montserrat_regular"
+            android:textStyle="bold"
             android:paddingTop="5dp"
             android:paddingStart="5dp"
             android:layout_gravity="center_horizontal"
@@ -324,6 +348,7 @@
                 android:gravity="center"
                 android:textColor="@color/colorWhite"
                 android:textStyle="bold"
+                android:fontFamily="@font/montserrat_regular"
                 android:layout_above="@id/cancel_action"
                 android:layout_marginBottom="20dp"
                 android:background="@drawable/done_button"/>
@@ -337,6 +362,7 @@
                 android:layout_centerHorizontal="true"
                 android:gravity="center"
                 android:textColor="#707070"
+                android:fontFamily="@font/montserrat_regular"
                 android:textStyle="bold"
                 android:layout_marginBottom="20dp"/>
         </RelativeLayout>

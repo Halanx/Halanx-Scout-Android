@@ -3,6 +3,7 @@ package com.technicalrj.halanxscouts;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,8 @@ public class RatingsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Ratings");
 
         View view = inflater.inflate(R.layout.fragment_ratings, container, false);
 

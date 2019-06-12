@@ -63,8 +63,9 @@ public class DocumentsActivity extends AppCompatActivity {
 
             if (requestCode == PICK_IMAGE_AADHAR_1) {
 
+
                 Picasso.get()
-                        .load(selectedImage)
+                        .load(R.drawable.user_icon)
                         .into(aadhar1);
 
 
