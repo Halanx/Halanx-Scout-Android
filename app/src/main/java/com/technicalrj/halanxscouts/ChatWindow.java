@@ -18,6 +18,7 @@ public class ChatWindow extends AppCompatActivity {
         RecyclerView rv_chat = findViewById(R.id.rv_chat);
         ChatAdapter adapter = new ChatAdapter(getApplicationContext());
         LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext());
+        lm.setReverseLayout(true);
         rv_chat.setAdapter(adapter);
         rv_chat.setLayoutManager(lm);
     }

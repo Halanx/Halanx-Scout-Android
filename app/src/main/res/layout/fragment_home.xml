@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="37dp"
         >
-        
+
         <ImageView
             android:layout_width="249dp"
             android:layout_height="53dp"
@@ -22,17 +22,17 @@
             android:layout_centerHorizontal="true"
             />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="GO ONLINE"
-        android:textSize="19dp"
-        android:layout_centerInParent="true"
-        android:textColor="@color/colorWhite"
-        android:textStyle="bold"
-        android:gravity="center"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GO ONLINE"
+            android:textSize="19dp"
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold"
+            android:gravity="center"/>
     </RelativeLayout>
-    
+
     <ScrollView
         android:layout_marginTop="15dp"
         android:layout_width="match_parent"
@@ -42,28 +42,28 @@
             android:layout_height="60dp"
             android:layout_marginStart="10dp"
             android:orientation="horizontal">
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:orientation="horizontal">
-
-            <ImageView
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/schedule_group"/>
+                android:layout_height="60dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/schedule_group"/>
 
 
-        </RelativeLayout>
+            </RelativeLayout>
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 >
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/schedule_circle"
-                />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/schedule_circle"
+                    />
                 <TextView
                     android:id="@+id/time"
                     android:layout_width="wrap_content"
@@ -96,7 +96,7 @@
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>
-    
+
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

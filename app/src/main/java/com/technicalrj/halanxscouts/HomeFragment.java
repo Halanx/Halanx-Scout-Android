@@ -1,6 +1,5 @@
 package com.technicalrj.halanxscouts;
 
-
 import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;

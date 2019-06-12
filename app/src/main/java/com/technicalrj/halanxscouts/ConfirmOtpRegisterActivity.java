@@ -3,8 +3,8 @@ package com.technicalrj.halanxscouts;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,12 +21,10 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 import static com.technicalrj.halanxscouts.LoginActivity.halanxScout;
 
@@ -185,6 +183,9 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
                             +"\"password\": \""+ password+ "\","
                             +"\"email\": \""+email+ "\" "
                             +" }" ;
+
+
+
             RequestBody body = RequestBody.create(JSON, json);
 
             /*RequestBody body = new MultipartBody.Builder()
@@ -256,7 +257,7 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
 
 
 
-                            Intent intent = new Intent(ConfirmOtpRegisterActivity.this,HomeActivity.class);
+                            Intent intent = new Intent(ConfirmOtpRegisterActivity.this, HomeActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             finish();

@@ -2,11 +2,9 @@ package com.technicalrj.halanxscouts;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,14 +17,13 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Headers;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static com.technicalrj.halanxscouts.LoginActivity.halanxScout;
+import static com.technicalrj.halanxscouts.RegisterActivity.JSON;
 
 public class EnterPasswordActivity extends AppCompatActivity {
 
@@ -34,13 +31,19 @@ public class EnterPasswordActivity extends AppCompatActivity {
     private EditText confirmPasswordTv;
 
     private String key;
+    private String otp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_enter_password);
 
+
+
+
         key = getIntent().getStringExtra("key");
+        otp = getIntent().getStringExtra("otp");
+
 
         passwordTv = findViewById(R.id.password);
         confirmPasswordTv = findViewById(R.id.confirm_password);
@@ -76,22 +79,24 @@ public class EnterPasswordActivity extends AppCompatActivity {
 
 
 
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("otp",Integer.valueOf(otp));
+                    jsonObject.put("old_password",JSONObject.NULL);
+                    jsonObject.put("new_password",password);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                RequestBody body = new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart("new_password1",password)
-                        .addFormDataPart("new_password2",password)
-                        .build();
 
-
+                RequestBody body = RequestBody.create(JSON, jsonObject.toString());
 
                 final Request request = new Request.Builder()
                         .url(halanxScout+"/rest-auth/password/change/")
-                        .post(body)
+                        .patch(body)
                         .addHeader("Authorization","Token "+key)
                         .build();
 
-                Log.i("InfoText","password key:"+key);
 
                 client.newCall(request).enqueue(new Callback() {
                     @Override
@@ -103,6 +108,7 @@ public class EnterPasswordActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
 
+                        Log.i("InfoText","Details :"+response.body().string());
                         if(response.isSuccessful()){
 
 
@@ -115,8 +121,10 @@ public class EnterPasswordActivity extends AppCompatActivity {
                                 }
                             });
 
+
+
                             Log.i("InfoText","password succ.");
-                            Intent intent = new Intent(EnterPasswordActivity.this,LoginActivity.class);
+                            Intent intent = new Intent(EnterPasswordActivity.this, LoginActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             finish();
@@ -148,4 +156,6 @@ public class EnterPasswordActivity extends AppCompatActivity {
 
 
     }
+
+
 }

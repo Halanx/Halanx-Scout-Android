@@ -1,15 +1,12 @@
 package com.technicalrj.halanxscouts;
 
 import android.app.ProgressDialog;
-import android.app.VoiceInteractor;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.Patterns;
-import android.view.Menu;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -50,7 +47,7 @@ public class LoginActivity extends AppCompatActivity {
         String restoredText = prefs.getString("login_key", null);
         if (restoredText != null) {
 
-            Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
             startActivity(intent);
             finish();
 
@@ -61,12 +58,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void registerHere(View view) {
-        Intent intent = new Intent(this,RegisterActivity.class);
+        Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
 
     public void forgotPassword(View view) {
-        Intent intent = new Intent(this,ForgotPassword.class);
+        Intent intent = new Intent(this, ForgotPassword.class);
         startActivity(intent);
     }
 
@@ -131,7 +128,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
 
-                                Intent intent = new Intent(LoginActivity.this,HomeActivity.class);
+                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                 startActivity(intent);
                                 finish();
 

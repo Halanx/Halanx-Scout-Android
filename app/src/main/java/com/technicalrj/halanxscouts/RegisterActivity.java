@@ -3,8 +3,8 @@ package com.technicalrj.halanxscouts;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.CheckBox;
@@ -14,12 +14,10 @@ import android.widget.Toast;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.net.URI;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
-import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -131,7 +129,7 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
                         progressDialog.dismiss();
 
-                        Intent intent = new Intent(RegisterActivity.this,ConfirmOtpRegisterActivity.class);
+                        Intent intent = new Intent(RegisterActivity.this, ConfirmOtpRegisterActivity.class);
                         intent.putExtra("firstName",first);
                         intent.putExtra("lastName",last);
                         intent.putExtra("email",email);
