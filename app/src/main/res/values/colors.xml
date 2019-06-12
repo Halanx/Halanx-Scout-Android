@@ -8,6 +8,7 @@
     <color name="colorTextButtonColor">#7F83FE</color>
     <color name="colorGrey">#B8B8B8</color>
     <color name="colorCardBackground">#F5F5F5</color>
+    <color name="colorLine">#D6D6D6</color>
 
 
 </resources>

@@ -9,6 +9,7 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -35,7 +36,10 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         setContentView(R.layout.activity_home);
 
 
-
+        /*Toolbar toolbar =  findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
+*/
         loadFragment(new HomeFragment());
 
         BottomNavigationView navigation = findViewById(R.id.bottom_navigation);
@@ -77,7 +81,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         if(id==R.id.action_wallet){
             fragment = new WalletFragment();
         }else if(id==R.id.action_stars){
-            fragment = new HomeFragment();
+            fragment = new RatingsFragment();
         }else if(id==R.id.action_home){
             fragment = new HomeFragment();
         }else if(id==R.id.action_notifi){

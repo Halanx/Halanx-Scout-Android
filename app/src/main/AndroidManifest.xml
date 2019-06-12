@@ -3,6 +3,8 @@
     package="com.technicalrj.halanxscouts">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -11,13 +13,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ConfirmOtpPasswordActivity" ></activity>
+        <activity android:name=".Profile.ProfileImageActivity" android:theme="@style/AppTheme"></activity>
+        <activity android:name=".ChangePassword" />
+        <activity android:name=".Profile.BankDetailsActivity" />
+        <activity android:name=".Profile.DocumentsActivity" />
+        <activity android:name=".ConfirmOtpPasswordActivity" />
         <activity
             android:name=".HomeActivity"
-            android:theme="@style/AppTheme"
-            />
-        <activity android:name=".EnterPasswordActivity"  />
-        <activity android:name=".ForgotPassword"  />
+            android:theme="@style/AppTheme" />
+        <activity android:name=".EnterPasswordActivity" />
+        <activity android:name=".ForgotPassword" />
         <activity android:name=".ConfirmOtpRegisterActivity" />
         <activity android:name=".RegisterActivity" />
         <activity
@@ -31,8 +36,7 @@
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/AppThemeNoBar"
-            />
+            android:theme="@style/AppThemeNoBar" />
     </application>
 
 </manifest>

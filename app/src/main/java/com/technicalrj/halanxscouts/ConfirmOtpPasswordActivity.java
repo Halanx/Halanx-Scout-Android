@@ -146,7 +146,7 @@ public class ConfirmOtpPasswordActivity extends AppCompatActivity {
         if(otp11.isEmpty() ||otp22.isEmpty()  || otp33.isEmpty()  || otp44.isEmpty()  ){
             Toast.makeText(this,"Otp Not Valid",Toast.LENGTH_LONG).show();
         }else {
-            String otp = otp11 + otp22 + otp33 + otp44;
+            final String otp = otp11 + otp22 + otp33 + otp44;
 
 
 
@@ -196,6 +196,7 @@ public class ConfirmOtpPasswordActivity extends AppCompatActivity {
 
                             Intent intent = new Intent(ConfirmOtpPasswordActivity.this,EnterPasswordActivity.class);
                             intent.putExtra("key",key);
+                            intent.putExtra("otp",otp);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
                             finish();

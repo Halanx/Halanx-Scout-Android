@@ -185,6 +185,9 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
                             +"\"password\": \""+ password+ "\","
                             +"\"email\": \""+email+ "\" "
                             +" }" ;
+
+
+
             RequestBody body = RequestBody.create(JSON, json);
 
             /*RequestBody body = new MultipartBody.Builder()

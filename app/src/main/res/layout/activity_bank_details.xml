@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="5dp"
+    app:cardBackgroundColor="@color/colorWhite"
+    android:layout_marginBottom="100dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <RelativeLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="20dp"
+        tools:context=".Profile.BankDetailsActivity">
+
+        <!-- TODO: Update blank fragment layout -->
+
+
+        <EditText
+            android:id="@+id/account_number"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="@drawable/edittext_border"
+            android:ems="10"
+            android:textSize="14sp"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="Account Number"
+            android:inputType="number"
+            android:padding="10dp" />
+
+
+
+        <EditText
+            android:id="@+id/confirm_account_number"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="@drawable/edittext_border"
+            android:ems="10"
+            android:textSize="14sp"
+            android:layout_below="@+id/account_number"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="Confirm Account Number"
+            android:inputType="number"
+            android:padding="10dp" />
+
+
+        <EditText
+            android:id="@+id/account_holder_name"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="@drawable/edittext_border"
+            android:ems="10"
+            android:textSize="14sp"
+            android:layout_below="@+id/confirm_account_number"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="Account Holder's Name"
+            android:layout_marginTop="20dp"
+            android:inputType="text"
+            android:padding="10dp" />
+
+
+        <EditText
+            android:id="@+id/ifsc_code"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="@drawable/edittext_border"
+            android:ems="10"
+            android:textSize="14sp"
+            android:layout_below="@+id/account_holder_name"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="IFSC Code"
+            android:inputType="number"
+            android:padding="10dp" />
+
+
+        <EditText
+            android:id="@+id/bank_name"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="@drawable/edittext_border"
+            android:ems="10"
+            android:textSize="14sp"
+            android:layout_below="@+id/ifsc_code"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="Bank Name"
+            android:inputType="number"
+            android:padding="10dp" />
+
+
+        <EditText
+            android:id="@+id/bank_branch"
+            android:layout_width="match_parent"
+            android:layout_height="49dp"
+            android:background="@drawable/edittext_border"
+            android:ems="10"
+            android:textSize="14sp"
+            android:layout_below="@+id/bank_name"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:hint="Bank Branch"
+            android:inputType="number"
+            android:padding="10dp" />
+
+
+
+
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="192dp"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/button_shape"
+            android:fontFamily="@font/montserrat_regular"
+            android:onClick="login"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:text="Save"
+            android:textAllCaps="false"
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+
+
+
+
+    </RelativeLayout>
+
+
+
+</android.support.v7.widget.CardView>
