@@ -81,7 +81,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         }else if(id==R.id.action_home){
             fragment = new HomeFragment();
         }else if(id==R.id.action_notifi){
-            fragment = new WalletFragment();
+            fragment = new NotificationFragment();
         }else if(id==R.id.action_user){
             fragment = new ProfileFragment();
         }
