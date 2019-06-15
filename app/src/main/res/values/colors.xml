@@ -9,6 +9,10 @@
     <color name="colorGrey">#B8B8B8</color>
     <color name="colorCardBackground">#F5F5F5</color>
     <color name="colorLine">#D6D6D6</color>
+    <color name="colorFace">#FFA5A5</color>
+    <color name="colorGreen">#0EDC4C</color>
+    <color name="colorDisabled">#707070</color>
+    <color name="colorEnabled">#EF3939</color>
 
 
 </resources>

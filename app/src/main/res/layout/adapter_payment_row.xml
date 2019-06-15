@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="10dp"
-    android:layout_marginStart="10dp">
+    android:layout_marginStart="10dp"
+    android:padding="10dp">
 
 
     <ImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:id="@+id/notification_icon"
-        android:src="@drawable/notification_icon_group"/>
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:src="@drawable/payment_icon"
+        android:layout_gravity="center"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -18,25 +20,30 @@
         android:layout_marginStart="10dp"
         android:layout_height="wrap_content">
         <TextView
-            android:id="@+id/notification_content"
+            android:id="@+id/description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
+            android:textSize="15sp"
             android:textColor="#707070"
             android:fontFamily="@font/montserrat_regular"
             android:textStyle="bold"
-            android:text="Rs 1500 Credited in your Bank Account"/>
+            android:text="Visit on 23rd May, 2019"/>
         <TextView
-            android:id="@+id/time"
+            android:id="@+id/amount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/notification_content"
-            android:textColor="#B8B8B8"
+            android:layout_below="@id/description"
+            android:textColor="#7F83FE"
             android:fontFamily="@font/montserrat_regular"
             android:textStyle="bold"
-            android:layout_marginTop="5dp"
-            android:textSize="11dp"
-            android:text="12:09 PM"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:textSize="21sp"
+            android:padding="5dp"
+            android:paddingStart="9dp"
+            android:paddingEnd="9dp"
+            android:background="@drawable/blue_background"
+            android:text="₹ 200"/>
 
         <TextView
             android:id="@+id/date"
@@ -44,11 +51,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="10dp"
-            android:layout_below="@id/notification_content"
-            android:textColor="#B8B8B8"
+            android:layout_below="@id/description"
             android:fontFamily="@font/montserrat_regular"
             android:textStyle="bold"
-            android:textSize="11dp"
+            android:layout_alignBaseline="@+id/amount"
+            android:textSize="12sp"
             android:layout_marginTop="5dp"
             android:text="25 May 2019"/>
     </RelativeLayout>

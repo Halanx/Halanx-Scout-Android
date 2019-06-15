@@ -2,18 +2,18 @@ package com.technicalrj.halanxscouts.Adapters;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.technicalrj.halanxscouts.ChatWindow;
-import com.technicalrj.halanxscouts.MoveInActivity;
+import com.squareup.picasso.Picasso;
+import com.technicalrj.halanxscouts.Notification.NoficationPojo.Notification;
 import com.technicalrj.halanxscouts.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by Nishant on 19/12/17.
@@ -23,10 +23,12 @@ import com.technicalrj.halanxscouts.R;
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.HomesViewHolder> {
 
     Context c;
+    ArrayList<Notification> notificationArrayList;
 
 
-    public NotificationAdapter(Context context) {
+    public NotificationAdapter(Context context, ArrayList<Notification> notificationArrayList) {
 
+        this.notificationArrayList = notificationArrayList;
         c = context;
     }
 
@@ -41,19 +43,38 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public void onBindViewHolder(final HomesViewHolder holder, final int position) {
 
 
+        holder.notification_content.setText(notificationArrayList.get(position).getContent());
+        String[] parts =   notificationArrayList.get(position).getTimestamp().split(" ");
+
+        holder.time.setText(parts[0]+" "+parts[1] + " " + parts[2]);
+        holder.date.setText(parts[3] + " "+ parts[4]);
+
+
+        Picasso.get()
+                .load( notificationArrayList.get(position).getCategory().getImage())
+                .into(holder.notification_icon);
+
+
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return notificationArrayList.size();
     }
 
 
     public class HomesViewHolder extends RecyclerView.ViewHolder {
 
+        TextView notification_content, time,date;
+        ImageView notification_icon;
 
         public HomesViewHolder(View itemView) {
             super(itemView);
+
+            notification_content = itemView.findViewById(R.id.notification_content);
+            time = itemView.findViewById(R.id.time);
+            date = itemView.findViewById(R.id.date);
+            notification_icon = itemView.findViewById(R.id.notification_icon);
         }
 
 

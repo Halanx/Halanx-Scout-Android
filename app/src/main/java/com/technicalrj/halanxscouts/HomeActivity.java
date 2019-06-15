@@ -7,7 +7,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.technicalrj.halanxscouts.Home.HomeFragment;
+import com.technicalrj.halanxscouts.Notification.NotificationFragment;
 import com.technicalrj.halanxscouts.Profile.ProfileFragment;
+import com.technicalrj.halanxscouts.Wallet.WalletFragment;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -28,11 +31,6 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
 
 
         navigation.setSelectedItemId(R.id.action_home);
-
-
-
-
-
 
 
 

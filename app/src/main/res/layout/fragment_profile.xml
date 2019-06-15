@@ -154,13 +154,12 @@
                         android:textStyle="bold" />
 
                     <ImageView
-                        android:layout_width="70dp"
+                        android:layout_width="90dp"
                         android:layout_height="20dp"
                         android:id="@+id/doc_status"
                         android:layout_centerVertical="true"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="10dp"
-                        android:src="@drawable/submitted"/>
+                        android:layout_marginEnd="10dp"/>
 
                 </RelativeLayout>
 
@@ -202,8 +201,7 @@
                         android:id="@+id/bank_status"
                         android:layout_centerVertical="true"
                         android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="10dp"
-                        android:src="@drawable/not_submitted"/>
+                        android:layout_marginEnd="10dp"/>
 
 
                 </RelativeLayout>

@@ -1,4 +1,4 @@
-package com.technicalrj.halanxscouts;
+package com.technicalrj.halanxscouts.Home;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.LinearLayout;
 
 import com.technicalrj.halanxscouts.Adapters.ChatAdapter;
+import com.technicalrj.halanxscouts.R;
 
 public class ChatWindow extends AppCompatActivity {
 

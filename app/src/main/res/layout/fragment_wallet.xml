@@ -58,11 +58,22 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/earning"
-                        android:text="₹ 10000"
+                        android:text="₹ "
+                        android:id="@+id/textView34"
                         android:paddingTop="10dp"
                         android:textColor="@color/colorWhite"
+                        android:textSize="60sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/earning"
+                        android:text="10000"
+                        android:layout_toRightOf="@+id/textView34"
+                        android:paddingTop="10dp"
                         android:fontFamily="@font/montserrat_regular"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorWhite"
                         android:textSize="60sp" />
 
 
@@ -118,12 +129,25 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/paid"
-                            android:text="₹ 10000"
+                            android:id="@+id/textView35"
+                            android:text="₹ "
                             android:paddingTop="10dp"
                             android:textColor="@color/colorWhite"
-                            android:fontFamily="@font/montserrat_regular"
                             android:textSize="30sp" />
+
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/paid"
+                            android:text="100"
+                            android:layout_toEndOf="@+id/textView35"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:textStyle="bold"
+                            android:paddingTop="10dp"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="30sp" />
+
 
 
                     </RelativeLayout>
@@ -165,15 +189,28 @@
 
 
                         <TextView
+                            android:id="@+id/textView36"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="0dp"
+                            android:paddingTop="10dp"
+                            android:text="₹ "
+                            android:textColor="@color/colorGrey"
+                            android:textSize="30sp" />
+
+                        <TextView
                             android:id="@+id/due"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="0dp"
-                            android:fontFamily="@font/montserrat_regular"
                             android:paddingTop="10dp"
-                            android:text="₹ 10000"
+                            android:layout_toEndOf="@+id/textView36"
+                            android:text="1545"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:textStyle="bold"
                             android:textColor="@color/colorGrey"
                             android:textSize="30sp" />
+
 
 
                     </RelativeLayout>

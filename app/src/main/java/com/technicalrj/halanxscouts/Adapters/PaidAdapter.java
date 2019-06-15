@@ -2,37 +2,35 @@ package com.technicalrj.halanxscouts.Adapters;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.technicalrj.halanxscouts.ChatWindow;
-import com.technicalrj.halanxscouts.MoveInActivity;
 import com.technicalrj.halanxscouts.R;
+import com.technicalrj.halanxscouts.Wallet.TaskPayment;
 
-/**
- * Created by Nishant on 19/12/17.
- */
+import java.util.ArrayList;
+
+
 
 
 public class PaidAdapter extends RecyclerView.Adapter<PaidAdapter.HomesViewHolder> {
 
     Context c;
+    ArrayList<TaskPayment> taskPayments;
 
 
-    public PaidAdapter(Context context) {
+    public PaidAdapter(Context context, ArrayList<TaskPayment> taskPayments) {
 
+        this.taskPayments = taskPayments;
         c = context;
     }
 
     @Override
     public HomesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_notification, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_payment_row, parent, false);
         HomesViewHolder holder = new HomesViewHolder(view);
         return holder;
     }
@@ -40,40 +38,34 @@ public class PaidAdapter extends RecyclerView.Adapter<PaidAdapter.HomesViewHolde
     @Override
     public void onBindViewHolder(final HomesViewHolder holder, final int position) {
 
-        holder.ll_layout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                c.startActivity(new Intent(c, MoveInActivity.class));
+        holder.tv_desc.setText(taskPayments.get(position).getDescription());
+        holder.tv_amount.setText(taskPayments.get(position).getAmount());
 
-            }
-        });
+        if(taskPayments.get(position).getPaidOn()!=null)
+            holder.tv_date.setText(taskPayments.get(position).getPaidOn());
 
-        holder.chat_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                c.startActivity(new Intent(c, ChatWindow.class));
-            }
-        });
 
     }
 
     @Override
     public int getItemCount() {
-        return 5;
+        return taskPayments.size();
     }
 
 
     public class HomesViewHolder extends RecyclerView.ViewHolder {
 
-        RecyclerView rv_bed_detail;
-        TextView tv_bed;
-        ImageView chat_icon;
+        TextView tv_desc,tv_amount,tv_date;
 
-        LinearLayout ll_layout;
         public HomesViewHolder(View itemView) {
+
             super(itemView);
-            chat_icon = itemView.findViewById(R.id.chat_icon);
-            ll_layout = itemView.findViewById(R.id.ll_layout);
+
+            tv_desc = itemView.findViewById(R.id.description);
+            tv_amount = itemView.findViewById(R.id.amount);
+            tv_date = itemView.findViewById(R.id.date);
+
+
         }
 
 

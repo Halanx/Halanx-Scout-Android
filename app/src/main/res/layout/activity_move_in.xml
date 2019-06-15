@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     app:cardCornerRadius="11dp"
     android:layout_margin="15dp"
-    tools:context=".MoveInActivity">
+    tools:context=".Home.MoveInActivity">
 
 
     <LinearLayout

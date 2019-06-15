@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.technicalrj.halanxscouts.R;
@@ -48,6 +49,8 @@ public class DocumentsActivity extends AppCompatActivity {
     private ImageView aadhar1, aadhar2;
     private ImageView pan;
     private ImageView imgView = null;
+    private String key ;
+    private int aadhar1Id, aadhar2Id,panId;
 
     private ProgressDialog progressDialog;
 
@@ -64,17 +67,24 @@ public class DocumentsActivity extends AppCompatActivity {
             if (requestCode == PICK_IMAGE_AADHAR_1) {
 
 
+                if(aadhar1.getContentDescription().equals("format"))
+                    deleteAadhar1(aadhar1);
+
                 Picasso.get()
                         .load(R.drawable.user_icon)
                         .into(aadhar1);
-
 
                 File aadhar1File = new File(getRealPathFromURI(selectedImage));
                 uploadData(aadhar1File, "Aadhar");
 
 
+
+
             }
             if (requestCode == PICK_IMAGE_AADHAR_2) {
+
+                if(aadhar2.getContentDescription().equals("format"))
+                    deleteAadhar1(aadhar2);
 
                 Picasso.get()
                         .load(selectedImage)
@@ -84,6 +94,9 @@ public class DocumentsActivity extends AppCompatActivity {
                 uploadData(aadhar2File, "Aadhar");
             }
             if (requestCode == PICK_IMAGE_PAN) {
+
+                if(aadhar2.getContentDescription().equals("format"))
+                    deleteAadhar2(pan);
 
                 Picasso.get()
                         .load(selectedImage)
@@ -136,11 +149,14 @@ public class DocumentsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
+        final SharedPreferences prefs =getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
+        key = prefs.getString("login_key", null);
+
+        Log.i("InfoText","key:"+key);
+
         OkHttpClient client = new OkHttpClient();
 
 
-        final SharedPreferences prefs = getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
-        String key = prefs.getString("login_key", null);
 
 
         Request request = new Request.Builder()
@@ -179,6 +195,8 @@ public class DocumentsActivity extends AppCompatActivity {
 
                             final String url = document.getString("image");
                             String type = document.getString("type");
+                            final int id = document.getInt("id");
+                            Log.i("InfoText","id:"+id);
 
                             Log.i("InfoText", "cont des:" + aadhar1.getContentDescription());
 
@@ -193,18 +211,21 @@ public class DocumentsActivity extends AppCompatActivity {
                                                     .load(url)
                                                     .into(aadhar2);
 
+                                            aadhar2Id = id;
 
                                         } else {
                                             aadhar1.setContentDescription("actual");
                                             Picasso.get()
                                                     .load(url)
                                                     .into(aadhar1);
+
+                                            aadhar1Id = id;
                                         }
 
 
                                     }
                                 });
-                            } else if (type.equals("PAN")) {
+                            } else if (type.equals("PAN") && pan.getContentDescription().equals("format")) {
                                 DocumentsActivity.this.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -212,6 +233,8 @@ public class DocumentsActivity extends AppCompatActivity {
                                         Picasso.get()
                                                 .load(url)
                                                 .into(pan);
+
+                                        panId = id;
 
                                     }
                                 });
@@ -312,8 +335,6 @@ public class DocumentsActivity extends AppCompatActivity {
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
-        final SharedPreferences prefs =getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
-        String key = prefs.getString("login_key", null);
 
         final MediaType MEDIA_TYPE_JPG = MediaType.parse("image/*");
 
@@ -377,12 +398,171 @@ public class DocumentsActivity extends AppCompatActivity {
     }
 
     public void deleteAadhar1(View view) {
-        Log.i(TAG,"button onlick");
+
+
+        if(aadhar1.getContentDescription().equals("format"))
+            return;
+
+
+
+        OkHttpClient client = new OkHttpClient();
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+
+
+
+
+        Request request = new Request.Builder()
+                .url(halanxScout+"/scouts/documents/"+aadhar1Id+"/")
+                .delete()
+                .addHeader("Authorization","Token "+key)
+                .build();
+
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+                String body = response.body().string();
+                Log.i(TAG,body+"id="+aadhar1Id);
+                if(response.isSuccessful()){
+                    DocumentsActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            Picasso.get()
+                                    .load(R.drawable.upload_image)
+                                    .into(aadhar1);
+
+                            aadhar1.setContentDescription("format");
+                        }
+                    });
+                }
+
+
+                progressDialog.dismiss();
+
+            }
+        });
+
+
     }
 
     public void deletePan(View view) {
+
+        if(pan.getContentDescription().equals("format"))
+            return;
+
+
+
+        OkHttpClient client = new OkHttpClient();
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+
+
+
+
+        Request request = new Request.Builder()
+                .url(halanxScout+"/scouts/documents/"+panId+"/")
+                .delete()
+                .addHeader("Authorization","Token "+key)
+                .build();
+
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+                String body = response.body().string();
+                Log.i(TAG,body);
+                if(response.isSuccessful()){
+                    DocumentsActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Picasso.get()
+                                    .load(R.drawable.upload_image)
+                                    .into(pan);
+
+                            pan.setContentDescription("format");
+                        }
+                    });
+                }
+
+                progressDialog.dismiss();
+
+
+            }
+        });
+
     }
 
     public void deleteAadhar2(View view) {
+
+        if(aadhar2.getContentDescription().equals("format"))
+            return;
+
+
+
+        OkHttpClient client = new OkHttpClient();
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+
+
+
+
+
+
+        Request request = new Request.Builder()
+                .url(halanxScout+"/scouts/documents/"+aadhar2Id+"/")
+                .delete()
+                .addHeader("Authorization","Token "+key)
+                .build();
+
+
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                e.printStackTrace();
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+                String body = response.body().string();
+                Log.i(TAG,body);
+                if(response.isSuccessful()){
+                    DocumentsActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Picasso.get()
+                                    .load(R.drawable.upload_image)
+                                    .into(aadhar2);
+
+                            aadhar2.setContentDescription("format");
+                        }
+                    });                }
+
+
+                progressDialog.dismiss();
+
+            }
+        });
+
     }
 }

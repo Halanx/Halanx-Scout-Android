@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="300dp"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="5dp">
@@ -20,42 +20,32 @@
                 android:textColor="#B8B8B8"
                 android:fontFamily="@font/montserrat_regular"
                 android:textStyle="bold"
+                android:textSize="10sp"
                 android:text="You have scheduled Avability for "/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="3 May"
-                android:textSize="38dp"
+                android:textSize="30sp"
+                android:id="@+id/date"
+                android:fontFamily="@font/montserrat_regular"
                 android:textStyle="bold"/>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="12:00 PM- 01:00 PM"
                 android:textSize="11dp"
+                android:id="@+id/time_limit"
                 android:fontFamily="@font/montserrat_regular"
                 android:textStyle="bold"
                 android:textColor="#8B8B8B"
                 android:layout_marginTop="5dp"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Today at 03:18 AM"
-                android:fontFamily="@font/montserrat_regular"
-                android:textStyle="bold"
-                android:textSize="11dp"
 
-                android:layout_marginTop="5dp"
-                android:textColor="#B8B8B8"/>
         </LinearLayout>
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/cross_button"
-            android:layout_alignParentEnd="true"
-            />
         <TextView
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="15dp"
             android:id="@+id/tv_edit_box"
             android:layout_width="106dp"
             android:layout_height="32dp"
@@ -77,6 +67,7 @@
             android:textStyle="bold"
             android:gravity="center"
             android:layout_marginTop="5dp"
+            android:id="@+id/tv_delete_box"
             android:layout_below="@id/tv_edit_box"
             android:textColor="@color/colorWhite"/>
 

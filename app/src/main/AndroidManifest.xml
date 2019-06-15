@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.technicalrj.halanxscouts">
 
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -13,7 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ScoutAcceptanceActivity"></activity>
+        <activity android:name=".Home.TaskActivity"></activity>
+        <activity android:name=".Wallet.DueActivity" />
+        <activity android:name=".Home.ScoutAcceptanceActivity" />
         <activity
             android:name=".Profile.ProfileImageActivity"
             android:theme="@style/AppTheme" />
@@ -21,9 +24,8 @@
         <activity android:name=".Profile.BankDetailsActivity" />
         <activity android:name=".Profile.DocumentsActivity" />
         <activity android:name=".ConfirmOtpPasswordActivity" />
-        <activity android:name=".PayHistory" />
-        <activity android:name=".ChatWindow" />
-        <activity android:name=".MoveInActivity" />
+        <activity android:name=".Wallet.PaidActivity" />
+        <activity android:name=".Home.ChatWindow" />
         <activity
             android:name=".HomeActivity"
             android:theme="@style/AppTheme" />

@@ -167,7 +167,7 @@ public class ProfileFragment extends Fragment {
                     String body = response.body().string();
                     try {
 
-                        JSONObject jsonObject = new JSONObject(body);
+                        final JSONObject jsonObject = new JSONObject(body);
 
                         String phoneNumber = jsonObject.getString("phone_no");
                         phoneNumberTv.setText(phoneNumber);
@@ -178,6 +178,9 @@ public class ProfileFragment extends Fragment {
                         final String firstName = user.getString("first_name");
                         final String lastName = user.getString("last_name");
                         final String email = user.getString("email");
+
+                        final boolean document_submission = jsonObject.getBoolean("document_submission_complete");
+                        final boolean bank_submission = jsonObject.getBoolean("bank_details_complete");
 
                         profile_pic_url = jsonObject.getString("profile_pic_url");
                         final String profile_pic_thumbnail_url = jsonObject.getString("profile_pic_thumbnail_url");
@@ -206,14 +209,23 @@ public class ProfileFragment extends Fragment {
                                 emailTv.setText(email);
 
 
+                                if(!document_submission){
+                                    docStatus.setImageDrawable(getResources().getDrawable(R.drawable.not_submitted));
+                                    //docStatus.getLayoutParams().width = (int)(90 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+                                }else {
+                                    docStatus.setImageDrawable(getResources().getDrawable(R.drawable.submitted));
+                                    //docStatus.getLayoutParams().width = (int)(70 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
 
-                                if(account_holder_name.equals("null")){
+                                }
+
+
+                                if(!bank_submission){
                                     bankStatus.setImageDrawable(getResources().getDrawable(R.drawable.not_submitted));
-                                    bankStatus.getLayoutParams().width = (int)(90 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+                                    //bankStatus.getLayoutParams().width = (int)(90 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
                                 }else {
                                     Log.i("InfoText","account_holder_name"+account_holder_name);
                                     bankStatus.setImageDrawable(getResources().getDrawable(R.drawable.submitted));
-                                    bankStatus.getLayoutParams().width = (int)(70 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+                                    //bankStatus.getLayoutParams().width = (int)(70 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
                                 }
                             }
                         });
