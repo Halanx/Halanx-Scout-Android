@@ -3,6 +3,7 @@ package com.technicalrj.halanxscouts.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import java.util.ArrayList;
 
 
 
-public class PaidAdapter extends RecyclerView.Adapter<PaidAdapter.HomesViewHolder> {
+public class PaidAdapter extends RecyclerView.Adapter<PaidAdapter.PaymentViewHolder> {
 
     Context c;
     ArrayList<TaskPayment> taskPayments;
@@ -26,20 +27,24 @@ public class PaidAdapter extends RecyclerView.Adapter<PaidAdapter.HomesViewHolde
 
         this.taskPayments = taskPayments;
         c = context;
+
+        Log.i("InfoText","PaidAdapter");
     }
 
     @Override
-    public HomesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public PaymentViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_payment_row, parent, false);
-        HomesViewHolder holder = new HomesViewHolder(view);
+        PaymentViewHolder holder = new PaymentViewHolder(view);
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(final HomesViewHolder holder, final int position) {
+    public void onBindViewHolder(final PaymentViewHolder holder, final int position) {
+
+        Log.i("InfoText","onBind"+taskPayments.get(0).getAmount());
 
         holder.tv_desc.setText(taskPayments.get(position).getDescription());
-        holder.tv_amount.setText(taskPayments.get(position).getAmount());
+        holder.tv_amount.setText("₹ "+taskPayments.get(position).getAmount() );
 
         if(taskPayments.get(position).getPaidOn()!=null)
             holder.tv_date.setText(taskPayments.get(position).getPaidOn());
@@ -49,15 +54,16 @@ public class PaidAdapter extends RecyclerView.Adapter<PaidAdapter.HomesViewHolde
 
     @Override
     public int getItemCount() {
+//        Log.i("InfoText","getItemCount"+getItemCount());
         return taskPayments.size();
     }
 
 
-    public class HomesViewHolder extends RecyclerView.ViewHolder {
+    public class PaymentViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_desc,tv_amount,tv_date;
 
-        public HomesViewHolder(View itemView) {
+        public PaymentViewHolder(View itemView) {
 
             super(itemView);
 

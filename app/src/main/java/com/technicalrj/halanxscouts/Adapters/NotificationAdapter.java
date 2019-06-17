@@ -3,6 +3,7 @@ package com.technicalrj.halanxscouts.Adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public void onBindViewHolder(final HomesViewHolder holder, final int position) {
 
 
+        Log.i("InfoText","notificationArrayList.get(position).getContent():"+notificationArrayList.get(position).getContent());
         holder.notification_content.setText(notificationArrayList.get(position).getContent());
         String[] parts =   notificationArrayList.get(position).getTimestamp().split(" ");
 

@@ -5,56 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5"
-    tools:context=".ChatWindow">
+    tools:context=".Home.ChatWindow">
     
-    
-    <RelativeLayout
-        android:id="@+id/rl_top_bar"
-        android:layout_width="match_parent"
-        android:layout_height="68dp"
-        android:background="#FFFFFF"
-        >
-        <ImageView
-            android:id="@+id/back_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/backbutton"
-            android:layout_marginStart="10dp"
-            />
-        <ImageView
-            android:id="@+id/profile_image"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/photo_icon"
-            android:layout_marginStart="10dp"
-            android:layout_toRightOf="@id/back_button"
-            />
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Janvi Kapoor"
-            android:textSize="17dp"
-            android:gravity="center"
-            android:textColor="#8B8B8B"
-            />
-        <ImageView
-            android:id="@+id/call_icon"
-            android:layout_width="45dp"
-            android:layout_height="45dp"
-            android:src="@drawable/call_icon_group"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            />
-
-
-    </RelativeLayout>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_chat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rl_top_bar"
         android:layout_above="@id/rl_send_mssg">
 
     </android.support.v7.widget.RecyclerView>
@@ -63,10 +20,11 @@
     <RelativeLayout
         android:id="@+id/rl_send_mssg"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="66dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/chat_send_border"
-        android:layout_margin="7dp">
+        android:layout_margin="7dp"
+        android:padding="10dp">
 
         <EditText
             android:layout_width="250dp"

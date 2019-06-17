@@ -75,7 +75,7 @@
             android:layout_marginTop="20dp"
             android:fontFamily="@font/montserrat_regular"
             android:hint="IFSC Code"
-            android:inputType="number"
+            android:inputType="text"
             android:padding="10dp" />
 
 
@@ -90,7 +90,7 @@
             android:layout_marginTop="20dp"
             android:fontFamily="@font/montserrat_regular"
             android:hint="Bank Name"
-            android:inputType="number"
+            android:inputType="text"
             android:padding="10dp" />
 
 
@@ -105,7 +105,7 @@
             android:layout_marginTop="20dp"
             android:fontFamily="@font/montserrat_regular"
             android:hint="Bank Branch"
-            android:inputType="number"
+            android:inputType="text"
             android:padding="10dp" />
 
 

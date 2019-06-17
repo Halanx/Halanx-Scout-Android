@@ -3,6 +3,7 @@ package com.technicalrj.halanxscouts.Home;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -38,6 +39,8 @@ import com.technicalrj.halanxscouts.LoginActivity;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
 
+import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -65,8 +68,11 @@ public class HomeFragment extends Fragment {
     private ImageView addSchedule;
     AvailabilityAdapter availabilityAdapter;
     String key;
+    Button go_online;
     Dialog dialog;
     ArrayList<ScheduledTask> scheduledTaskList;
+    LinearLayout avalabilityLayout;
+    LayoutInflater inflater;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -76,15 +82,16 @@ public class HomeFragment extends Fragment {
 
 
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Home");
         View v =  inflater.inflate(R.layout.fragment_home, container, false);
-
+        this.inflater  = inflater;
 
         RecyclerView task_recycler = v.findViewById(R.id.task_recycler);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
@@ -95,12 +102,13 @@ public class HomeFragment extends Fragment {
 
 
         addSchedule = v.findViewById(R.id.addSchedule);
+        go_online = v.findViewById(R.id.go_online);
 
         final SharedPreferences prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
 
-        final LayoutInflater inflater1 = LayoutInflater.from(getActivity());
-        final LinearLayout avalabilityLayout = v.findViewById(R.id.availability);
+
+        avalabilityLayout = v.findViewById(R.id.availability);
 
 
 
@@ -116,83 +124,9 @@ public class HomeFragment extends Fragment {
                 for (int i = 0; i <list.size() ; i++) {
 
 
-                    final String startTime = list.get(i).getStartTime();
-                    final String endTime =list.get(i).getEndTime();
-
-                    String dateString = startTime.split(" ")[0];
-                    String monthString = startTime.split(" ")[1].substring(0,3).toUpperCase();
-                    String timeString = String.format("%d",Integer.valueOf(startTime.split(" ")[3].split(":")[0]))  + startTime.split(" ")[4];
-
-                    //String.format("%d",Integer.valueOf(startTime.split(" ")[3].split(":")[0]));
 
 
-
-
-                    final View view = inflater1.inflate(R.layout.availability_date,null);
-                    TextView date = view.findViewById(R.id.date);
-                    TextView time = view.findViewById(R.id.time);
-                    final TextView month = view.findViewById(R.id.month);
-
-                    date.setText(dateString);
-                    time.setText(timeString);
-                    month.setText(monthString);
-
-
-                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                    (layoutParams).setMargins(23,0,0,0);
-                    view.setLayoutParams(layoutParams);
-                    avalabilityLayout.addView(view);
-
-
-                    final int finalI = i;
-                    view.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            final Dialog dialog = new Dialog(getActivity());
-                            dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                            dialog.setContentView(R.layout.dialog_scout_schedule);
-
-
-                            final TextView date = dialog.findViewById(R.id.date);
-                            TextView timeLimit = dialog.findViewById(R.id.time_limit);
-                            TextView edit_tv = dialog.findViewById(R.id.tv_edit_box);
-                            TextView delete_tv = dialog.findViewById(R.id.tv_delete_box);
-
-
-                            date.setText(startTime.split(" ")[0] + " " + startTime.split(" ")[1]);
-                            timeLimit.setText( startTime.split(" ")[3] +" " + startTime.split(" ")[4] + "-"+
-                                            endTime.split(" ")[3] +" " + endTime.split(" ")[4] );
-
-                            edit_tv.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-
-
-                                    dialog.dismiss();
-                                    openEditDialog(startTime,endTime,list.get(finalI).getId(),view);
-
-
-                                }
-                            });
-
-                            delete_tv.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    deleteScheduleFromServer(list.get(finalI).getId());
-                                    dialog.dismiss();
-                                    avalabilityLayout.removeView(view);
-
-
-
-                                }
-                            });
-
-
-
-
-                            dialog.show();
-                        }
-                    });
+                    addScheduleInList(list.get(i));
 
 
                 }
@@ -233,6 +167,12 @@ public class HomeFragment extends Fragment {
 
 
 
+        go_online.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(),ScoutAcceptanceActivity.class));
+            }
+        });
 
 
 
@@ -242,7 +182,7 @@ public class HomeFragment extends Fragment {
                 dialog = new Dialog(getActivity());
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-                View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_scout_add_schedule,null);
+                View view = inflater.inflate(R.layout.dialog_scout_add_schedule,null);
                 dialog.setContentView(view);
 
 
@@ -291,7 +231,6 @@ public class HomeFragment extends Fragment {
                         mTimePicker.show();
 
 
-                        Log.i("InfoText","2:"+ (from.getText().toString().contains(":")) + "1:"+ availabilityAdapter.isDateSelected );
 
 
 
@@ -333,7 +272,6 @@ public class HomeFragment extends Fragment {
                 save_button.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        Toast.makeText(getActivity(),"Clicken",Toast.LENGTH_SHORT).show();
 
                         String selectedDate = availabilityAdapter.selectedDate;
                         String startTime = from.getText().toString() ;
@@ -366,16 +304,95 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private void addScheduleInList(final ScheduleAvailability scheduleAvailability) {
 
 
-    public void openEditDialog(String startTime, String endTime, final int id, final View clickedView ){
+        final String startTime = scheduleAvailability.getStartTime();
+        final String endTime =scheduleAvailability.getEndTime();
+
+
+        String dateString = startTime.split(" ")[0];
+        String monthString = startTime.split(" ")[1].substring(0,3).toUpperCase();
+        String timeString = String.format("%d",Integer.valueOf(startTime.split(" ")[3].split(":")[0]))  + startTime.split(" ")[4];
+
+
+
+        final View view = inflater.inflate(R.layout.availability_date,null);
+        TextView date = view.findViewById(R.id.date);
+        TextView time = view.findViewById(R.id.time);
+        final TextView month = view.findViewById(R.id.month);
+
+        date.setText(dateString);
+        time.setText(timeString);
+        month.setText(monthString);
+
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        (layoutParams).setMargins(23,0,0,0);
+        view.setLayoutParams(layoutParams);
+        avalabilityLayout.addView(view);
+
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(getActivity());
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_scout_schedule);
+
+
+                final TextView date = dialog.findViewById(R.id.date);
+                TextView timeLimit = dialog.findViewById(R.id.time_limit);
+                TextView edit_tv = dialog.findViewById(R.id.tv_edit_box);
+                TextView delete_tv = dialog.findViewById(R.id.tv_delete_box);
+
+
+                date.setText(startTime.split(" ")[0] + " " + startTime.split(" ")[1]);
+                timeLimit.setText( startTime.split(" ")[3] +" " + startTime.split(" ")[4] + "-"+
+                        endTime.split(" ")[3] +" " + endTime.split(" ")[4] );
+
+                edit_tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+                        dialog.dismiss();
+                        openEditDialog(startTime,endTime,scheduleAvailability.getId(),view);
+
+
+                    }
+                });
+
+                delete_tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteScheduleFromServer(scheduleAvailability.getId());
+                        dialog.dismiss();
+                        avalabilityLayout.removeView(view);
+
+
+
+                    }
+                });
+
+
+
+
+                dialog.show();
+            }
+        });
+
+    }
+
+
+    public void openEditDialog(final String startTime, final String endTime, final int id, final View clickedView ){
 
         Log.i("InfoText","Update :"+startTime+"---"+endTime);
 
         dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_scout_add_schedule,null);
+        View view = inflater.inflate(R.layout.dialog_scout_add_schedule,null);
         dialog.setContentView(view);
 
 
@@ -405,7 +422,10 @@ public class HomeFragment extends Fragment {
 
 
         String fromTime = startTime.split(" ")[3] + " " + startTime.split(" ")[4] ;
-        String toTime =     endTime.split(" ")[3] + " " + startTime.split(" ")[4] ;
+        Log.i("InfoText","from time 1part:"+startTime.split(" ")[3]);
+        Log.i("InfoText","from time 2part:"+startTime.split(" ")[4]);
+
+        String toTime =     endTime.split(" ")[3] + " " + endTime.split(" ")[4] ;
         from.setText(fromTime);
         to.setText(toTime);
 
@@ -438,9 +458,13 @@ public class HomeFragment extends Fragment {
         from.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
+                String[] parts = startTime.split(" ")[3].split(":");
+                int hour = startTime.split(" ")[4].equals("PM") ? 12+Integer.valueOf( removeZero(parts[0])) : Integer.valueOf( removeZero(parts[0]));
+                int minute = Integer.valueOf( parts[1]);
+
+
+                Log.i("InfoTextStart","houe:"+hour+" minute:"+minute+" m:"+startTime.split(" ")[4]);
+
                 TimePickerDialog mTimePicker;
                 mTimePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
@@ -462,7 +486,6 @@ public class HomeFragment extends Fragment {
                 mTimePicker.show();
 
 
-                Log.i("InfoText","2:"+ (from.getText().toString().contains(":")) + "1:"+ availabilityAdapter.isDateSelected );
 
 
 
@@ -474,9 +497,12 @@ public class HomeFragment extends Fragment {
         to.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar mcurrentTime = Calendar.getInstance();
-                int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                int minute = mcurrentTime.get(Calendar.MINUTE);
+                String[] parts = endTime.split(" ")[3].split(":");
+                int hour = endTime.split(" ")[4].equals("PM") ? 12+Integer.valueOf( removeZero(parts[0])) : Integer.valueOf( removeZero(parts[0]));
+                int minute = Integer.valueOf( parts[1]);
+
+                Log.i("InfoTextStart","houe:"+hour+" minute:"+minute+" m:"+startTime.split(" ")[4]);
+
                 TimePickerDialog mTimePicker;
                 mTimePicker = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
@@ -505,7 +531,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(getActivity(),"Clicken",Toast.LENGTH_SHORT).show();
 
                 String selectedDate = availabilityAdapter.selectedDate;
                 String startTime = from.getText().toString() ;
@@ -533,7 +558,7 @@ public class HomeFragment extends Fragment {
         progressDialog.show();
 
         RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
-        ScheduleAvailability scheduleAvailability = new ScheduleAvailability();
+        final ScheduleAvailability scheduleAvailability = new ScheduleAvailability();
         scheduleAvailability.setStartTime(startTime);
         scheduleAvailability.setEndTime(endTime);
         Call<ScheduleAvailability> call1 = availabilityInterface.updateSchedule(scheduleAvailability,id,"Token "+key);
@@ -546,47 +571,30 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<ScheduleAvailability> call, Response<ScheduleAvailability> response) {
 
+                final ScheduleAvailability newScheduleAvailability = response.body();
+
                 Log.i("InfoText","update response :"+response.message());
 
 
 
                 if(response.isSuccessful()){
 
-
-
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getActivity(),"Availability Added", Toast.LENGTH_SHORT).show();
-
-                            //Changing the view locally
-
-                            String dateString = startTime.split(" ")[0];
-                            String monthString = startTime.split(" ")[1].substring(0,3).toUpperCase();
-                            String timeString = String.format("%d",Integer.valueOf(startTime.split(" ")[3].split(":")[0]))  + startTime.split(" ")[4];
-
-
-
-                            TextView date = clickedView.findViewById(R.id.date);
-                            TextView time = clickedView.findViewById(R.id.time);
-                            final TextView month = clickedView.findViewById(R.id.month);
-
-                            date.setText(dateString);
-                            time.setText(timeString);
-                            month.setText(monthString);
+                            Toast.makeText(getActivity(),"Availability Updated", Toast.LENGTH_SHORT).show();
+                            updateScheduleInList(newScheduleAvailability,clickedView);
 
                         }
                     });
-
-
 
                 }else {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getActivity(),"Some Error Occurred", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
+                        Toast.makeText(getActivity(), jObjError.getJSONArray("non_field_errors").get(0)+"", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                    }
                 }
 
 
@@ -605,6 +613,84 @@ public class HomeFragment extends Fragment {
 
     }
 
+    private void updateScheduleInList(final ScheduleAvailability newScheduleAvailability, final View view) {
+
+        final String startTime = newScheduleAvailability.getStartTime();
+        final String endTime =newScheduleAvailability.getEndTime();
+
+
+        String dateString = startTime.split(" ")[0];
+        String monthString = startTime.split(" ")[1].substring(0,3).toUpperCase();
+        String timeString = String.format("%d",Integer.valueOf(startTime.split(" ")[3].split(":")[0]))  + startTime.split(" ")[4];
+
+
+
+        TextView date = view.findViewById(R.id.date);
+        TextView time = view.findViewById(R.id.time);
+        final TextView month = view.findViewById(R.id.month);
+
+        date.setText(dateString);
+        time.setText(timeString);
+        month.setText(monthString);
+
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams( LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        (layoutParams).setMargins(23,0,0,0);
+        view.setLayoutParams(layoutParams);
+
+
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(getActivity());
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setContentView(R.layout.dialog_scout_schedule);
+
+
+                final TextView date = dialog.findViewById(R.id.date);
+                TextView timeLimit = dialog.findViewById(R.id.time_limit);
+                TextView edit_tv = dialog.findViewById(R.id.tv_edit_box);
+                TextView delete_tv = dialog.findViewById(R.id.tv_delete_box);
+
+
+                date.setText(startTime.split(" ")[0] + " " + startTime.split(" ")[1]);
+                timeLimit.setText( startTime.split(" ")[3] +" " + startTime.split(" ")[4] + "-"+
+                        endTime.split(" ")[3] +" " + endTime.split(" ")[4] );
+
+                edit_tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+
+                        dialog.dismiss();
+                        openEditDialog(startTime,endTime,newScheduleAvailability.getId(),view);
+
+
+                    }
+                });
+
+                delete_tv.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        deleteScheduleFromServer(newScheduleAvailability.getId());
+                        dialog.dismiss();
+                        avalabilityLayout.removeView(view);
+
+
+
+                    }
+                });
+
+
+
+
+                dialog.show();
+            }
+        });
+
+
+    }
+
     private void deleteScheduleFromServer(int id) {
 
 
@@ -615,6 +701,25 @@ public class HomeFragment extends Fragment {
         call1.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
+                if(response.isSuccessful()){
+
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getActivity(),"Availability Deleted Succesfully", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                }else {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getActivity(),"Some Error Occurred", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
             }
 
             @Override
@@ -640,12 +745,14 @@ public class HomeFragment extends Fragment {
 
         call1.enqueue(new retrofit2.Callback<ScheduleAvailability>() {
             @Override
-            public void onResponse(retrofit2.Call<ScheduleAvailability> call, retrofit2.Response<ScheduleAvailability> response) {
+            public void onResponse(retrofit2.Call<ScheduleAvailability> call, final retrofit2.Response<ScheduleAvailability> response) {
 
 
 
                 if(response.isSuccessful()){
 
+                    ScheduleAvailability scheduleAvailability1 = response.body();
+                    addScheduleInList(scheduleAvailability1);
                     Log.i("InfoText","response :"+response.body().toString());
 
                     getActivity().runOnUiThread(new Runnable() {
@@ -659,7 +766,12 @@ public class HomeFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getActivity(),"Some Error Occurred", Toast.LENGTH_SHORT).show();
+                            try {
+                                JSONObject jObjError = new JSONObject(response.errorBody().string());
+                                Toast.makeText(getActivity(), jObjError.getJSONArray("non_field_errors").get(0)+"", Toast.LENGTH_SHORT).show();
+                            } catch (Exception e) {
+                                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                            }
                         }
                     });
                 }
@@ -708,6 +820,24 @@ public class HomeFragment extends Fragment {
 
         return list;
 
+    }
+
+    public static String removeZero(String str)
+    {
+        // Count leading zeros
+        int i = 0;
+        while (i < str.length() && str.charAt(i) == '0')
+            i++;
+
+        // Convert str into StringBuffer as Strings
+        // are immutable.
+        StringBuffer sb = new StringBuffer(str);
+
+        // The  StringBuffer replace function removes
+        // i characters from given index (0 here)
+        sb.replace(0, i, "");
+
+        return sb.toString();  // return in String
     }
 
 }

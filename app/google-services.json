@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "909168328087",
+    "firebase_url": "https://halanx-scout.firebaseio.com",
+    "project_id": "halanx-scout",
+    "storage_bucket": "halanx-scout.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:909168328087:android:0e827d7da5ee02ad",
+        "android_client_info": {
+          "package_name": "com.technicalrj.halanxscouts"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "909168328087-vclt7o5bmfuodne5t0ljv3c86i7cigsp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.technicalrj.halanxscouts",
+            "certificate_hash": "ad59319e33d253a021b91b54701e8d8bd54f8935"
+          }
+        },
+        {
+          "client_id": "909168328087-6e8bb9e9ki4f3tfdrru3m9bbua97lc6j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCP1hpPxjNfcdYnEYAW5qRelyijy6wILQo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "909168328087-6e8bb9e9ki4f3tfdrru3m9bbua97lc6j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

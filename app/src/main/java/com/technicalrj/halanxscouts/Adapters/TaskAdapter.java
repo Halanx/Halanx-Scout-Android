@@ -90,8 +90,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
         }
 
 
-        String firstName = scheduledTaskList.get(position).getCustomer().getUser().getFirstName();
-        String lastName = scheduledTaskList.get(position).getCustomer().getUser().getLastName();
+        final String firstName = scheduledTaskList.get(position).getCustomer().getUser().getFirstName();
+        final String lastName = scheduledTaskList.get(position).getCustomer().getUser().getLastName();
 
         holder.customer_name.setText( firstName.substring(0,1).toUpperCase() + firstName.substring(1)  +" "+ lastName.substring(0,1).toUpperCase() + lastName.substring(1) );
 
@@ -105,7 +105,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
         holder.chat_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                c.startActivity(new Intent(c, ChatWindow.class));
+                c.startActivity(new Intent(c, ChatWindow.class)
+                        .putExtra("id",scheduledTaskList.get(position).getConversation())
+                        .putExtra("name",firstName+" "+lastName));
             }
         });
 
@@ -160,8 +162,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
             lin_layout = itemView.findViewById(R.id.ll_layout);
 
 
-
         }
+
+
 
 
     }

@@ -18,7 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/mssg_rcv_border"
-        android:text="sdasdasdadadad"
+        android:text="Message"
         android:textSize="11dp"
         android:padding="10dp"
         android:layout_alignParentEnd="true"

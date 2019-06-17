@@ -108,6 +108,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="126dp"
+                    android:id="@+id/earning_layout"
                     android:background="@drawable/paid_background">
 
                     <RelativeLayout
@@ -170,6 +171,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="126dp"
+                    android:id="@+id/due_layout"
                     android:background="@drawable/due_background">
 
                     <RelativeLayout

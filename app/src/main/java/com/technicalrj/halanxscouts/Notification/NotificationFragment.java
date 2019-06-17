@@ -75,15 +75,19 @@ public class NotificationFragment extends Fragment {
         progressDialog.show();
 
         RetrofitAPIClient.DataInterface retrofitAPIClient = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
-        retrofitAPIClient.getNotifications(key);
-        Call<List<Notification>> call = retrofitAPIClient.getNotifications(key);
+        Call<List<Notification>> call = retrofitAPIClient.getNotifications("Token "+key);
         call.enqueue(new Callback<List<Notification>>() {
             @Override
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
 
-                notificationArrayList  = (ArrayList<Notification>) response.body();
-                //Log.i("InfoText","notificationArrayList.size()"+ notificationArrayList.size());
+
+                Log.i("InfoText","notificationArrayList.size()"+ notificationArrayList.size());
+
+                ArrayList<Notification> notiList  = (ArrayList<Notification>) response.body();
+                notificationArrayList.clear();
+                notificationArrayList.addAll(notiList);
                 adapter.notifyDataSetChanged();
+
                 progressDialog.dismiss();
             }
 

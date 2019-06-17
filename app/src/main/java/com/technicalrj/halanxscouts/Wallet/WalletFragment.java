@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
@@ -32,6 +33,7 @@ public class WalletFragment extends Fragment {
 
     TextView earning,paid,due;
     String key;
+    RelativeLayout earning_layout,due_layout;
 
     public WalletFragment() {
         // Required empty public constructor
@@ -49,6 +51,8 @@ public class WalletFragment extends Fragment {
         earning = view.findViewById(R.id.earning);
         paid = view.findViewById(R.id.paid);
         due = view.findViewById(R.id.due);
+        earning_layout = view.findViewById(R.id.earning_layout);
+        due_layout = view.findViewById(R.id.due_layout);
 
 
         final SharedPreferences prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
@@ -60,7 +64,7 @@ public class WalletFragment extends Fragment {
         updatePayment();
 
 
-        paid.setOnClickListener(new View.OnClickListener() {
+        earning_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -71,7 +75,7 @@ public class WalletFragment extends Fragment {
             }
         });
 
-        due.setOnClickListener(new View.OnClickListener() {
+        due_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), DueActivity.class);
@@ -108,8 +112,8 @@ public class WalletFragment extends Fragment {
                 double debit =  jsonObject.get("debit").getAsDouble();
 
                 earning.setText(""+credit);
-                paid.setText(""+pending_withdrawal);
-                due.setText(""+debit);
+                paid.setText(""+debit);
+                due.setText(""+pending_withdrawal);
 
                 progressDialog.dismiss();
             }
@@ -117,7 +121,7 @@ public class WalletFragment extends Fragment {
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
                 t.printStackTrace();
-                Log.i("InfoText","inside onFailure "+t.getMessage());
+                Log.i("InfoText",getActivity().getClass().toString()+"inside onFailure "+t.getMessage());
                 progressDialog.dismiss();
             }
         });

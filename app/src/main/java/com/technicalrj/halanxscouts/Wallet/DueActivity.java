@@ -37,19 +37,14 @@ public class DueActivity extends AppCompatActivity {
         final SharedPreferences prefs = getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
 
-        RecyclerView rv_notiification = findViewById(R.id.rv_notifications);
-        LinearLayoutManager lm = new LinearLayoutManager(getApplicationContext());
-
-        taskPayments  = new ArrayList<>();
-        getAllDuePayments();
-
-        adapter = new PaidAdapter(getApplicationContext(),taskPayments);
-        rv_notiification.setAdapter(adapter);
-        rv_notiification.setLayoutManager(lm);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setTitle("Due Payments");
+
+
+
+
+        getAllDuePayments();
 
 
     }
@@ -69,10 +64,12 @@ public class DueActivity extends AppCompatActivity {
         call1.enqueue(new Callback<List<TaskPayment>>() {
             @Override
             public void onResponse(Call<List<TaskPayment>> call, Response<List<TaskPayment>> response) {
-                taskPayments.clear();
                 taskPayments  = (ArrayList<TaskPayment>) response.body();
-                adapter.notifyDataSetChanged();
 
+                RecyclerView rv_payments = findViewById(R.id.rv_notifications);
+                adapter = new PaidAdapter(DueActivity.this,taskPayments);
+                rv_payments.setAdapter(adapter);
+                rv_payments.setLayoutManager(new LinearLayoutManager(DueActivity.this));
 
 
                 Log.i("InfoText","taskPayments.size():"+taskPayments.size());

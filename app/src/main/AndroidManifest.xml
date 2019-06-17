@@ -14,7 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Home.TaskActivity"></activity>
+
+
+        <activity android:name=".Home.TaskActivity" />
         <activity android:name=".Wallet.DueActivity" />
         <activity android:name=".Home.ScoutAcceptanceActivity" />
         <activity
@@ -42,6 +44,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service android:name=".Notification.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".LoginActivity"
             android:theme="@style/AppThemeNoBar" />

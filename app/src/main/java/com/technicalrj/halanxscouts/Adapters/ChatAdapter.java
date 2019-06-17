@@ -8,7 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.technicalrj.halanxscouts.Home.Chat.Result;
 import com.technicalrj.halanxscouts.R;
+
+import java.util.ArrayList;
 
 /**
  * Created by Nishant on 19/12/17.
@@ -18,10 +21,12 @@ import com.technicalrj.halanxscouts.R;
 public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.HomesViewHolder> {
 
     Context c;
+    ArrayList<Result> results;
 
+    public ChatAdapter(Context context, ArrayList<Result> results) {
 
-    public ChatAdapter(Context context) {
-
+        this.results = results;
+        this.c = context;
     }
 
     @Override

@@ -71,7 +71,7 @@ public class DocumentsActivity extends AppCompatActivity {
                     deleteAadhar1(aadhar1);
 
                 Picasso.get()
-                        .load(R.drawable.user_icon)
+                        .load(selectedImage)
                         .into(aadhar1);
 
                 File aadhar1File = new File(getRealPathFromURI(selectedImage));
@@ -369,6 +369,12 @@ public class DocumentsActivity extends AppCompatActivity {
                 Log.i(TAG,body);
 
                 if(response.isSuccessful()){
+                    DocumentsActivity.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(DocumentsActivity.this,"Document Uploaded",Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     progressDialog.dismiss();
                 }
 
@@ -440,8 +446,13 @@ public class DocumentsActivity extends AppCompatActivity {
                             Picasso.get()
                                     .load(R.drawable.upload_image)
                                     .into(aadhar1);
-
                             aadhar1.setContentDescription("format");
+                            DocumentsActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(DocumentsActivity.this,"Document Deleted",Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     });
                 }
@@ -496,8 +507,14 @@ public class DocumentsActivity extends AppCompatActivity {
                             Picasso.get()
                                     .load(R.drawable.upload_image)
                                     .into(pan);
-
                             pan.setContentDescription("format");
+
+                            DocumentsActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(DocumentsActivity.this,"Document Deleted",Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     });
                 }
@@ -553,10 +570,17 @@ public class DocumentsActivity extends AppCompatActivity {
                             Picasso.get()
                                     .load(R.drawable.upload_image)
                                     .into(aadhar2);
-
                             aadhar2.setContentDescription("format");
+
+                            DocumentsActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(DocumentsActivity.this,"Document Deleted",Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
-                    });                }
+                    });
+                }
 
 
                 progressDialog.dismiss();

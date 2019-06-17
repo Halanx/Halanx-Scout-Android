@@ -1,9 +1,12 @@
 package com.technicalrj.halanxscouts;
 
 import com.google.gson.JsonObject;
+import com.technicalrj.halanxscouts.Home.Chat.Messages;
 import com.technicalrj.halanxscouts.Home.ScheduleAvailability;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.Notification.NoficationPojo.Notification;
+import com.technicalrj.halanxscouts.Profile.ProfilePojo.BankDetail;
+import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.Wallet.TaskPayment;
 
 import java.util.List;
@@ -83,6 +86,26 @@ public class RetrofitAPIClient {
 
         @GET("/scouts/notifications/")
         Call<List<Notification>> getNotifications(@Header("Authorization") String token);
+
+
+
+
+        @GET("/scouts/")
+        Call<Profile> getProfile(@Header("Authorization") String token);
+
+        @PATCH("/scouts/")
+        Call<Profile> updateProfileGcmId(@Query("gcm_id") String gcm_id, @Header("Authorization") String token);
+
+        @PATCH("/scouts/")
+        Call<Profile> updateBankDetails(@Body Profile profile , @Header("Authorization") String token);
+
+
+
+
+
+        @GET("/chat/conversations/{id}/messages/")
+        Call<Messages> getMessages( @Path("id") String id,@Header("Authorization") String token , @Header("PARTICIPANT-TYPE") String particationType);
+
 
 
     }

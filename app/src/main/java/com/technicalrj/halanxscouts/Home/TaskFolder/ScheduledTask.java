@@ -40,6 +40,10 @@ public class ScheduledTask {
     @SerializedName("remark")
     @Expose
     private String remark;
+    @SerializedName("conversation")
+    @Expose
+    private int conversation;
+
 
     public Integer getId() {
         return id;
@@ -129,4 +133,11 @@ public class ScheduledTask {
         this.remark = remark;
     }
 
+    public int getConversation() {
+        return conversation;
+    }
+
+    public void setConversation(int conversation) {
+        this.conversation = conversation;
+    }
 }

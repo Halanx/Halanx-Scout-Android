@@ -163,6 +163,7 @@ public class ProfileFragment extends Fragment {
             public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
 
 
+
                 if(response.isSuccessful()){
                     String body = response.body().string();
                     try {
@@ -211,10 +212,10 @@ public class ProfileFragment extends Fragment {
 
                                 if(!document_submission){
                                     docStatus.setImageDrawable(getResources().getDrawable(R.drawable.not_submitted));
-                                    //docStatus.getLayoutParams().width = (int)(90 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+                                    //docStatus.getLayoutParams().width = (int)(100 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
                                 }else {
                                     docStatus.setImageDrawable(getResources().getDrawable(R.drawable.submitted));
-                                    //docStatus.getLayoutParams().width = (int)(70 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+                                    docStatus.getLayoutParams().width = (int)(120 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
 
                                 }
 
@@ -223,9 +224,8 @@ public class ProfileFragment extends Fragment {
                                     bankStatus.setImageDrawable(getResources().getDrawable(R.drawable.not_submitted));
                                     //bankStatus.getLayoutParams().width = (int)(90 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
                                 }else {
-                                    Log.i("InfoText","account_holder_name"+account_holder_name);
                                     bankStatus.setImageDrawable(getResources().getDrawable(R.drawable.submitted));
-                                    //bankStatus.getLayoutParams().width = (int)(70 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+                                    bankStatus.getLayoutParams().height = (int)(120 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
                                 }
                             }
                         });
