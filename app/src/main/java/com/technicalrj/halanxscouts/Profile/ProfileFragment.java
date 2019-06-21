@@ -3,16 +3,21 @@ package com.technicalrj.halanxscouts.Profile;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.DisplayMetrics;
@@ -36,7 +41,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -60,6 +67,7 @@ public class ProfileFragment extends Fragment {
 
 
     private static final int PICK_IMAGE = 1;
+    public static final int DOCUMENTS_DETAILS_UPDATE = 4 , BANK_DETAILS_UPDATE=5;
     private CardView documents;
     private CardView bank;
     private CardView changePass;
@@ -83,30 +91,50 @@ public class ProfileFragment extends Fragment {
     }
 
 
+
+
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==PICK_IMAGE && resultCode==RESULT_OK){
+        if(requestCode==PICK_IMAGE && resultCode==RESULT_OK ){
 
 
             Uri selectedImage = data.getData();
-            Picasso.get()
-                    .load(selectedImage)
-                    .transform(new CircleTransform())
-                    .into(imageView);
+            File profileFile=null;
+            if(selectedImage==null){
+                Bitmap photo = (Bitmap) data.getExtras().get("data");
+                imageView.setImageBitmap(photo);
+                profileFile = persistImage( photo ,"sdf");
+            }else {
+                imageView.setImageBitmap(getRotatedImage(selectedImage));
+                profileFile = persistImage( getRotatedImage(selectedImage) ,"dsf");
+            }
 
-            File profileFile = new File(getRealPathFromURI(selectedImage));
             uploadData(profileFile);
 
         }
-    }
 
+        if(requestCode==BANK_DETAILS_UPDATE || requestCode==DOCUMENTS_DETAILS_UPDATE){
+            if(resultCode == RESULT_OK){
+                String result=data.getStringExtra("result");
+                if(result.equals("update")){
+                    Log.i("InfoText","result update");
+
+                    //Call to update page data
+                    updatePage();
+
+                }
+            }
+        }
+
+    }
 
 
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
             //resume tasks needing this permission
             if(requestCode==PICK_IMAGE)
                 chooseImage(PICK_IMAGE);
@@ -141,108 +169,9 @@ public class ProfileFragment extends Fragment {
         docStatus = view.findViewById(R.id.doc_status);
 
 
-        OkHttpClient client = new OkHttpClient();
+        //Call to update page data
+        updatePage();
 
-        SharedPreferences prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
-        key = prefs.getString("login_key", null);
-
-        Request request = new Request.Builder()
-                .url(halanxScout+"/scouts/")
-                .addHeader("Authorization","Token "+key)
-                .build();
-
-
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(@NotNull Call call, @NotNull IOException e) {
-
-            }
-
-            @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-
-
-
-                if(response.isSuccessful()){
-                    String body = response.body().string();
-                    try {
-
-                        final JSONObject jsonObject = new JSONObject(body);
-
-                        String phoneNumber = jsonObject.getString("phone_no");
-                        phoneNumberTv.setText(phoneNumber);
-
-
-                        JSONObject user = jsonObject.getJSONObject("user");
-
-                        final String firstName = user.getString("first_name");
-                        final String lastName = user.getString("last_name");
-                        final String email = user.getString("email");
-
-                        final boolean document_submission = jsonObject.getBoolean("document_submission_complete");
-                        final boolean bank_submission = jsonObject.getBoolean("bank_details_complete");
-
-                        profile_pic_url = jsonObject.getString("profile_pic_url");
-                        final String profile_pic_thumbnail_url = jsonObject.getString("profile_pic_thumbnail_url");
-                        final String account_holder_name = jsonObject.getJSONObject("bank_detail").getString("account_holder_name");
-
-
-                        Log.i("InfoText","KEY:"+key);
-
-
-                        //String account_holder_name  = user.getJSONObject("bank_detail").getString("account_holder_name");
-
-                        if(getActivity()==null)
-                            return;
-
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Picasso.get()
-                                        .load(profile_pic_thumbnail_url)
-                                        .placeholder(R.drawable.male_avatar)
-                                        .transform(new CircleTransform())
-                                        .into(imageView);
-
-
-                                name.setText(firstName +" "+lastName);
-                                emailTv.setText(email);
-
-
-                                if(!document_submission){
-                                    docStatus.setImageDrawable(getResources().getDrawable(R.drawable.not_submitted));
-                                    //docStatus.getLayoutParams().width = (int)(100 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
-                                }else {
-                                    docStatus.setImageDrawable(getResources().getDrawable(R.drawable.submitted));
-                                    docStatus.getLayoutParams().width = (int)(120 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
-
-                                }
-
-
-                                if(!bank_submission){
-                                    bankStatus.setImageDrawable(getResources().getDrawable(R.drawable.not_submitted));
-                                    //bankStatus.getLayoutParams().width = (int)(90 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
-                                }else {
-                                    bankStatus.setImageDrawable(getResources().getDrawable(R.drawable.submitted));
-                                    bankStatus.getLayoutParams().height = (int)(120 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
-                                }
-                            }
-                        });
-
-
-
-
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-
-
-            }
-        });
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -280,7 +209,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), DocumentsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,DOCUMENTS_DETAILS_UPDATE);
             }
         });
 
@@ -288,7 +217,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), BankDetailsActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent,BANK_DETAILS_UPDATE);
             }
         });
 
@@ -312,58 +241,91 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                final SharedPreferences prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
 
-                OkHttpClient client = new OkHttpClient();
-                RequestBody body = new MultipartBody.Builder()
-                        .setType(MultipartBody.FORM)
-                        .addFormDataPart("key",prefs.getString("login_key",""))
-                        .build();
 
-                final Request request = new Request.Builder()
-                        .url("https://scout-api.halanx.com/rest-auth/logout/")
-                        .post(body)
-                        .build();
-
-                client.newCall(request).enqueue(new Callback() {
+                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
                     @Override
-                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
-                        e.printStackTrace();
-                    }
+                    public void onClick(DialogInterface dialog, int which) {
+                        switch (which){
+                            case DialogInterface.BUTTON_POSITIVE:
+                                final SharedPreferences prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
 
-                    @Override
-                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                OkHttpClient client = new OkHttpClient();
+                                RequestBody body = new MultipartBody.Builder()
+                                        .setType(MultipartBody.FORM)
+                                        .addFormDataPart("key",prefs.getString("login_key",""))
+                                        .build();
 
-                        if(response.isSuccessful()){
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getActivity(),"Logged out successfully",Toast.LENGTH_SHORT).show();
+                                final Request request = new Request.Builder()
+                                        .url("https://scout-api.halanx.com/rest-auth/logout/")
+                                        .post(body)
+                                        .build();
+
+                                client.newCall(request).enqueue(new Callback() {
+                                    @Override
+                                    public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    @Override
+                                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+                                        if(response.isSuccessful()){
+                                            getActivity().runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(getActivity(),"Logged out successfully",Toast.LENGTH_SHORT).show();
 
 
 
-                                    SharedPreferences.Editor editor = prefs.edit();
-                                    editor.remove("login_key");
-                                    editor.apply();
+                                                    SharedPreferences.Editor editor = prefs.edit();
+                                                    editor.remove("login_key");
+                                                    editor.apply();
 
-                                    Intent intent = new Intent(getActivity(), LoginActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                    getActivity().finish();
-                                }
-                            });
-                        }else {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Toast.makeText(getActivity(),"Unable to logout",Toast.LENGTH_SHORT).show();
+                                                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                    startActivity(intent);
+                                                    getActivity().finish();
+                                                }
+                                            });
+                                        }else {
+                                            getActivity().runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Toast.makeText(getActivity(),"Unable to logout",Toast.LENGTH_SHORT).show();
 
-                                }
-                            });
+                                                }
+                                            });
+                                        }
+
+                                    }
+                                });
+                                break;
+
+                            case DialogInterface.BUTTON_NEGATIVE:
+                                dialog.dismiss();
+                                break;
                         }
-
                     }
-                });
+                };
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setMessage("Are you sure you want to Logout")
+                        .setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener)
+                        .show();
+
+
+
+
+
+
+
+
+
+
+
+
             }
         });
 
@@ -379,7 +341,7 @@ public class ProfileFragment extends Fragment {
                     final String email_entered = emailTv.getText().toString().trim();
 
                     //Check email
-                    if(!email_entered.isEmpty() && !Patterns.EMAIL_ADDRESS.matcher(email_entered).matches() ){
+                    if( !email_entered.isEmpty() && !Patterns.EMAIL_ADDRESS.matcher(email_entered).matches() ){
                         emailTv.setError("Please enter a valid email address");
                         return false;
                     }
@@ -450,11 +412,13 @@ public class ProfileFragment extends Fragment {
                                     @Override
                                     public void run() {
                                         Toast.makeText(getActivity(),"Data Updated",Toast.LENGTH_SHORT).show();
+                                        name.setText(name_entered.substring(0,idx)+" "+name_entered.substring(idx+1));
+                                        emailTv.setText(email_entered);
+                                        name.clearFocus();
                                     }
                                 });
 
-                                name.setText(name_entered.substring(0,idx)+" "+name_entered.substring(idx+1));
-                                emailTv.setText(email_entered);
+
 
                             }
                         });
@@ -504,10 +468,59 @@ public class ProfileFragment extends Fragment {
 
                         JSONObject user = new JSONObject();
                         int idx  = name_entered.indexOf(" ");
-
                         user.put("first_name",name_entered.substring(0,idx));
                         user.put("last_name",name_entered.substring(idx+1));
                         user.put("email",email_entered);
+
+                        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                        progressDialog.setMessage("Loading...");
+                        progressDialog.show();
+                        OkHttpClient client = new OkHttpClient();
+                        RequestBody body = RequestBody.create(JSON, "{ \"user\" : "+ user.toString() +" }");
+                        Request request = new Request.Builder()
+                                .url(halanxScout+"/scouts/")
+                                .patch(body)
+                                .addHeader("Authorization","Token "+key)
+                                .build();
+                        Log.i("InfoText","json :"+"{ \"user\" : "+ user.toString() +" }");
+                        Log.i("InfoText","key :"+key);
+
+
+
+                        client.newCall(request).enqueue(new Callback() {
+                            @Override
+                            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+                                e.printStackTrace();
+                                progressDialog.dismiss();
+                            }
+
+                            @Override
+                            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                progressDialog.dismiss();
+
+
+                                JSONObject jsonObject= null;
+                                try {
+                                    jsonObject = new JSONObject(response.body().string());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                String messageString =jsonObject.toString();
+                                Log.i("InfoText","Detail :"+messageString);
+
+                                getActivity().runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Toast.makeText(getActivity(),"Data Updated",Toast.LENGTH_SHORT).show();
+                                        emailTv.clearFocus();
+                                    }
+                                });
+
+
+
+
+                            }
+                        });
 
 
                         Log.i("InfoText","name:"+name_entered.substring(0,idx)+"-"+name_entered.substring(idx+1)+"-"+email_entered);
@@ -531,6 +544,122 @@ public class ProfileFragment extends Fragment {
 
 
         return view;
+    }
+
+
+    public void updatePage(){
+
+
+
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+
+
+
+        OkHttpClient client = new OkHttpClient();
+
+        final SharedPreferences prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
+        key = prefs.getString("login_key", null);
+
+        Request request = new Request.Builder()
+                .url(halanxScout+"/scouts/")
+                .addHeader("Authorization","Token "+key)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+
+                progressDialog.dismiss();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+
+
+                if(response.isSuccessful()){
+                    String body = response.body().string();
+                    try {
+
+                        final JSONObject jsonObject = new JSONObject(body);
+
+                        String phoneNumber = jsonObject.getString("phone_no");
+                        phoneNumberTv.setText(phoneNumber);
+
+
+                        JSONObject user = jsonObject.getJSONObject("user");
+
+                        final String firstName = user.getString("first_name");
+                        final String lastName = user.getString("last_name");
+                        final String email = user.getString("email");
+
+                        final boolean document_submission = jsonObject.getBoolean("document_submission_complete");
+                        final boolean bank_submission = jsonObject.getBoolean("bank_details_complete");
+
+                        profile_pic_url = jsonObject.getString("profile_pic_url");
+                        final String profile_pic_thumbnail_url = jsonObject.getString("profile_pic_thumbnail_url");
+                        final String account_holder_name = jsonObject.getJSONObject("bank_detail").getString("account_holder_name");
+
+
+                        Log.i("InfoText","KEY:"+key);
+
+
+                        //String account_holder_name  = user.getJSONObject("bank_detail").getString("account_holder_name");
+
+                        if(getActivity()==null)
+                            return;
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Picasso.get()
+                                        .load(profile_pic_thumbnail_url)
+                                        .placeholder(R.drawable.male_avatar)
+                                        .transform(new CircleTransform())
+                                        .into(imageView);
+
+
+                                name.setText(firstName +" "+lastName);
+                                emailTv.setText(email);
+
+
+                                if(!document_submission){
+                                    docStatus.setImageDrawable(getResources().getDrawable(R.drawable.not_submitted));
+                                    //docStatus.getLayoutParams().width = (int)(100 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+                                }else {
+                                    docStatus.setImageDrawable(getResources().getDrawable(R.drawable.submitted));
+                                    docStatus.getLayoutParams().height = (int)(120 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+
+                                }
+
+
+                                if(!bank_submission){
+                                    bankStatus.setImageDrawable(getResources().getDrawable(R.drawable.not_submitted));
+                                    //bankStatus.getLayoutParams().width = (int)(90 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+                                }else {
+                                    bankStatus.setImageDrawable(getResources().getDrawable(R.drawable.submitted));
+                                    bankStatus.getLayoutParams().height = (int)(120 / ((float) getActivity().getResources().getDisplayMetrics().densityDpi / DisplayMetrics.DENSITY_DEFAULT));
+                                }
+                            }
+                        });
+
+
+
+
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+                progressDialog.dismiss();
+            }
+        });
     }
 
 
@@ -598,29 +727,99 @@ public class ProfileFragment extends Fragment {
     }
 
     private void chooseImage(int permisson) {
-        Intent getIntent = new Intent(Intent.ACTION_GET_CONTENT);
-        getIntent.setType("image/*");
+        Intent intentCamera = new Intent("android.media.action.IMAGE_CAPTURE");
 
         Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         pickIntent.setType("image/*");
 
         Intent chooserIntent = Intent.createChooser(pickIntent, "Select Image");
-        //chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[] {pickIntent});
+        chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{intentCamera});
 
         startActivityForResult(chooserIntent, permisson);
+
+
     }
 
 
 
+    public Bitmap getRotatedImage(Uri selectedImage){
+
+
+        Bitmap rotatedBitmap=null;
+        try {
+            ExifInterface ei = null;
+            ei = new ExifInterface(getRealPathFromURI(selectedImage));
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+            Bitmap bitmap = null;
+            bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), selectedImage);
+
+            rotatedBitmap = null;
+            switch(orientation) {
+
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotatedBitmap = rotateImage(bitmap, 90);
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotatedBitmap = rotateImage(bitmap, 180);
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotatedBitmap = rotateImage(bitmap, 270);
+                    break;
+
+                case ExifInterface.ORIENTATION_NORMAL:
+                default:
+                    rotatedBitmap = bitmap;
+            }
+        } catch (IOException e) {
+            Log.i("InfoText","exception :"+e.getMessage());
+            e.printStackTrace();
+        }
+
+
+
+
+        return rotatedBitmap;
+    }
+
+    private  File persistImage(Bitmap bitmap, String name) {
+        File filesDir = getActivity().getFilesDir();
+        File imageFile = new File(filesDir, name + ".jpg");
+
+        OutputStream os;
+        try {
+            os = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            Log.e(this.getClass().getSimpleName(), "Error writing bitmap", e);
+        }
+
+        return imageFile;
+    }
+
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
+
 
     public  boolean isStoragePermissionGranted(int permissionCode) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
+            if (getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                    && getActivity().checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED ) {
                 return true;
             } else {
 
-                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, permissionCode);
+                ActivityCompat.requestPermissions(getActivity(), new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA},
+                        permissionCode);
                 return false;
             }
         }
@@ -628,7 +827,6 @@ public class ProfileFragment extends Fragment {
             return true;
         }
     }
-
     private String getRealPathFromURI(Uri contentURI) {
         Cursor cursor = getActivity().getContentResolver().query(contentURI, null, null, null, null);
         if (cursor == null) { // Source is Dropbox or other similar local file path

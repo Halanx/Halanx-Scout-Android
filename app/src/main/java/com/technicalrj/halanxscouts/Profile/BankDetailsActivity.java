@@ -1,11 +1,17 @@
 package com.technicalrj.halanxscouts.Profile;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatEditText;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,9 +29,8 @@ import retrofit2.Response;
 
 public class BankDetailsActivity extends AppCompatActivity {
 
-    TextView account_number,confirm_account_number,account_holder_name,ifsc_code , bank_name ,bank_branch;
+    EditText account_number, confirm_account_number,account_holder_name,ifsc_code , bank_name ,bank_branch;
     String key;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +46,7 @@ public class BankDetailsActivity extends AppCompatActivity {
 
         final SharedPreferences prefs = getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
+
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -84,6 +90,19 @@ public class BankDetailsActivity extends AppCompatActivity {
             }
         });
 
+
+
+        confirm_account_number.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean hasFocus) {
+                if (!hasFocus) {
+
+                    if (!confirm_account_number.getText().toString().trim().equals(account_number.getText().toString())) {
+                        confirm_account_number.setError("This is not same as Account Number");
+                    }
+                }
+            }
+        });
 
 
 
@@ -182,6 +201,9 @@ public class BankDetailsActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         Toast.makeText(BankDetailsActivity.this,"Bank Details Updated",Toast.LENGTH_SHORT).show();
+                        Intent returnIntent = new Intent();
+                        returnIntent.putExtra("result","update");
+                        setResult(RESULT_OK,returnIntent);
                         finish();
                     }
                 });

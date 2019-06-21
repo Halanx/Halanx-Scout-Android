@@ -17,9 +17,10 @@ public class ProfileImageActivity extends AppCompatActivity {
         String imageUrl = getIntent().getStringExtra("profile_pic_url");
         ImageView imageView = findViewById(R.id.imageView);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+       /* getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Profile Picture");
+        getSupportActionBar().setTitle("Profile Picture");*/
+
 
         Picasso.get()
                 .load(imageUrl)

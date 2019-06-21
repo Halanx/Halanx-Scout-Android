@@ -20,7 +20,7 @@ public class Notification {
     private String content;
     @SerializedName("payload")
     @Expose
-    private Object payload;
+    private String payload;
     @SerializedName("seen")
     @Expose
     private Boolean seen;
@@ -63,11 +63,11 @@ public class Notification {
         this.content = content;
     }
 
-    public Object getPayload() {
+    public String getPayload() {
         return payload;
     }
 
-    public void setPayload(Object payload) {
+    public void setPayload(String payload) {
         this.payload = payload;
     }
 

@@ -52,7 +52,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
 
         holder.task_name.setText(scheduledTaskList.get(position).getCategory().getName());
         holder.address.setText(scheduledTaskList.get(position).getHouse().getAddress().getStreetAddress());
-        holder.earning.setText("₹ "+scheduledTaskList.get(position).getEarning()+"");
+        holder.earning.setText(scheduledTaskList.get(position).getEarning()+"");
 
         String[] parts = scheduledTaskList.get(position).getScheduledAt().split(" ") ;
         String date = parts[0]+" "+parts[1].substring(0,3).toUpperCase() +" ("+ parts[3]+" "+parts[4]+")";
@@ -106,8 +106,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
             @Override
             public void onClick(View v) {
                 c.startActivity(new Intent(c, ChatWindow.class)
-                        .putExtra("id",scheduledTaskList.get(position).getConversation())
-                        .putExtra("name",firstName+" "+lastName));
+                        .putExtra("id",scheduledTaskList.get(position).getConversation()+"")
+                        .putExtra("first_name",firstName)
+                        .putExtra("last_name",lastName));
             }
         });
 

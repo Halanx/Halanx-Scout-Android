@@ -2,6 +2,7 @@ package com.technicalrj.halanxscouts;
 
 import com.google.gson.JsonObject;
 import com.technicalrj.halanxscouts.Home.Chat.Messages;
+import com.technicalrj.halanxscouts.Home.Chat.Result;
 import com.technicalrj.halanxscouts.Home.ScheduleAvailability;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.Notification.NoficationPojo.Notification;
@@ -9,6 +10,7 @@ import com.technicalrj.halanxscouts.Profile.ProfilePojo.BankDetail;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.Wallet.TaskPayment;
 
+import java.util.HashMap;
 import java.util.List;
 
 import retrofit2.Call;
@@ -94,18 +96,31 @@ public class RetrofitAPIClient {
         Call<Profile> getProfile(@Header("Authorization") String token);
 
         @PATCH("/scouts/")
-        Call<Profile> updateProfileGcmId(@Query("gcm_id") String gcm_id, @Header("Authorization") String token);
+        Call<Profile> updateProfileGcmId(@Body HashMap<String,String> map, @Header("Authorization") String token);
 
         @PATCH("/scouts/")
         Call<Profile> updateBankDetails(@Body Profile profile , @Header("Authorization") String token);
 
+        @PATCH("/scouts/")
+        Call<Profile> updateOnlineStatus(@Body JsonObject jsonObject, @Header("Authorization") String token);
 
 
 
 
         @GET("/chat/conversations/{id}/messages/")
-        Call<Messages> getMessages( @Path("id") String id,@Header("Authorization") String token , @Header("PARTICIPANT-TYPE") String particationType);
+        Call<Messages> getMessages( @Path("id") String id,@Query("page") int page , @Header("Authorization") String token , @Header("PARTICIPANT-TYPE") String particationType);
 
+        @POST("/chat/conversations/{id}/messages/")
+        Call<Result> createMessage( @Body HashMap<String,String> map, @Path("id") String id,@Header("Authorization") String token , @Header("PARTICIPANT-TYPE") String particationType);
+
+
+        @PATCH("/scouts/tasks/{id}/request/")
+        Call<JsonObject> taskRequest( @Body JsonObject jsonObject ,@Path("id") int id,@Header("Authorization") String token );
+
+
+
+        @GET("/scouts/")
+        Call<Profile> getRating(@Header("Authorization") String token);
 
 
     }

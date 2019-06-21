@@ -62,7 +62,7 @@
             android:layout_below="@+id/view"
             android:id="@+id/textView"
             android:layout_margin="10dp"
-            android:text="Select Date"/>
+            android:text="Select Time"/>
 
 
 

@@ -4,6 +4,8 @@ package com.technicalrj.halanxscouts.Profile.ProfilePojo;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class Profile {
 
     @SerializedName("id")
@@ -42,6 +44,14 @@ public class Profile {
     @SerializedName("gcm_id")
     @Expose
     private String gcmId;
+    @SerializedName("rating")
+    @Expose
+    private Double rating;
+
+    @SerializedName("review_tags")
+    @Expose
+    private List<ReviewTag> reviewTags = null;
+
 
     public Integer getId() {
         return id;
@@ -139,6 +149,21 @@ public class Profile {
         this.gcmId = gcmId;
     }
 
+    public Double getRating() {
+        return rating;
+    }
+
+    public void setRating(Double rating) {
+        this.rating = rating;
+    }
+
+    public List<ReviewTag> getReviewTags() {
+        return reviewTags;
+    }
+
+    public void setReviewTags(List<ReviewTag> reviewTags) {
+        this.reviewTags = reviewTags;
+    }
 
     @Override
     public String toString() {

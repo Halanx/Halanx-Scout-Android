@@ -2,22 +2,29 @@ package com.technicalrj.halanxscouts.Profile;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 import com.technicalrj.halanxscouts.R;
 
@@ -26,8 +33,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -51,31 +65,42 @@ public class DocumentsActivity extends AppCompatActivity {
     private ImageView imgView = null;
     private String key ;
     private int aadhar1Id, aadhar2Id,panId;
+    String aadhar1Url,aadhar2Url,panUrl;
 
     private ProgressDialog progressDialog;
+
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if ((requestCode == PICK_IMAGE_AADHAR_1 || requestCode == PICK_IMAGE_AADHAR_2 || requestCode == PICK_IMAGE_PAN) && resultCode == RESULT_OK) {
 
 
-            Log.i("InfoText", "Image : " + data.toString());
+
 
             Uri selectedImage = data.getData();
+
+            Log.i("InfoText", "Sledted image uri : " + selectedImage);
 
 
             if (requestCode == PICK_IMAGE_AADHAR_1) {
 
 
-                if(aadhar1.getContentDescription().equals("format"))
-                    deleteAadhar1(aadhar1);
 
-                Picasso.get()
-                        .load(selectedImage)
-                        .into(aadhar1);
 
-                File aadhar1File = new File(getRealPathFromURI(selectedImage));
-                uploadData(aadhar1File, "Aadhar");
+                File aadhar1File=null;
+                if(selectedImage==null){
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    aadhar1.setImageBitmap(photo);
+                    aadhar1File = persistImage( photo ,"sdf");
+                }else {
+                    aadhar1.setImageBitmap(getRotatedImage(selectedImage));
+                    aadhar1File = persistImage( getRotatedImage(selectedImage) ,"dsf");
+                }
+
+                aadhar1.setContentDescription("actual");
+                uploadData(aadhar1File, "Aadhar","aadhar1");
 
 
 
@@ -83,27 +108,36 @@ public class DocumentsActivity extends AppCompatActivity {
             }
             if (requestCode == PICK_IMAGE_AADHAR_2) {
 
-                if(aadhar2.getContentDescription().equals("format"))
-                    deleteAadhar1(aadhar2);
 
-                Picasso.get()
-                        .load(selectedImage)
-                        .into(aadhar2);
+                File aadhar2File=null;
+                if(selectedImage==null){
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    aadhar2.setImageBitmap(photo);
+                    aadhar2File = persistImage( photo ,"sdf");
+                }else {
+                    aadhar2.setImageBitmap(getRotatedImage(selectedImage));
+                    aadhar2File = persistImage( getRotatedImage(selectedImage) ,"dsf");
+                }
+                aadhar2.setContentDescription("actual");
+                uploadData(aadhar2File, "Aadhar","aadhar2");
 
-                File aadhar2File = new File(getRealPathFromURI(selectedImage));
-                uploadData(aadhar2File, "Aadhar");
+
             }
             if (requestCode == PICK_IMAGE_PAN) {
 
-                if(aadhar2.getContentDescription().equals("format"))
-                    deleteAadhar2(pan);
+                File panFile=null;
+                if(selectedImage==null){
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    pan.setImageBitmap(photo);
+                    panFile = persistImage( photo ,"sdf");
+                }else {
+                    pan.setImageBitmap(getRotatedImage(selectedImage));
+                    panFile = persistImage( getRotatedImage(selectedImage) ,"dsf");
+                }
+                pan.setContentDescription("actual");
+                uploadData(panFile, "PAN","pan");
 
-                Picasso.get()
-                        .load(selectedImage)
-                        .into(pan);
 
-                File panFile = new File(getRealPathFromURI(selectedImage));
-                uploadData(panFile, "PAN");
             }
 
 
@@ -113,10 +147,14 @@ public class DocumentsActivity extends AppCompatActivity {
     }
 
 
+
+
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
             //resume tasks needing this permission
             if (requestCode == PICK_IMAGE_AADHAR_1)
                 chooseImage(PICK_IMAGE_AADHAR_1);
@@ -178,12 +216,6 @@ public class DocumentsActivity extends AppCompatActivity {
                 String body = response.body().string();
                 //Log.i(TAG,"documents :"+body);
 
-                try {
-                    JSONObject jsonObject = new JSONObject(body);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
 
                 if (response.isSuccessful()) {
 
@@ -211,6 +243,7 @@ public class DocumentsActivity extends AppCompatActivity {
                                                     .load(url)
                                                     .into(aadhar2);
 
+                                            aadhar2Url = url;
                                             aadhar2Id = id;
 
                                         } else {
@@ -219,6 +252,7 @@ public class DocumentsActivity extends AppCompatActivity {
                                                     .load(url)
                                                     .into(aadhar1);
 
+                                            aadhar1Url = url;
                                             aadhar1Id = id;
                                         }
 
@@ -234,6 +268,7 @@ public class DocumentsActivity extends AppCompatActivity {
                                                 .load(url)
                                                 .into(pan);
 
+                                        panUrl = url;
                                         panId = id;
 
                                     }
@@ -258,18 +293,41 @@ public class DocumentsActivity extends AppCompatActivity {
 
 
     public void uploadAadharFront(View view) {
+        if(aadhar1.getContentDescription().equals("actual")){
+            Intent intent  = new Intent(this,DocumentImage.class);
+            intent.putExtra("image_url",aadhar1Url);
+            startActivity(intent);
+            return;
+        }
+
         if (isStoragePermissionGranted(PICK_IMAGE_AADHAR_1)) {
             chooseImage(PICK_IMAGE_AADHAR_1);
         }
     }
 
     public void uploadAadharBack(View view) {
+
+        if(aadhar2.getContentDescription().equals("actual")){
+            Intent intent  = new Intent(this,DocumentImage.class);
+            intent.putExtra("image_url",aadhar2Url);
+            startActivity(intent);
+            return;
+        }
+
         if (isStoragePermissionGranted(PICK_IMAGE_AADHAR_2)) {
             chooseImage(PICK_IMAGE_AADHAR_2);
         }
     }
 
     public void uploadPan(View view) {
+        if(pan.getContentDescription().equals("actual")){
+            Intent intent  = new Intent(this,DocumentImage.class);
+            intent.putExtra("image_url",panUrl);
+            startActivity(intent);
+            return;
+        }
+
+
         if (isStoragePermissionGranted(PICK_IMAGE_PAN)) {
             chooseImage(PICK_IMAGE_PAN);
         }
@@ -289,34 +347,21 @@ public class DocumentsActivity extends AppCompatActivity {
         startActivityForResult(chooserIntent, permisson);
 
 
-
-
     }
 
-/*
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-
-
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-        }
-    }
-*/
 
 
 
     public  boolean isStoragePermissionGranted(int permissionCode) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
+                        && checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED ) {
                 return true;
             } else {
 
-                ActivityCompat.requestPermissions(DocumentsActivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, permissionCode);
+                ActivityCompat.requestPermissions(DocumentsActivity.this, new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE,
+                                Manifest.permission.CAMERA},
+                                permissionCode);
                 return false;
             }
         }
@@ -329,7 +374,7 @@ public class DocumentsActivity extends AppCompatActivity {
 
 
 
-    private void uploadData(File file , String type ) {
+    private void uploadData(File file , String type , final String document) {
 
         OkHttpClient client = new OkHttpClient();
         progressDialog.setMessage("Loading...");
@@ -368,16 +413,38 @@ public class DocumentsActivity extends AppCompatActivity {
                 String body = response.body().string();
                 Log.i(TAG,body);
 
+                try {
+                    JSONObject jsonObject = new JSONObject(body);
+                    String url = jsonObject.getString("image");
+
+                    if(document.equals("aadhar1")){
+                        aadhar1Url = url;
+                    }else if(document.equals("aadhar2")){
+                        aadhar2Url = url;
+                    }else if(document.equals("pan")){
+                        panUrl = url;
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+
                 if(response.isSuccessful()){
                     DocumentsActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+
+
+
                             Toast.makeText(DocumentsActivity.this,"Document Uploaded",Toast.LENGTH_SHORT).show();
                         }
                     });
-                    progressDialog.dismiss();
-                }
 
+                }else {
+
+                }
+                progressDialog.dismiss();
             }
         });
 
@@ -396,11 +463,21 @@ public class DocumentsActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     public boolean onSupportNavigateUp() {
         onBackPressed();
-
         return super.onSupportNavigateUp();
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        Intent returnIntent = new Intent();
+        returnIntent.putExtra("result","update");
+        setResult(RESULT_OK,returnIntent);
+        finish();
+        super.onBackPressed();
     }
 
     public void deleteAadhar1(View view) {
@@ -589,4 +666,101 @@ public class DocumentsActivity extends AppCompatActivity {
         });
 
     }
+
+
+    public Bitmap getRotatedImage(Uri selectedImage){
+
+
+        Bitmap rotatedBitmap=null;
+        try {
+            ExifInterface ei = null;
+            ei = new ExifInterface(getRealPathFromURI(selectedImage));
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+            Bitmap bitmap = null;
+            bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+
+            rotatedBitmap = null;
+            switch(orientation) {
+
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotatedBitmap = rotateImage(bitmap, 90);
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotatedBitmap = rotateImage(bitmap, 180);
+                    break;
+
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotatedBitmap = rotateImage(bitmap, 270);
+                    break;
+
+                case ExifInterface.ORIENTATION_NORMAL:
+                default:
+                    rotatedBitmap = bitmap;
+            }
+        } catch (IOException e) {
+            Log.i("InfoText","exception :"+e.getMessage());
+            e.printStackTrace();
+        }
+
+
+
+
+        return rotatedBitmap;
+    }
+
+    private  File persistImage(Bitmap bitmap, String name) {
+        File filesDir = getApplicationContext().getFilesDir();
+        File imageFile = new File(filesDir, name + ".jpg");
+
+        OutputStream os;
+        try {
+            os = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            Log.e(this.getClass().getSimpleName(), "Error writing bitmap", e);
+        }
+
+        return imageFile;
+    }
+
+    public File getFileFromBitmap(Bitmap bitmap){
+        File f = new File(this.getCacheDir(),"sdf.jpg" );
+        try {
+            f.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //Convert bitmap to byte array
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 0 /*ignored for PNG*/, bos);
+        byte[] bitmapdata = bos.toByteArray();
+
+        //write the bytes in file
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(f);
+            fos.write(bitmapdata);
+            fos.flush();
+            fos.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return f;
+    }
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
+
 }

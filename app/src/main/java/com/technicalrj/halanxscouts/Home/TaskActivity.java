@@ -30,7 +30,11 @@ import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
 import com.technicalrj.halanxscouts.Wallet.TaskPayment;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -48,6 +52,7 @@ public class TaskActivity extends AppCompatActivity {
     LinearLayout sub_task_layout;
     CardView customer_card;
     Button done_button;
+    String firstName,lastName;
 
 
 
@@ -128,8 +133,8 @@ public class TaskActivity extends AppCompatActivity {
             customer_card.setVisibility(View.INVISIBLE);
         }else {
 
-            String firstName = scheduledTask.getCustomer().getUser().getFirstName();
-            String lastName = scheduledTask.getCustomer().getUser().getLastName();
+            firstName = scheduledTask.getCustomer().getUser().getFirstName();
+            lastName = scheduledTask.getCustomer().getUser().getLastName();
             customer_name.setText(firstName.substring(0,1).toUpperCase() + firstName.substring(1)  +" "+ lastName.substring(0,1).toUpperCase() + lastName.substring(1));
 
             Picasso.get()
@@ -157,13 +162,13 @@ public class TaskActivity extends AppCompatActivity {
                         //enable button
 
                         done_button.setEnabled(true);
-                        done_button.setBackgroundTintList(getResources().getColorStateList(R.color.colorEnabled));
+                        done_button.setBackground(getResources().getDrawable(R.drawable.button_shape));
 
                     }else {
                         //disable it
 
                         done_button.setEnabled(false);
-                        done_button.setBackgroundTintList(getResources().getColorStateList(R.color.colorDisabled));
+                        done_button.setBackground(getResources().getDrawable(R.drawable.button_shape_dark_grey));
 
                     }
 
@@ -182,7 +187,6 @@ public class TaskActivity extends AppCompatActivity {
         for (int i = 0; i <sub_task_layout.getChildCount() ; i++) {
             LinearLayout linearLayout = (LinearLayout) sub_task_layout.getChildAt(i);
             CheckBox checkbox= (CheckBox) linearLayout.getChildAt(0);
-            Log.i("InfoText","checkbox"+i+" :"+checkbox.isChecked());
             if(!checkbox.isChecked())
                 return false;
 
@@ -221,7 +225,11 @@ public class TaskActivity extends AppCompatActivity {
     }
 
     public void chatCustomer(View view) {
-        startActivity(new Intent(this,ChatWindow.class));
+        startActivity(new Intent(this,ChatWindow.class)
+                .putExtra("id",id+"")
+                .putExtra("first_name",firstName)
+                .putExtra("last_name",lastName)
+        );
     }
 
     public void saveData(View view) {
@@ -306,5 +314,40 @@ public class TaskActivity extends AppCompatActivity {
 
 
 
+    }
+
+    public void setReminder(View view) {
+
+
+
+        String givenDateString =scheduledTask.getScheduledAt();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM yyyy hh:mm a");
+        try {
+            Date mDate = sdf.parse(givenDateString);
+            long timeInMilliseconds = mDate.getTime();
+
+            Intent intent = new Intent(Intent.ACTION_EDIT);
+            intent.setType("vnd.android.cursor.item/event");
+            /*scheduledTask.getScheduledAt()*/
+            intent.putExtra("beginTime", timeInMilliseconds);
+            intent.putExtra("allDay", false);
+            intent.putExtra("endTime", timeInMilliseconds+20*60*1000);
+            intent.putExtra("title", scheduledTask.getCategory().getName()+" Task");
+            startActivity(intent);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+
+    }
+
+    public void moreInfo(View view) {
+
+        String url = "https://halanx.com/house/"+id;
+        Intent i = new Intent(Intent.ACTION_VIEW);
+        i.setData(Uri.parse(url));
+        startActivity(i);
     }
 }

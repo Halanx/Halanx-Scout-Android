@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
@@ -22,6 +23,7 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.JsonObject;
+import com.technicalrj.halanxscouts.Home.ScoutAcceptanceActivity;
 import com.technicalrj.halanxscouts.HomeActivity;
 import com.technicalrj.halanxscouts.Notification.NoficationPojo.Notification;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
@@ -39,11 +41,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.ContentValues.TAG;
+import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public static final String TAG = "InfoText";
     public int Unique_Integer_Number = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
     Profile profile;
+
 
     public MyFirebaseMessagingService() {
 
@@ -52,23 +56,24 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        // ...
 
-        // TODO(developer): Handle FCM messages here.
-        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
 
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
-            Log.d("InfoText", "Message data payload: " + remoteMessage.getData());
+            String data = remoteMessage.getData().get("data");
 
-            Log.e(TAG, "Data Payload: " + remoteMessage.getData().toString());
-            String data = remoteMessage.getData().toString();
+            Log.d(TAG, "Message data payload correct: " + data);
+            Log.d(TAG, "Data Payload full: " + remoteMessage.getData().toString());
             try {
-                JSONObject json = new JSONObject(String.valueOf(data));
-                handleDataMessage(json);
+                JSONObject json = new JSONObject(data);
+                if(json.getJSONObject("category").getString("name").equals("NewTask")){
+                    handleTaskNotification(json);
+                }else {
+                    handleDataMessage(json);
+                }
             } catch (Exception e) {
                 Log.e(TAG, "Exception123:" + e);
             }
@@ -83,9 +88,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String sd =  "{\"data\":{\"title\":\"Payment\",\"content\":\"Helo\",\"category\":{\"name\":\"Payment\",\"image\":\"https:\\/\\/d3agek5ajs3os7.cloudfront.net\\/media\\/public\\/notification-category-images\\/1\\/nMHCi-chatbot.png\"},\"payload\":{}}}";
             try {
                 JSONObject json = new JSONObject(sd);
-
-
                 handleDataMessage(json);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -100,21 +104,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     }
 
 
-    private void handleNotification(String message) {
-        if (!NotificationUtils.isAppIsInBackground(getApplicationContext())) {
-            // app is in foreground, broadcast the push message
-            Intent pushNotification = new Intent(Config.PUSH_NOTIFICATION);
-            pushNotification.putExtra("message", message);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(pushNotification);
-
-            // play notification sound
-            NotificationUtils notificationUtils = new NotificationUtils(getApplicationContext());
-            notificationUtils.playNotificationSound();
-        }else{
-            // If the app is in background, firebase itself handles the notification
-        }
-    }
-
 
 
 
@@ -125,65 +114,71 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Saving reg id to shared preferences
         storeRegIdInPref(token);
 
-        // sending reg id to your server
-        sendRegistrationToServer(token);
-
-
-    }
-
-    private void sendRegistrationToServer(final String token) {
-        // sending gcm token to server
-        Log.e(TAG, "sendRegistrationToServer: " + token);
-
-        final SharedPreferences prefs = getApplicationContext().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
-        final String key = prefs.getString("login_key", null);
-
-
-        final RetrofitAPIClient.DataInterface retrofitAPIClient = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
-        Call<Profile> call2 = retrofitAPIClient.updateProfileGcmId(token,"Token "+key);
-        call2.enqueue(new Callback<Profile>() {
-            @Override
-            public void onResponse(Call<Profile> call, Response<Profile> response) {
-
-            }
-
-            @Override
-            public void onFailure(Call<Profile> call, Throwable t) {
-                Log.i(TAG,t.getMessage());
-                t.printStackTrace();
-            }
-        });
 
 
 
     }
+
+
 
 
 
     private void storeRegIdInPref(String token) {
-        SharedPreferences pref = getApplicationContext().getSharedPreferences("firebase_id", 0);
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("firebase_id", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
-        editor.putString("regId", token);
-        Log.i("InfoText","Token:"+token);
+        editor.putString("gcm_id", token);
         editor.apply();
     }
 
+
+    private void handleTaskNotification(JSONObject json){
+
+
+        try {
+            JSONObject payload = json.getJSONObject("payload");
+            int taskId = payload.getInt("id");
+            String dateTime = payload.getString("scheduled_at");
+            String taskname = payload.getJSONObject("category").getString("name");
+
+            String[] parts = dateTime.split(" ");
+
+
+
+            Intent intent = new Intent(getApplicationContext(), ScoutAcceptanceActivity.class);
+            String time=parts[3]+" "+parts[4];
+            String date=parts[0] +" " + parts[1];
+            intent.putExtra("id",taskId);
+            intent.putExtra("date",date);
+            intent.putExtra("time",time);
+            intent.putExtra("task_name",taskname);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+
+    }
 
     private void handleDataMessage(JSONObject json) {
         Log.e(TAG, "push json: " + json.toString());
 
         String title="",content="",imageUrl="";
         try {
-            title = json.getJSONObject("data").getString("title");
-            content = json.getJSONObject("data").getString("content");
-            imageUrl = json.getJSONObject("data").getJSONObject("category").getString("image");
+            title = json.getJSONObject("category").getString("name");
+            content = json.getString("content");
+            imageUrl = json.getJSONObject("category").getString("image");
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         NotificationCompat.Builder builder;
 
@@ -205,20 +200,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }else {
             builder = new NotificationCompat.Builder(this );
         }
-        final Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/raw/notification");
+        //final Uri alarmSound = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + getApplicationContext().getPackageName() + "/raw/notification");
+        //Uri alarmSound= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
         builder.setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle(title)
                 .setContentText(content)
                 .setContentIntent(pendingIntent)
-                .setSound(alarmSound)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        // notificationId is a unique int for each notification that you must define
         notificationManager.notify(Unique_Integer_Number, builder.build());
 
 
-
+        try {
+            Uri notification = Uri.parse("android.resource://" + getPackageName() + "/" + R.raw.notification);
+            Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+            r.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
 

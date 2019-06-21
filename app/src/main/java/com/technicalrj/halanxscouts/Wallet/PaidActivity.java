@@ -74,7 +74,6 @@ public class PaidActivity extends AppCompatActivity {
 
 
                 Log.i("InfoText","taskPayments.size():"+taskPayments.size());
-                Log.i("InfoText","taskPayments.get():"+taskPayments.get(0).getAmount());
 
                 progressDialog.dismiss();
 

@@ -41,7 +41,6 @@ public class PaidAdapter extends RecyclerView.Adapter<PaidAdapter.PaymentViewHol
     @Override
     public void onBindViewHolder(final PaymentViewHolder holder, final int position) {
 
-        Log.i("InfoText","onBind"+taskPayments.get(0).getAmount());
 
         holder.tv_desc.setText(taskPayments.get(position).getDescription());
         holder.tv_amount.setText("₹ "+taskPayments.get(position).getAmount() );

@@ -13,11 +13,14 @@
         android:layout_marginBottom="10dp">
 
 
-        <ImageView
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/notification_icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:id="@+id/notification_icon"
-            android:src="@drawable/notification_icon_group"/>
+            android:src="@drawable/notification_icon_group"
+            android:scaleType="centerCrop" />
+
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -10,105 +10,159 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
 
-    <RelativeLayout
+    <LinearLayout
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="20dp"
-        tools:context=".Profile.BankDetailsActivity">
+        tools:context=".Profile.BankDetailsActivity"
+        android:orientation="vertical">
 
         <!-- TODO: Update blank fragment layout -->
 
 
-        <EditText
-            android:id="@+id/account_number"
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:background="@drawable/edittext_border"
-            android:ems="10"
-            android:textSize="14sp"
-            android:fontFamily="@font/montserrat_regular"
-            android:hint="Account Number"
-            android:inputType="number"
-            android:padding="10dp" />
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+            <EditText
+                android:id="@+id/account_number"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:ems="10"
+                android:hint="Account Number"
+                android:textSize="14sp"
+                android:fontFamily="@font/montserrat_regular"
+                android:inputType="number"
+                android:padding="10dp" />
+
+
+        </android.support.design.widget.TextInputLayout>
 
 
 
-        <EditText
-            android:id="@+id/confirm_account_number"
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:background="@drawable/edittext_border"
-            android:ems="10"
-            android:textSize="14sp"
-            android:layout_below="@+id/account_number"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/montserrat_regular"
-            android:hint="Confirm Account Number"
-            android:inputType="number"
-            android:padding="10dp" />
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_marginTop="20dp">
+
+            <EditText
+                android:id="@+id/confirm_account_number"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:layout_below="@+id/dsf"
+                android:background="@drawable/edittext_border"
+                android:ems="10"
+                android:fontFamily="@font/montserrat_regular"
+                android:hint="Confirm Account Number"
+                android:inputType="number"
+                android:padding="10dp"
+                android:textSize="14sp" />
+
+        </android.support.design.widget.TextInputLayout>
 
 
-        <EditText
-            android:id="@+id/account_holder_name"
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:background="@drawable/edittext_border"
-            android:ems="10"
-            android:textSize="14sp"
-            android:layout_below="@+id/confirm_account_number"
-            android:fontFamily="@font/montserrat_regular"
-            android:hint="Account Holder's Name"
-            android:layout_marginTop="20dp"
-            android:inputType="text"
-            android:padding="10dp" />
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_marginTop="20dp">
+
+            <EditText
+                android:id="@+id/account_holder_name"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:background="@drawable/edittext_border"
+                android:ems="10"
+                android:textSize="14sp"
+                android:layout_below="@+id/confirm_account_number"
+                android:fontFamily="@font/montserrat_regular"
+                android:hint="Account Holder's Name"
+                android:layout_marginTop="20dp"
+                android:inputType="text"
+                android:padding="10dp" />
+
+        </android.support.design.widget.TextInputLayout>
 
 
-        <EditText
-            android:id="@+id/ifsc_code"
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:background="@drawable/edittext_border"
-            android:ems="10"
-            android:textSize="14sp"
-            android:layout_below="@+id/account_holder_name"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/montserrat_regular"
-            android:hint="IFSC Code"
-            android:inputType="text"
-            android:padding="10dp" />
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_marginTop="20dp">
+
+            <EditText
+                android:id="@+id/ifsc_code"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:background="@drawable/edittext_border"
+                android:ems="10"
+                android:textSize="14sp"
+                android:layout_below="@+id/account_holder_name"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:hint="IFSC Code"
+                android:inputType="text"
+                android:padding="10dp" />
+
+        </android.support.design.widget.TextInputLayout>
 
 
-        <EditText
-            android:id="@+id/bank_name"
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:background="@drawable/edittext_border"
-            android:ems="10"
-            android:textSize="14sp"
-            android:layout_below="@+id/ifsc_code"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/montserrat_regular"
-            android:hint="Bank Name"
-            android:inputType="text"
-            android:padding="10dp" />
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_marginTop="20dp">
+
+            <EditText
+                android:id="@+id/bank_name"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:background="@drawable/edittext_border"
+                android:ems="10"
+                android:textSize="14sp"
+                android:layout_below="@+id/ifsc_code"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:hint="Bank Name"
+                android:inputType="text"
+                android:padding="10dp" />
 
 
-        <EditText
-            android:id="@+id/bank_branch"
+
+        </android.support.design.widget.TextInputLayout>
+
+
+
+        <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="49dp"
-            android:background="@drawable/edittext_border"
-            android:ems="10"
-            android:textSize="14sp"
-            android:layout_below="@+id/bank_name"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/montserrat_regular"
-            android:hint="Bank Branch"
-            android:inputType="text"
-            android:padding="10dp" />
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_marginTop="20dp">
 
 
+            <EditText
+                android:id="@+id/bank_branch"
+                android:layout_width="match_parent"
+                android:layout_height="49dp"
+                android:background="@drawable/edittext_border"
+                android:ems="10"
+                android:textSize="14sp"
+                android:layout_below="@+id/bank_name"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:hint="Bank Branch"
+                android:inputType="text"
+                android:padding="10dp" />
+
+
+        </android.support.design.widget.TextInputLayout>
 
 
 
@@ -117,17 +171,15 @@
             android:layout_width="192dp"
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginBottom="10dp"
             android:background="@drawable/button_shape"
             android:fontFamily="@font/montserrat_regular"
             android:onClick="saveDetails"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text="Save"
+            android:layout_marginTop="20dp"
             android:textAllCaps="false"
+            android:layout_gravity="center_horizontal"
             android:textColor="@color/colorWhite"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -136,7 +188,9 @@
 
 
 
-    </RelativeLayout>
+
+
+    </LinearLayout>
 
 
 

@@ -4,82 +4,150 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Home.ScoutAcceptanceActivity"
     android:background="#F5F5F5"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".Home.ScoutAcceptanceActivity">
 
     <ImageView
         android:id="@+id/im_task"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="147dp"
         android:layout_marginTop="100dp"
-        android:src="@drawable/new_task_group"
-        />
+        android:src="@drawable/new_task_group" />
 
     <TextView
         android:id="@+id/tv_task"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="New Task"
-        android:gravity="center"
-        android:textSize="16dp"
-        android:layout_marginTop="10dp"
         android:layout_below="@id/im_task"
-        android:textColor="#8B8B8B"/>
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/montserrat_regular"
+        android:gravity="center"
+        android:text="New Task"
+        android:textColor="#8B8B8B"
+        android:textSize="16dp"
+        android:textStyle="bold" />
 
 
     <TextView
         android:id="@+id/time"
         android:layout_width="212dp"
         android:layout_height="38dp"
-        android:text="24 Nov, 12:00PM "
-        android:gravity="center"
-        android:textSize="16dp"
-        android:layout_marginTop="10dp"
-        android:layout_gravity="center"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/button_border"
-        android:backgroundTint="#7F83FE"
         android:layout_below="@id/tv_task"
-        android:textColor="#7F83FE"/>
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/button_border"
+        android:textStyle="bold"
+        android:backgroundTint="#7F83FE"
+        android:fontFamily="@font/montserrat_regular"
+        android:gravity="center"
+        android:text="24 Nov, 12:00PM "
+        android:textColor="#7F83FE"
+        android:textSize="16dp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        >
-    <ImageView
-        android:id="@+id/accept_reject_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:gravity="center">
 
-        android:src="@drawable/accept_reject_button" />
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Swipe Right To Accept"
-        android:gravity="center"
-        android:textSize="16dp"
-        android:layout_below="@id/accept_reject_button"
-        android:textColor="#8B8B8B"/>
-
-        <ImageView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/accept_reject_button"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="45dp"
-            android:layout_marginStart="40dp"
-            android:layout_toRightOf="@id/accept_reject_button"
-            android:src="@drawable/accept_arrow" />
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/button_back_swipe">
 
-        <ImageView
-            android:layout_width="wrap_content"
+
+
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="0.3"
+                android:id="@+id/swipe_left"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="50dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/reject_arrow" />
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_weight="0.3"
+                android:id="@+id/swipe_left_2"
+                android:layout_centerVertical="true"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="60dp"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/reject_arrow" />
+
+
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/button_back_swipe"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/accept_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/tick"
+                app:fabCustomSize="@dimen/design_fab_content_size"
+                app:maxImageSize="30dp"
+                android:layout_centerVertical="true"
+                android:backgroundTint="@color/colorWhite" />
+
+
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/swipe_right_2"
+                android:layout_weight="0.3"
+                android:layout_marginEnd="60dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/swipe_right" />
+
+
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:id="@+id/swipe_right"
+                android:layout_weight="0.3"
+                android:layout_marginEnd="50dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/swipe_right" />
+
+
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="45dp"
-            android:layout_marginEnd="40dp"
-            android:layout_toLeftOf="@id/accept_reject_button"
-            android:src="@drawable/reject_arrow" />
+            android:layout_below="@id/accept_reject_button"
+            android:layout_marginTop="30dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="center"
+            android:text="Swipe Right To Accept"
+            android:textColor="#8B8B8B"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+
+
 
 
     </RelativeLayout>

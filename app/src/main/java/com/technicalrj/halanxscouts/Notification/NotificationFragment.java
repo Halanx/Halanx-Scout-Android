@@ -82,8 +82,12 @@ public class NotificationFragment extends Fragment {
 
 
                 Log.i("InfoText","notificationArrayList.size()"+ notificationArrayList.size());
-
-                ArrayList<Notification> notiList  = (ArrayList<Notification>) response.body();
+                ArrayList<Notification> notiList  = new ArrayList<>();
+                for (Notification notification:(ArrayList<Notification>) response.body()) {
+                    if(notification.getPayload()==null){
+                        notiList.add(notification);
+                    }
+                }
                 notificationArrayList.clear();
                 notificationArrayList.addAll(notiList);
                 adapter.notifyDataSetChanged();

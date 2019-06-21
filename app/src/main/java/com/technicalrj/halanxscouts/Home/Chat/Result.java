@@ -73,4 +73,15 @@ public class Result {
         this.role = role;
     }
 
+    @Override
+    public String toString() {
+        return "Result{" +
+                "id=" + id +
+                ", createdAt='" + createdAt + '\'' +
+                ", isRead=" + isRead +
+                ", readAt=" + readAt +
+                ", content='" + content + '\'' +
+                ", role='" + role + '\'' +
+                '}';
+    }
 }

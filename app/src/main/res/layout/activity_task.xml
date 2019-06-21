@@ -123,6 +123,7 @@
                         android:fontFamily="@font/montserrat_regular"
                         android:textStyle="bold"
                         android:textColor="#7F83FE"
+                        android:onClick="setReminder"
                         android:layout_marginEnd="10dp"/>
 
 
@@ -155,6 +156,7 @@
                         android:textStyle="bold"
                         android:layout_marginStart="10dp"
                         android:textColor="#8B8B8B"
+                        android:scaleType="centerCrop"
                         android:layout_centerVertical="true"
                         android:src="@drawable/bed_icon"
 
@@ -209,6 +211,7 @@
                         android:layout_height="wrap_content"
                         android:layout_toRightOf="@id/house_pic"
                         android:text="More Info"
+                        android:onClick="moreInfo"
                         android:fontFamily="@font/montserrat_regular"
                         android:textStyle="bold"
                         android:layout_alignParentBottom="true"
@@ -219,8 +222,8 @@
 
 
                     <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
                         android:layout_alignParentBottom="true"
                         android:layout_marginBottom="5dp"
                         android:layout_marginEnd="5dp"
@@ -283,8 +286,8 @@
                         android:padding="5dp">
 
                         <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             android:src="@drawable/call_icon_group"
                             android:onClick="callCustomer"/>
 
@@ -299,8 +302,8 @@
                         android:padding="5dp">
 
                         <ImageView
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             android:src="@drawable/chat_icon_group"
                             android:onClick="chatCustomer"/>
 
@@ -382,9 +385,8 @@
                     android:id="@+id/done_button"
                     android:layout_width="170dp"
                     android:layout_height="50dp"
-                    android:background="@drawable/button_shape"
+                    android:background="@drawable/button_shape_dark_grey"
                     android:enabled="false"
-                    android:backgroundTint="@color/colorDisabled"
                     android:fontFamily="@font/montserrat_regular"
                     android:layout_marginTop="30dp"
                     android:paddingLeft="20dp"

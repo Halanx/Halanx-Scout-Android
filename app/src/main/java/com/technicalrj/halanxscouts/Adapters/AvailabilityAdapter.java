@@ -10,18 +10,24 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 
+
 import com.technicalrj.halanxscouts.Home.AvailabiltyTime;
+import com.technicalrj.halanxscouts.Home.HomeFragment;
 import com.technicalrj.halanxscouts.R;
 
 import java.util.ArrayList;
+
+import static com.technicalrj.halanxscouts.Home.HomeFragment.fromTime;
+import static com.technicalrj.halanxscouts.Home.HomeFragment.save_button;
+import static com.technicalrj.halanxscouts.Home.HomeFragment.toTime;
 
 public class AvailabilityAdapter extends BaseAdapter {
 
 
     private ArrayList<AvailabiltyTime> availibilityList;
     private Context mContext;
-    public boolean isDateSelected=false;
     public String selectedDate;
+    public boolean isDateSelected;
 
     public AvailabilityAdapter(Context c,ArrayList<AvailabiltyTime> availibilityList) {
         this.availibilityList = availibilityList;
@@ -96,6 +102,11 @@ public class AvailabilityAdapter extends BaseAdapter {
                     }
                 }
                 finalConvertView.setBackgroundTintList(mContext.getResources().getColorStateList(R.color.colorFace));
+
+                if(fromTime && toTime && isDateSelected){
+                    save_button.setEnabled(true);
+                    save_button.setBackgroundTintList(mContext.getResources().getColorStateList(R.color.colorGreen));
+                }
 
             }
         });

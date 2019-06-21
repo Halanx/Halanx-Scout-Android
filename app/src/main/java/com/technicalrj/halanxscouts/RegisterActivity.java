@@ -52,6 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Register");
 
 
         firstName = findViewById(R.id.first_name);

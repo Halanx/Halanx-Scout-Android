@@ -1,17 +1,29 @@
 package com.technicalrj.halanxscouts.Home;
 
 import android.app.Dialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.media.AudioAttributes;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +41,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.technicalrj.halanxscouts.Adapters.AvailabilityAdapter;
@@ -36,15 +49,19 @@ import com.technicalrj.halanxscouts.Adapters.TaskAdapter;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.HomeActivity;
 import com.technicalrj.halanxscouts.LoginActivity;
+import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.MultipartBody;
@@ -73,6 +90,12 @@ public class HomeFragment extends Fragment {
     ArrayList<ScheduledTask> scheduledTaskList;
     LinearLayout avalabilityLayout;
     LayoutInflater inflater;
+    public static boolean onlineStatus = false;
+    SharedPreferences prefs;
+    public static boolean fromTime=false,toTime=false,selectedDate=false;
+    public static Button save_button;
+    public int Unique_Integer_Number = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+    public String gcmId;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -104,11 +127,25 @@ public class HomeFragment extends Fragment {
         addSchedule = v.findViewById(R.id.addSchedule);
         go_online = v.findViewById(R.id.go_online);
 
-        final SharedPreferences prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
+        prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
+        onlineStatus= prefs.getBoolean("online_status",false);
 
 
         avalabilityLayout = v.findViewById(R.id.availability);
+
+
+        if(onlineStatus){
+            //button tells now to get offline
+            setButtonState(false);
+        }else {
+            //button tells now to get online
+            setButtonState(true);
+        }
+
+
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading...");
 
 
 
@@ -123,24 +160,25 @@ public class HomeFragment extends Fragment {
                 final ArrayList<ScheduleAvailability> list = (ArrayList<ScheduleAvailability>) response.body();
                 for (int i = 0; i <list.size() ; i++) {
 
-
-
-
+                    progressDialog.dismiss();
                     addScheduleInList(list.get(i));
-
 
                 }
             }
 
             @Override
             public void onFailure(retrofit2.Call<List<ScheduleAvailability>> call, Throwable t) {
-
+                progressDialog.dismiss();
             }
         });
 
 
 
-
+        //Save gcm id to server everytime from shared prefs
+        SharedPreferences prefs2 = getActivity().getSharedPreferences("firebase_id", MODE_PRIVATE);
+        gcmId = prefs2.getString("gcm_id", "");
+        Log.i("InfoText","Home : gcm_id:"+gcmId);
+        sendRegistrationToServer(gcmId);
 
 
 
@@ -150,18 +188,21 @@ public class HomeFragment extends Fragment {
 
         //Get all tasks
 
+        progressDialog.show();
         Call<List<ScheduledTask>> call2 = availabilityInterface.getAllTasks("Token "+key);
         call2.enqueue(new Callback<List<ScheduledTask>>() {
             @Override
             public void onResponse(Call<List<ScheduledTask>> call, Response<List<ScheduledTask>> response) {
                 scheduledTaskList.addAll( response.body()) ;
 
+                progressDialog.dismiss();
                 taskAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onFailure(Call<List<ScheduledTask>> call, Throwable t) {
 
+                progressDialog.dismiss();
             }
         });
 
@@ -170,7 +211,34 @@ public class HomeFragment extends Fragment {
         go_online.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(),ScoutAcceptanceActivity.class));
+
+
+                if(onlineStatus){
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    changeOnlineStatus();
+                                    break;
+
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    dialog.dismiss();
+                                    break;
+                            }
+                        }
+                    };
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setMessage("Are you sure you want to Go Offline")
+                            .setPositiveButton("Yes", dialogClickListener)
+                            .setNegativeButton("No", dialogClickListener)
+                            .show();
+
+                }else {
+                    changeOnlineStatus();
+                }
+
+
             }
         });
 
@@ -196,12 +264,14 @@ public class HomeFragment extends Fragment {
 
 
 
+                fromTime = false;
+                toTime = false;
 
                 //Setting onClickListener
 
                 final Button from = view.findViewById(R.id.from);
                 final Button to = view.findViewById(R.id.to);
-                final Button save_button = view.findViewById(R.id.save_button);
+                save_button = view.findViewById(R.id.save_button);
 
 
                 from.setOnClickListener(new View.OnClickListener() {
@@ -218,6 +288,7 @@ public class HomeFragment extends Fragment {
                                 boolean isPM = (selectedHour >= 12);
                                 from.setText(String.format("%02d:%02d %s", (selectedHour == 12 || selectedHour == 0) ? 12 : selectedHour % 12, selectedMinute, isPM ? "PM" : "AM"));
 
+                                fromTime = true;
                                 from.setBackgroundTintList(getResources().getColorStateList(R.color.colorFace));
                                 if(availabilityAdapter.isDateSelected && from.getText().toString().contains(":") && to.getText().toString().contains(":")){
                                     save_button.setEnabled(true);
@@ -226,15 +297,9 @@ public class HomeFragment extends Fragment {
 
 
                             }
-                        }, hour, minute, false);//Yes 24 hour time
+                        }, hour, 0, false);//Yes 24 hour time
                         mTimePicker.setTitle("Select Time");
                         mTimePicker.show();
-
-
-
-
-
-
 
                     }
                 }) ;
@@ -250,6 +315,7 @@ public class HomeFragment extends Fragment {
                             @Override
                             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
 
+                                toTime = true;
                                 boolean isPM = (selectedHour >= 12);
                                 to.setText(String.format("%02d:%02d %s", (selectedHour == 12 || selectedHour == 0) ? 12 : selectedHour % 12, selectedMinute, isPM ? "PM" : "AM"));
                                 to.setBackgroundTintList(getResources().getColorStateList(R.color.colorFace));
@@ -259,7 +325,7 @@ public class HomeFragment extends Fragment {
                                     save_button.setBackgroundTintList(getResources().getColorStateList(R.color.colorGreen));
                                 }
                             }
-                        }, hour, minute, false);//Yes 24 hour time
+                        }, hour, 0, false);//Yes 24 hour time
                         mTimePicker.setTitle("Select Time");
                         mTimePicker.show();
 
@@ -296,11 +362,80 @@ public class HomeFragment extends Fragment {
 
 
 
-
-
         return v;
 
 
+
+    }
+
+    private void changeOnlineStatus() {
+
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("gcm_id",gcmId);
+        jsonObject.addProperty("active",!onlineStatus);
+
+        RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
+        Call<Profile> call = availabilityInterface.updateOnlineStatus(jsonObject,"Token "+key);
+        call.enqueue(new Callback<Profile>() {
+            @Override
+            public void onResponse(Call<Profile> call, Response<Profile> response) {
+                if(response.isSuccessful()){
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+
+                            onlineStatus = !onlineStatus;
+
+                            String status ;
+                            if(onlineStatus){
+                                status = "Online";
+                                setButtonState(false);
+                            }else {
+                                status = "Offline";
+                                setButtonState(true);
+                            }
+
+                            SharedPreferences.Editor editor = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE).edit();
+                            editor.putBoolean("online_status", onlineStatus);
+                            editor.apply();
+
+
+                            Toast.makeText(getActivity(),"Status "+status,Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+                }else {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getActivity(),"Some Error Occurred",Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Profile> call, Throwable t) {
+            }
+        });
+
+    }
+
+
+    private void setButtonState(boolean b) {
+
+
+        //if b is false it means user if online and wants to go offline
+        if(b){
+            go_online.setBackground(getActivity().getDrawable(R.drawable.go_online_shape));
+            go_online.setText("Go Online");
+            Log.i("InfoText","button showing go online");
+        }else {
+
+            go_online.setBackground(getActivity().getDrawable(R.drawable.go_offline_shape));
+            go_online.setText("Go Offline");
+            Log.i("InfoText","button showing go offline");
+        }
 
     }
 
@@ -366,10 +501,32 @@ public class HomeFragment extends Fragment {
                 delete_tv.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        deleteScheduleFromServer(scheduleAvailability.getId());
-                        dialog.dismiss();
-                        avalabilityLayout.removeView(view);
 
+
+                        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogdsa, int which) {
+                                switch (which){
+                                    case DialogInterface.BUTTON_POSITIVE:
+                                        deleteScheduleFromServer(scheduleAvailability.getId());
+                                        dialogdsa.dismiss();
+                                        dialog.dismiss();
+
+                                        avalabilityLayout.removeView(view);
+                                        break;
+
+                                    case DialogInterface.BUTTON_NEGATIVE:
+                                        dialogdsa.dismiss();
+                                        break;
+                                }
+                            }
+                        };
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setMessage("Are you sure you want to Delete this Availability?")
+                                .setPositiveButton("Yes", dialogClickListener)
+                                .setNegativeButton("No", dialogClickListener)
+                                .show();
 
 
                     }
@@ -683,7 +840,6 @@ public class HomeFragment extends Fragment {
 
 
 
-
                 dialog.show();
             }
         });
@@ -821,6 +977,39 @@ public class HomeFragment extends Fragment {
         return list;
 
     }
+
+
+    private void sendRegistrationToServer(String token) {
+        // sending gcm token to server
+
+
+        HashMap<String,String> map = new HashMap<>();
+        map.put("gcm_id",token);
+
+        final RetrofitAPIClient.DataInterface retrofitAPIClient = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
+        Call<Profile> call2 = retrofitAPIClient.updateProfileGcmId(map,"Token "+key);
+        call2.enqueue(new Callback<Profile>() {
+            @Override
+            public void onResponse(Call<Profile> call, Response<Profile> response) {
+
+                if(response.isSuccessful()){
+                    Log.i("InfoText","returned from server:"+response.body().getGcmId());
+                }else {
+                    Log.i("InfoText","token erro:"+response.errorBody().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Profile> call, Throwable t) {
+                Log.i(TAG,t.getMessage());
+                t.printStackTrace();
+            }
+        });
+
+
+
+    }
+
 
     public static String removeZero(String str)
     {

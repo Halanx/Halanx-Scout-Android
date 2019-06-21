@@ -37,6 +37,7 @@ public class ForgotPassword extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setTitle("Forgot Password");
 
         phoneNumber = findViewById(R.id.phone_number);
 

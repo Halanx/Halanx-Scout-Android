@@ -38,7 +38,7 @@
                 <RelativeLayout
                     android:layout_width="92dp"
                     android:layout_height="91dp">
-                    <ImageView
+                    <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/imageView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
