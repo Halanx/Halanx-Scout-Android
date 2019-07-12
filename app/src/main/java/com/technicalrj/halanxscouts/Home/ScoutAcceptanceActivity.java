@@ -7,6 +7,7 @@ import android.graphics.Point;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.animation.DynamicAnimation;
 import android.support.animation.SpringAnimation;
 import android.support.animation.SpringForce;
@@ -88,6 +89,13 @@ public class ScoutAcceptanceActivity extends AppCompatActivity {
         key = prefs.getString("login_key", null);
 
 
+        //Close this activity after 2 minutes
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 2*60*1000);
 
 
 

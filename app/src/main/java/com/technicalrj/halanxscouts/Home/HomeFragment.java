@@ -228,7 +228,7 @@ public class HomeFragment extends Fragment {
                             }
                         }
                     };
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.AlertDialogCustom);
                     builder.setMessage("Are you sure you want to Go Offline")
                             .setPositiveButton("Yes", dialogClickListener)
                             .setNegativeButton("No", dialogClickListener)
@@ -247,7 +247,7 @@ public class HomeFragment extends Fragment {
         addSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialog = new Dialog(getActivity());
+                dialog = new Dialog(getActivity(),R.style.AlertDialogCustom);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
                 View view = inflater.inflate(R.layout.dialog_scout_add_schedule,null);
@@ -471,7 +471,7 @@ public class HomeFragment extends Fragment {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog = new Dialog(getActivity());
+                final Dialog dialog = new Dialog(getActivity(),R.style.AlertDialogCustom);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.dialog_scout_schedule);
 
@@ -522,7 +522,7 @@ public class HomeFragment extends Fragment {
                             }
                         };
 
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.AlertDialogCustom);
                         builder.setMessage("Are you sure you want to Delete this Availability?")
                                 .setPositiveButton("Yes", dialogClickListener)
                                 .setNegativeButton("No", dialogClickListener)
@@ -546,7 +546,7 @@ public class HomeFragment extends Fragment {
 
         Log.i("InfoText","Update :"+startTime+"---"+endTime);
 
-        dialog = new Dialog(getActivity());
+        dialog = new Dialog(getActivity(),R.style.AlertDialogCustom);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
         View view = inflater.inflate(R.layout.dialog_scout_add_schedule,null);
@@ -799,7 +799,7 @@ public class HomeFragment extends Fragment {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final Dialog dialog = new Dialog(getActivity());
+                final Dialog dialog = new Dialog(getActivity(),R.style.AlertDialogCustom);
                 dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                 dialog.setContentView(R.layout.dialog_scout_schedule);
 

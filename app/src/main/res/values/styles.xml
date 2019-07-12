@@ -6,16 +6,24 @@
         <item name="colorPrimary">@android:color/white</item>
         <item name="colorPrimaryDark">@android:color/black</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:fontFamily">@font/montserrat_regular</item>
+        <item name="fontFamily">@font/montserrat_regular</item>
+        <item name="android:dialogTheme">@style/AlertDialogCustom</item>
     </style>
+
 
     <style name="AppThemeNoBar" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@android:color/white</item>
         <item name="colorPrimaryDark">@android:color/black</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:fontFamily">@font/montserrat_regular</item>
     </style>
 
 
+    <style name="AlertDialogCustom"   parent="Theme.AppCompat.DayNight.Dialog">
+        <item name="android:fontFamily">@font/montserrat_regular</item>
+    </style>
 
 
 

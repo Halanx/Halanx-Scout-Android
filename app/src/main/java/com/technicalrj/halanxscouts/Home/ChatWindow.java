@@ -14,7 +14,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.engineio.client.Transport;
 import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Manager;
 import com.github.nkzawa.socketio.client.Socket;
 import com.technicalrj.halanxscouts.Adapters.ChatAdapter;
 import com.technicalrj.halanxscouts.Home.Chat.Messages;
@@ -28,8 +30,10 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -85,11 +89,33 @@ public class ChatWindow extends AppCompatActivity {
 
 
         try {
-            mSocket = IO.socket("http://chat.socket.io");
+            IO.Options opts = new IO.Options();
+            mSocket = IO.socket("https://consumerchat.herokuapp.com");
             mSocket.on(Socket.EVENT_CONNECT, onConnect);
 
+            mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    Transport transport = (Transport)args[0];
+                    transport.on(Transport.EVENT_REQUEST_HEADERS, new Emitter.Listener() {
+                        @Override
+                        public void call(Object... args) {
+                            Map<String, List<String>> headers = (Map<String, List<String>>)args[0];
+                            // modify request headers
+                            headers.put("Authorization", Arrays.asList( "Token "+key));
+                            headers.put("PARTICIPANT-TYPE", Arrays.asList("scout"));
+                            // modify request headers
+                        }
+                    }).on(Transport.EVENT_RESPONSE_HEADERS, new Emitter.Listener() {
+                        @Override
+                        public void call(Object... args) {
+                            Log.i("InfoText", "error header call: "+args[0]);
+                        }
+                    });
+                }
+            });
             mSocket.connect();
-            mSocket.on("onChat", onChat);
+            mSocket.on("chat_event", chat_event);
             mSocket.on(Socket.EVENT_DISCONNECT, onDisconnect);
             mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);
 
@@ -156,13 +182,14 @@ public class ChatWindow extends AppCompatActivity {
     public void sendText(View view) {
 
         final String text = chat_text.getText().toString().trim();
+        Log.i("ChatWindow", "sendText: "+text);
         if(text.equals(""))
             return;
 
         HashMap<String,String> map  = new HashMap<>();
         map.put("content",text);
         RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
-        Call<Result> call = availabilityInterface.createMessage(map,id,"Token "+key,"scout");
+        Call<Result> call = availabilityInterface.createMessage(map,id,"Token "+key,"scout","application/json");
         call.enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
@@ -192,7 +219,7 @@ public class ChatWindow extends AppCompatActivity {
 
     }
 
-    private Emitter.Listener onChat = new Emitter.Listener() {
+    private Emitter.Listener chat_event = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             runOnUiThread(new Runnable() {
@@ -269,6 +296,7 @@ public class ChatWindow extends AppCompatActivity {
 
                 }
             });
+            Log.i("InfoText", "call: "+args[0].toString());
         }
     };
 

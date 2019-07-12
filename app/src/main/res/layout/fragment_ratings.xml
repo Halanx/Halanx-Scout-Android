@@ -1,100 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView android:layout_width="match_parent"
+<ScrollView
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     android:foreground="?android:attr/selectableItemBackground"
     android:layout_margin="10dp"
-    app:cardCornerRadius="5dp"
-    app:cardBackgroundColor="@color/colorWhite"
-    android:layout_marginBottom="100dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-
-    <RelativeLayout
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
+    <android.support.v7.widget.CardView android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:foreground="?android:attr/selectableItemBackground"
         android:layout_margin="10dp"
-        tools:context=".RatingsFragment">
-
-        <!-- TODO: Update blank fragment layout -->
-
+        app:cardCornerRadius="5dp"
+        app:cardBackgroundColor="@color/colorWhite"
+        android:layout_marginBottom="100dp"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
         <RelativeLayout
+            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="126dp"
-            android:id="@+id/rel_layout"
-            android:background="@drawable/rating_background_color">
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"
+            tools:context=".RatingsFragment">
+
+            <!-- TODO: Update blank fragment layout -->
+
+
 
             <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="126dp"
+                android:id="@+id/rel_layout"
+                android:background="@drawable/rating_background_color">
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/rating"
+                        android:text=""
+                        android:textColor="@color/colorWhite"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:textSize="65sp" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="  / 5 Stars"
+                        android:textColor="@color/colorWhite"
+                        android:layout_toRightOf="@+id/rating"
+                        android:layout_alignBottom="@+id/rating"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:layout_marginBottom="10dp"
+                        android:textSize="30dp" />
+                </RelativeLayout>
+
+            </RelativeLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:id="@+id/view"
+                android:layout_below="@+id/rel_layout"
+                android:layout_marginTop="30dp"
+                android:background="@color/colorLine">
+            </View>
+
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:id="@+id/textView1"
+                android:text="Things To Improve"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/rating"
-                    android:text=""
-                    android:textColor="@color/colorWhite"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:textSize="65sp" />
+                android:layout_below="@+id/view"
+                android:fontFamily="@font/montserrat_regular"
+                android:textStyle="bold"
+                android:layout_marginTop="30dp"
+                android:textSize="17sp"/>
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="  / 5 Stars"
-                    android:textColor="@color/colorWhite"
-                    android:layout_toRightOf="@+id/rating"
-                    android:layout_alignBottom="@+id/rating"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:layout_marginBottom="10dp"
-                    android:textSize="30dp" />
-            </RelativeLayout>
+
+            <GridView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView1"
+                android:id="@+id/things_to_improve"
+                android:layout_marginTop="30dp"
+                android:numColumns="2">
+            </GridView>
+
+
+
 
         </RelativeLayout>
 
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:id="@+id/view"
-            android:layout_below="@+id/rel_layout"
-            android:layout_marginTop="30dp"
-            android:background="@color/colorLine">
-        </View>
+
+    </android.support.v7.widget.CardView>
 
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView1"
-            android:text="Things To Improve"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/view"
-            android:fontFamily="@font/montserrat_regular"
-            android:textStyle="bold"
-            android:layout_marginTop="30dp"
-            android:textSize="17sp"/>
-
-
-
-        <GridView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView1"
-            android:id="@+id/things_to_improve"
-            android:layout_marginTop="30dp"
-            android:numColumns="2">
-        </GridView>
-
-
-
-
-    </RelativeLayout>
-
-
-
-</android.support.v7.widget.CardView>
+</ScrollView>

@@ -111,7 +111,8 @@ public class RetrofitAPIClient {
         Call<Messages> getMessages( @Path("id") String id,@Query("page") int page , @Header("Authorization") String token , @Header("PARTICIPANT-TYPE") String particationType);
 
         @POST("/chat/conversations/{id}/messages/")
-        Call<Result> createMessage( @Body HashMap<String,String> map, @Path("id") String id,@Header("Authorization") String token , @Header("PARTICIPANT-TYPE") String particationType);
+        Call<Result> createMessage( @Body HashMap<String,String> map, @Path("id") String id,@Header("Authorization") String token , @Header("PARTICIPANT-TYPE") String particationType,
+                                    @Header("Content-Type") String type);
 
 
         @PATCH("/scouts/tasks/{id}/request/")

@@ -100,7 +100,10 @@
                 android:foreground="?android:attr/selectableItemBackground"
                 app:cardCornerRadius="13dp"
                 android:layout_weight="0.5"
+                android:layout_marginStart="1dp"
                 android:layout_marginEnd="10dp"
+                android:layout_marginBottom="1dp"
+                android:layout_marginTop="1dp"
                 android:id="@+id/rel_layout2"
                 >
 
@@ -165,6 +168,7 @@
                 android:layout_height="126dp"
                 android:layout_weight="0.5"
                 app:cardCornerRadius="13dp"
+                android:layout_margin="1dp"
                 android:id="@+id/rel_layout3">
 
 
