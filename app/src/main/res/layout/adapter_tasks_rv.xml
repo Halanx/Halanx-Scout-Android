@@ -1,25 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:elevation="10dp"
-    app:cardCornerRadius="5dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:elevation="10dp"
+    app:cardCornerRadius="5dp">
 
-        <LinearLayout
-            android:id="@+id/ll_layout"
+    <LinearLayout
+        android:id="@+id/ll_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="26dp"
+        android:orientation="vertical"
+        android:padding="5dp">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
-            android:padding="5dp"
-            android:orientation="vertical">
+            android:layout_height="wrap_content">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
             <RelativeLayout
                 android:id="@+id/rl_1"
+                android:layout_toLeftOf="@+id/house_location_parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
@@ -27,35 +29,35 @@
                     android:id="@+id/task_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="House Visit"
+                    android:background="@drawable/rectanglebox"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:gravity="center"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:textStyle="bold"
-                    android:gravity="center"
-                    android:background="@drawable/rectanglebox"
-                    android:textColor="#F65F5F" />
+                    android:text="House Visit"
+                    android:textColor="#F65F5F"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toRightOf="@id/task_name"
                     android:layout_marginLeft="20dp"
-                    android:text="109D, Karol Bagh, Pillar N..."
+                    android:layout_toRightOf="@id/task_name"
                     android:fontFamily="@font/montserrat_regular"
-                    android:textStyle="bold"
+                    android:text="109D, Karol Bagh, Pillar N..."
                     android:textColor="#707070"
-                    android:textSize="12dp" />
+                    android:textSize="12dp"
+                    android:textStyle="bold" />
 
 
                 <TextView
                     android:id="@+id/rs_symbol"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="₹ "
                     android:layout_below="@+id/task_name"
                     android:paddingBottom="5dp"
+                    android:text="₹ "
                     android:textColor="#F65F5F"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -65,10 +67,10 @@
                     android:id="@+id/earning"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:layout_toRightOf="@+id/rs_symbol"
-                    android:text="200"
                     android:layout_below="@+id/task_name"
+                    android:layout_toRightOf="@+id/rs_symbol"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:text="200"
                     android:textColor="#F65F5F"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -77,110 +79,106 @@
                     android:id="@+id/date_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignStart="@+id/address"
-                    android:layout_alignBaseline="@+id/earning"
-                    android:layout_toRightOf="@id/earning"
                     android:layout_below="@+id/address"
+                    android:layout_alignBaseline="@+id/earning"
+                    android:layout_alignStart="@+id/address"
+                    android:layout_toRightOf="@id/earning"
                     android:fontFamily="@font/montserrat_regular"
-                    android:textStyle="bold"
                     android:text="24 AUG (02:30 PM)"
                     android:textColor="#7F83FE"
-                    android:textSize="14dp" />
+                    android:textSize="14dp"
+                    android:textStyle="bold" />
 
             </RelativeLayout>
 
-
-
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="5dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
-                        android:id="@+id/house_location"
-                        android:src="@drawable/home_icon_group"/>
-
-
-                </RelativeLayout>
-
-            </RelativeLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#D6D6D6"
-                />
 
             <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_marginStart="5dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tenantLayout">
+                android:id="@+id/house_location_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="5dp">
 
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/customer_img"
+                <ImageView
+                    android:id="@+id/house_location"
                     android:layout_width="45dp"
-                    android:layout_height="46dp"
-                    android:layout_marginTop="5dp"
-                    android:src="@drawable/profile_icon"
-                    android:scaleType="centerCrop" />
+                    android:layout_height="45dp"
+                    android:src="@drawable/home_icon_group" />
 
-
-
-                <TextView
-                    android:id="@+id/customer_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Janvi Kapoor"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:textStyle="bold"
-                    android:layout_toRightOf="@id/customer_img"
-                    android:textColor="#8B8B8B"
-                    android:textSize="16dp"
-                    android:layout_marginStart="15dp"
-                    android:layout_centerVertical="true"/>
-
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_toLeftOf="@id/chat_layout"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp">
-
-                    <ImageView
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
-                        android:id="@+id/call_icon"
-                        android:src="@drawable/call_icon_group"/>
-
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/chat_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp">
-
-                    <ImageView
-                        android:id="@+id/chat_icon"
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
-                        android:src="@drawable/chat_icon_group"/>
-
-                </RelativeLayout>
 
             </RelativeLayout>
 
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#D6D6D6" />
+
+        <RelativeLayout
+            android:id="@+id/tenantLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp">
 
 
-        </LinearLayout>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/customer_img"
+                android:layout_width="45dp"
+                android:layout_height="46dp"
+                android:layout_marginTop="5dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/profile_icon" />
+
+
+            <TextView
+                android:id="@+id/customer_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="15dp"
+                android:layout_toRightOf="@id/customer_img"
+                android:fontFamily="@font/montserrat_regular"
+                android:text="Janvi Kapoor"
+                android:textColor="#8B8B8B"
+                android:textSize="16dp"
+                android:textStyle="bold" />
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toLeftOf="@id/chat_layout"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/call_icon"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:src="@drawable/call_icon_group" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/chat_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:padding="5dp">
+
+                <ImageView
+                    android:id="@+id/chat_icon"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:src="@drawable/chat_icon_group" />
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
 
 
 </android.support.v7.widget.CardView>

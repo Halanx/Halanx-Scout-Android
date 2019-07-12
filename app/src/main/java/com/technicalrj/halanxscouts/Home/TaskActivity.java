@@ -345,7 +345,7 @@ public class TaskActivity extends AppCompatActivity {
 
     public void moreInfo(View view) {
 
-        String url = "https://halanx.com/house/"+id;
+        String url = "https://halanx.com/house/"+scheduledTask.getHouse().getId();
         Intent i = new Intent(Intent.ACTION_VIEW);
         i.setData(Uri.parse(url));
         startActivity(i);

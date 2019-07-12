@@ -57,6 +57,7 @@ public class BankDetailsActivity extends AppCompatActivity {
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
+
         RetrofitAPIClient.DataInterface retrofitAPIClient = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
         Call<Profile> call = retrofitAPIClient.getProfile("Token "+key);
         call.enqueue(new Callback<Profile>() {

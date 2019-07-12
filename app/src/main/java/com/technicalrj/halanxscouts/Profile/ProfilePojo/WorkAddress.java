@@ -11,28 +11,28 @@ public class WorkAddress {
     private Integer id;
     @SerializedName("street_address")
     @Expose
-    private Object streetAddress;
+    private String streetAddress;
     @SerializedName("city")
     @Expose
     private String city;
     @SerializedName("state")
     @Expose
-    private Object state;
+    private String state;
     @SerializedName("pincode")
     @Expose
-    private Object pincode;
+    private Integer pincode;
     @SerializedName("country")
     @Expose
-    private Object country;
+    private String country;
     @SerializedName("complete_address")
     @Expose
     private String completeAddress;
     @SerializedName("latitude")
     @Expose
-    private Object latitude;
+    private Double latitude;
     @SerializedName("longitude")
     @Expose
-    private Object longitude;
+    private Double longitude;
     @SerializedName("same_as_permanent_address")
     @Expose
     private Boolean sameAsPermanentAddress;
@@ -48,11 +48,11 @@ public class WorkAddress {
         this.id = id;
     }
 
-    public Object getStreetAddress() {
+    public String getStreetAddress() {
         return streetAddress;
     }
 
-    public void setStreetAddress(Object streetAddress) {
+    public void setStreetAddress(String streetAddress) {
         this.streetAddress = streetAddress;
     }
 
@@ -64,27 +64,27 @@ public class WorkAddress {
         this.city = city;
     }
 
-    public Object getState() {
+    public String getState() {
         return state;
     }
 
-    public void setState(Object state) {
+    public void setState(String state) {
         this.state = state;
     }
 
-    public Object getPincode() {
+    public Integer getPincode() {
         return pincode;
     }
 
-    public void setPincode(Object pincode) {
+    public void setPincode(Integer pincode) {
         this.pincode = pincode;
     }
 
-    public Object getCountry() {
+    public String getCountry() {
         return country;
     }
 
-    public void setCountry(Object country) {
+    public void setCountry(String country) {
         this.country = country;
     }
 
@@ -96,19 +96,19 @@ public class WorkAddress {
         this.completeAddress = completeAddress;
     }
 
-    public Object getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Object latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public Object getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Object longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 

@@ -68,11 +68,13 @@ public class ProfileFragment extends Fragment {
 
     private static final int PICK_IMAGE = 1;
     public static final int DOCUMENTS_DETAILS_UPDATE = 4 , BANK_DETAILS_UPDATE=5;
+    private static final int WORK_ADDRESS_UPDATE = 6 ;
     private CardView documents;
     private CardView bank;
     private CardView changePass;
     private CardView help;
     private CardView logout;
+    private CardView workAddress;
 
     private TextView name;
     private TextView phoneNumberTv;
@@ -114,7 +116,7 @@ public class ProfileFragment extends Fragment {
 
         }
 
-        if(requestCode==BANK_DETAILS_UPDATE || requestCode==DOCUMENTS_DETAILS_UPDATE){
+        if(requestCode==BANK_DETAILS_UPDATE || requestCode==DOCUMENTS_DETAILS_UPDATE ){
             if(resultCode == RESULT_OK){
                 String result=data.getStringExtra("result");
                 if(result.equals("update")){
@@ -158,6 +160,7 @@ public class ProfileFragment extends Fragment {
         changePass = view.findViewById(R.id.changePass);
         help = view.findViewById(R.id.help);
         logout = view.findViewById(R.id.logout);
+        workAddress = view.findViewById(R.id.work_address);
 
         name = view.findViewById(R.id.name);
         phoneNumberTv = view.findViewById(R.id.phone_number);
@@ -236,6 +239,13 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        workAddress.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), WorkAddressActivity.class);
+                startActivityForResult(intent,WORK_ADDRESS_UPDATE);
+            }
+        });
 
         logout.setOnClickListener(new View.OnClickListener() {
             @Override

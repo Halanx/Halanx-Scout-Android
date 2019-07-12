@@ -123,6 +123,10 @@ public class RetrofitAPIClient {
         @GET("/scouts/")
         Call<Profile> getRating(@Header("Authorization") String token);
 
+        @PATCH("/scouts/")
+        Call<Profile> updateLocation(@Body JsonObject jsonObject , @Header("Authorization") String token);
+
+
 
     }
 
