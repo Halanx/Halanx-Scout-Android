@@ -5,7 +5,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +49,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
     public void onBindViewHolder(final HomesViewHolder holder, final int position) {
 
 
+        if(position>=scheduledTaskList.size())
+            return;
 
         holder.task_name.setText(scheduledTaskList.get(position).getCategory().getName());
         holder.address.setText(scheduledTaskList.get(position).getHouse().getAddress().getStreetAddress());
@@ -138,7 +140,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
 
     @Override
     public int getItemCount() {
-        return scheduledTaskList.size();
+        return scheduledTaskList.size() ;
     }
 
 

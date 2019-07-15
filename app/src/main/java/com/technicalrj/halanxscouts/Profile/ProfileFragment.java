@@ -15,11 +15,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.Patterns;
@@ -56,7 +56,6 @@ import okhttp3.Response;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
-import static android.support.constraint.Constraints.TAG;
 import static com.technicalrj.halanxscouts.LoginActivity.halanxScout;
 import static com.technicalrj.halanxscouts.RegisterActivity.JSON;
 
@@ -76,6 +75,7 @@ public class ProfileFragment extends Fragment {
     private CardView logout;
     private CardView workAddress;
 
+    public static final String TAG = "ProfileFragment";
     private TextView name;
     private TextView phoneNumberTv;
     private TextView emailTv;
@@ -626,7 +626,7 @@ public class ProfileFragment extends Fragment {
                             @Override
                             public void run() {
                                 Picasso.get()
-                                        .load(profile_pic_thumbnail_url)
+                                        .load(profile_pic_url)
                                         .placeholder(R.drawable.male_avatar)
                                         .transform(new CircleTransform())
                                         .into(imageView);

@@ -1,59 +1,40 @@
 package com.technicalrj.halanxscouts.Home;
 
 import android.app.Dialog;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.media.AudioAttributes;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.GridView;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.technicalrj.halanxscouts.Adapters.AvailabilityAdapter;
 import com.technicalrj.halanxscouts.Adapters.TaskAdapter;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
-import com.technicalrj.halanxscouts.HomeActivity;
-import com.technicalrj.halanxscouts.LoginActivity;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
@@ -64,17 +45,11 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
-import static android.support.constraint.Constraints.TAG;
-import static com.technicalrj.halanxscouts.LoginActivity.halanxScout;
 
 
 /**
@@ -96,6 +71,10 @@ public class HomeFragment extends Fragment {
     public static Button save_button;
     public int Unique_Integer_Number = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
     public String gcmId;
+    public static final String TAG = "HomeFragment";
+    private ImageView noTasksImg;
+    private HorizontalScrollView horizontalScrollView;
+    private ConstraintLayout addScheduleEmpty;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -123,10 +102,14 @@ public class HomeFragment extends Fragment {
         final TaskAdapter taskAdapter = new TaskAdapter(getActivity(),scheduledTaskList);
         task_recycler.setLayoutManager(lm);
         task_recycler.setAdapter(taskAdapter);
+        task_recycler.setNestedScrollingEnabled(false);
 
 
         addSchedule = v.findViewById(R.id.addSchedule);
         go_online = v.findViewById(R.id.go_online);
+        noTasksImg = v.findViewById(R.id.no_tasks_img);
+        addScheduleEmpty = v.findViewById(R.id.add_schedule_empty);
+        horizontalScrollView = v.findViewById(R.id.horizontal_scroll);
 
         prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
@@ -148,7 +131,7 @@ public class HomeFragment extends Fragment {
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
 
-
+        refreshAddButton();
 
         //Get all available scheudle
 
@@ -159,12 +142,15 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<List<ScheduleAvailability>> call, final Response<List<ScheduleAvailability>> response) {
                 final ArrayList<ScheduleAvailability> list = (ArrayList<ScheduleAvailability>) response.body();
+
+
                 for (int i = 0; i <list.size() ; i++) {
 
-                    progressDialog.dismiss();
+
                     addScheduleInList(list.get(i));
 
                 }
+                progressDialog.dismiss();
             }
 
             @Override
@@ -194,10 +180,20 @@ public class HomeFragment extends Fragment {
         call2.enqueue(new Callback<List<ScheduledTask>>() {
             @Override
             public void onResponse(Call<List<ScheduledTask>> call, Response<List<ScheduledTask>> response) {
-                scheduledTaskList.addAll( response.body()) ;
+                if(response.body()!=null){
 
-                progressDialog.dismiss();
-                taskAdapter.notifyDataSetChanged();
+                    if(response.body().size()>0){
+                        scheduledTaskList.addAll( response.body()) ;
+                        taskAdapter.notifyDataSetChanged();
+                        noTasksImg.setVisibility(View.GONE);
+                    }else {
+                        noTasksImg.setVisibility(View.VISIBLE);
+                    }
+
+                    progressDialog.dismiss();
+
+
+                }
             }
 
             @Override
@@ -244,6 +240,12 @@ public class HomeFragment extends Fragment {
         });
 
 
+        addScheduleEmpty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addSchedule.performClick();
+            }
+        });
 
         addSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -467,6 +469,7 @@ public class HomeFragment extends Fragment {
         (layoutParams).setMargins(23,0,0,0);
         view.setLayoutParams(layoutParams);
         avalabilityLayout.addView(view);
+        refreshAddButton();
 
 
         view.setOnClickListener(new View.OnClickListener() {
@@ -514,6 +517,7 @@ public class HomeFragment extends Fragment {
                                         dialog.dismiss();
 
                                         avalabilityLayout.removeView(view);
+                                        refreshAddButton();
                                         break;
 
                                     case DialogInterface.BUTTON_NEGATIVE:
@@ -833,7 +837,7 @@ public class HomeFragment extends Fragment {
                         deleteScheduleFromServer(newScheduleAvailability.getId());
                         dialog.dismiss();
                         avalabilityLayout.removeView(view);
-
+                        refreshAddButton();
 
 
                     }
@@ -1028,6 +1032,16 @@ public class HomeFragment extends Fragment {
         sb.replace(0, i, "");
 
         return sb.toString();  // return in String
+    }
+
+    public void refreshAddButton(){
+        if(avalabilityLayout.getChildCount()==1){
+            addScheduleEmpty.setVisibility(View.VISIBLE);
+            horizontalScrollView.setVisibility(View.GONE);
+        }else {
+            addScheduleEmpty.setVisibility(View.GONE);
+            horizontalScrollView.setVisibility(View.VISIBLE);
+        }
     }
 
 }

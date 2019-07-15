@@ -3,14 +3,13 @@ package com.technicalrj.halanxscouts.Profile;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.technicalrj.halanxscouts.Profile.ProfilePojo.BankDetail;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.WorkAddress;
 import com.technicalrj.halanxscouts.R;

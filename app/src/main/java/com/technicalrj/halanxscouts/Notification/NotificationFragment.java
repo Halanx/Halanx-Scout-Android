@@ -4,14 +4,15 @@ package com.technicalrj.halanxscouts.Notification;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.technicalrj.halanxscouts.Adapters.NotificationAdapter;
 import com.technicalrj.halanxscouts.Notification.NoficationPojo.Notification;
@@ -37,6 +38,7 @@ public class NotificationFragment extends Fragment {
     ArrayList<Notification> notificationArrayList;
     String key;
     NotificationAdapter adapter;
+    ImageView noNotification;
 
     public NotificationFragment() {
         // Required empty public constructor
@@ -51,9 +53,11 @@ public class NotificationFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Notification");
         View v = inflater.inflate(R.layout.fragment_notification, container, false);
 
+
         final SharedPreferences prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
 
+        noNotification = v.findViewById(R.id.no_notification);
 
         RecyclerView rv_notiification = v.findViewById(R.id.rv_notifications);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
@@ -81,16 +85,25 @@ public class NotificationFragment extends Fragment {
             public void onResponse(Call<List<Notification>> call, Response<List<Notification>> response) {
 
 
-                Log.i("InfoText","notificationArrayList.size()"+ notificationArrayList.size());
-                ArrayList<Notification> notiList  = new ArrayList<>();
-                for (Notification notification:(ArrayList<Notification>) response.body()) {
-                    if(notification.getPayload()==null){
-                        notiList.add(notification);
-                    }
+
+                ArrayList<Notification> notifications = (ArrayList<Notification>) response.body();
+                if(notifications.size()==0){
+                    noNotification.setVisibility(View.VISIBLE);
+                }else {
+                    noNotification.setVisibility(View.GONE);
+                    notificationArrayList.addAll(notifications);
+                    adapter.notifyDataSetChanged();
                 }
-                notificationArrayList.clear();
-                notificationArrayList.addAll(notiList);
-                adapter.notifyDataSetChanged();
+
+//                Log.i("InfoText","notificationArrayList.size()"+ notificationArrayList.size());
+//                ArrayList<Notification> notiList  = new ArrayList<>();
+//                for (Notification notification:(ArrayList<Notification>) response.body()) {
+//                    if(notification.getPayload()==null){
+//                        notiList.add(notification);
+//                    }
+//                }
+//                notificationArrayList.clear();
+
 
                 progressDialog.dismiss();
             }

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorCardBackground">
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
@@ -16,14 +16,43 @@
         app:cardCornerRadius="5dp">
 
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_notifications"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        </android.support.v7.widget.RecyclerView>
+            <ImageView
+                android:layout_width="215dp"
+                android:layout_height="111dp"
+                android:id="@+id/no_payment"
+                android:layout_gravity="center_horizontal"
+                android:src="@drawable/no_payment"
+                android:visibility="gone"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
 
-    </android.support.v7.widget.CardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_notifications"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+            </androidx.recyclerview.widget.RecyclerView>
+
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

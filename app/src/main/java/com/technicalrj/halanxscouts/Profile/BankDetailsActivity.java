@@ -1,27 +1,21 @@
 package com.technicalrj.halanxscouts.Profile;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.AppCompatEditText;
-import android.text.Editable;
-import android.text.TextWatcher;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.technicalrj.halanxscouts.Notification.NoficationPojo.Notification;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.BankDetail;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;

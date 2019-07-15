@@ -3,36 +3,24 @@ package com.technicalrj.halanxscouts;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.FragmentTransaction;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.fragment.app.Fragment;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationAvailability;
@@ -47,18 +35,18 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 import com.technicalrj.halanxscouts.Home.HomeFragment;
 import com.technicalrj.halanxscouts.Notification.NotificationFragment;
 import com.technicalrj.halanxscouts.Pojo.MyLocation;
 import com.technicalrj.halanxscouts.Profile.ProfileFragment;
+import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.Service.LocationService;
 import com.technicalrj.halanxscouts.Wallet.WalletFragment;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import static com.technicalrj.halanxscouts.Profile.ProfileFragment.BANK_DETAILS_UPDATE;
-import static com.technicalrj.halanxscouts.Profile.ProfileFragment.DOCUMENTS_DETAILS_UPDATE;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
@@ -76,6 +64,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.i("InfoText","onAcitivyt: in HomeAcity");
+
 
 
 
@@ -103,6 +92,7 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        checkPermissionAndGetLocation();
 
         navigation = findViewById(R.id.bottom_navigation);
         navigation.setOnNavigationItemSelectedListener(this);
@@ -322,6 +312,30 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         String locationString = new Gson().toJson(myLocation);
         getSharedPreferences(Constants.LOCATION_SHARED_PREF, MODE_PRIVATE).edit().
                 putString(Constants.LOCATION_KEY, locationString).apply();
+
+
+
+        SharedPreferences prefs = getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
+        String key = prefs.getString("login_key", null);
+        JsonObject jsonObject = new JsonObject();
+        JsonObject jsonObject1 = new JsonObject();
+        jsonObject1.addProperty("latitude",location.getLatitude());
+        jsonObject1.addProperty("longitude",location.getLongitude());
+        jsonObject.add("work_address",jsonObject1);
+
+        RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
+        Call<Profile> call = availabilityInterface.updateLocation(jsonObject,"Token "+key);
+        call.enqueue(new Callback<Profile>() {
+            @Override
+            public void onResponse(Call<Profile> call, Response<Profile> response) {
+                Log.i(TAG, "onResponse: "+response.toString());
+            }
+
+            @Override
+            public void onFailure(Call<Profile> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
 
 
 

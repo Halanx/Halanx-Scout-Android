@@ -2,13 +2,14 @@ package com.technicalrj.halanxscouts.Wallet;
 
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
-import com.technicalrj.halanxscouts.Adapters.NotificationAdapter;
 import com.technicalrj.halanxscouts.Adapters.PaidAdapter;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
@@ -25,6 +26,7 @@ public class PaidActivity extends AppCompatActivity {
     String key;
     ArrayList<TaskPayment> taskPayments ;
     PaidAdapter adapter;
+    ImageView noPaymentImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +36,7 @@ public class PaidActivity extends AppCompatActivity {
         final SharedPreferences prefs = getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
 
+        noPaymentImg = findViewById(R.id.no_payment);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -66,15 +69,19 @@ public class PaidActivity extends AppCompatActivity {
 
                 taskPayments  = (ArrayList<TaskPayment>) response.body();
 
-                RecyclerView rv_payments = findViewById(R.id.rv_notifications);
-                adapter = new PaidAdapter(PaidActivity.this,taskPayments);
-                rv_payments.setAdapter(adapter);
-                rv_payments.setLayoutManager(new LinearLayoutManager(PaidActivity.this));
+                if(taskPayments.size()==0){
+                    noPaymentImg.setVisibility(View.VISIBLE);
+                }else {
+                    noPaymentImg.setVisibility(View.GONE);
+                    RecyclerView rv_payments = findViewById(R.id.rv_notifications);
+                    adapter = new PaidAdapter(PaidActivity.this,taskPayments);
+                    rv_payments.setAdapter(adapter);
+                    rv_payments.setLayoutManager(new LinearLayoutManager(PaidActivity.this));
 
 
 
+                }
                 Log.i("InfoText","taskPayments.size():"+taskPayments.size());
-
                 progressDialog.dismiss();
 
             }

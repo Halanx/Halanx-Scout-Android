@@ -3,44 +3,30 @@ package com.technicalrj.halanxscouts.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
-import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.IBinder;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
+
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.google.gson.JsonObject;
 import com.technicalrj.halanxscouts.Home.ScoutAcceptanceActivity;
 import com.technicalrj.halanxscouts.HomeActivity;
-import com.technicalrj.halanxscouts.Notification.NoficationPojo.Notification;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.R;
-import com.technicalrj.halanxscouts.RetrofitAPIClient;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.Date;
-import java.util.List;
 
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-import static android.content.ContentValues.TAG;
 import static android.content.Intent.FLAG_ACTIVITY_NEW_TASK;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {

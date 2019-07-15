@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v7.widget.CardView android:layout_width="match_parent"
+    <androidx.cardview.widget.CardView android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:foreground="?android:attr/selectableItemBackground"
         android:layout_margin="10dp"
@@ -59,7 +59,7 @@
                 android:layout_below="@+id/adhar"
                 android:layout_marginTop="20dp">
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="136dp"
                     android:layout_height="136dp"
                     app:cardCornerRadius="8dp">
@@ -93,11 +93,11 @@
 
                     </RelativeLayout>
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
 
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="136dp"
                     android:layout_height="136dp"
                     android:layout_alignParentEnd="true"
@@ -134,7 +134,7 @@
                     </RelativeLayout>
 
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
 
 
@@ -168,7 +168,7 @@
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:fontFamily="@font/montserrat_regular"
-                    android:text="Submit Pan " />
+                    android:text="Submit PAN " />
 
 
 
@@ -182,7 +182,7 @@
                 android:layout_below="@+id/subPan"
                 android:layout_marginTop="20dp">
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="136dp"
                     android:layout_height="136dp"
                     app:cardCornerRadius="8dp">
@@ -217,7 +217,7 @@
                     </RelativeLayout>
 
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
 
 
@@ -242,7 +242,7 @@
 
 
 
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 
 
 </ScrollView>

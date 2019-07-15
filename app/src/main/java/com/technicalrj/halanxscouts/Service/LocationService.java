@@ -77,9 +77,10 @@ public class LocationService extends Service {
             JsonObject jsonObject1 = new JsonObject();
             jsonObject1.addProperty("latitude",location.getLatitude());
             jsonObject1.addProperty("longitude",location.getLongitude());
+            jsonObject.add("work_address",jsonObject1);
 
             RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
-            Call<Profile> call = availabilityInterface.updateLocation(jsonObject,key);
+            Call<Profile> call = availabilityInterface.updateLocation(jsonObject,"Token "+key);
             call.enqueue(new Callback<Profile>() {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {

@@ -4,8 +4,8 @@ package com.technicalrj.halanxscouts;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +13,6 @@ import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.ReviewTag;
 
@@ -33,6 +32,7 @@ public class RatingsFragment extends Fragment {
 
     String key;
     GridView gridView;
+    TextView thingsToTv;
 
     public RatingsFragment() {
         // Required empty public constructor
@@ -48,6 +48,7 @@ public class RatingsFragment extends Fragment {
         ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Ratings");
         View view = inflater.inflate(R.layout.fragment_ratings, container, false);
         gridView = view.findViewById(R.id.things_to_improve);
+        thingsToTv = view.findViewById(R.id.things_to_improve_Tv);
         final TextView rating = view.findViewById(R.id.rating);
         final SharedPreferences prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
@@ -77,6 +78,9 @@ public class RatingsFragment extends Fragment {
                     ArrayAdapter<String > adapter = new ArrayAdapter<String>(getActivity(), R.layout.ratings_row, R.id.tag,strings);
                     gridView.setAdapter(adapter);
 
+                    if(strings.length==0){
+                        thingsToTv.setVisibility(View.GONE);
+                    }
 
                     progressDialog.dismiss();
                 }
