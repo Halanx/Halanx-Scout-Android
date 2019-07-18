@@ -47,8 +47,6 @@ public class ConfirmOtpPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_confirm_otp_password);
 
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         phoneNumber = getIntent().getStringExtra("phoneNumber");
 
@@ -267,12 +265,10 @@ public class ConfirmOtpPasswordActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onSupportNavigateUp() {
+
+
+
+    public void backPress(View view) {
         onBackPressed();
-
-        return super.onSupportNavigateUp();
     }
-
-
 }

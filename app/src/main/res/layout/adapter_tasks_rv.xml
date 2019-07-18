@@ -11,9 +11,8 @@
         android:id="@+id/ll_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="26dp"
         android:orientation="vertical"
-        android:padding="5dp">
+        android:padding="9dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -34,6 +33,7 @@
                     android:background="@drawable/rectanglebox"
                     android:fontFamily="@font/montserrat_regular"
                     android:gravity="center"
+                    android:textSize="12sp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:text="House Visit"
@@ -49,7 +49,7 @@
                     android:fontFamily="@font/montserrat_regular"
                     android:text="109D, Karol Bagh, Pillar N..."
                     android:textColor="#707070"
-                    android:textSize="12dp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
 
@@ -88,7 +88,7 @@
                     android:fontFamily="@font/montserrat_regular"
                     android:text="24 AUG (02:30 PM)"
                     android:textColor="#7F83FE"
-                    android:textSize="14dp"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
 
             </RelativeLayout>
@@ -116,6 +116,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:id="@+id/line_view"
             android:background="#D6D6D6" />
 
         <RelativeLayout
@@ -144,7 +145,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:text="Janvi Kapoor"
                 android:textColor="#8B8B8B"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
 

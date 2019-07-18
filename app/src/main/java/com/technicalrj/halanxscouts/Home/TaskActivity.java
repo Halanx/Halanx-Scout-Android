@@ -1,5 +1,6 @@
 package com.technicalrj.halanxscouts.Home;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
@@ -21,12 +22,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.Home.TaskFolder.SubTask;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -41,6 +44,7 @@ public class TaskActivity extends AppCompatActivity {
     int id;
     String key;
     ScheduledTask scheduledTask;
+    TextView amountTv;
     TextView date , time ,address1 ,address2,address3 , customer_name;
     EditText remarks;
     ImageView house_pic ,customer_img ;
@@ -48,6 +52,8 @@ public class TaskActivity extends AppCompatActivity {
     CardView customer_card;
     Button done_button;
     String firstName,lastName;
+    TextView toolBar;
+    public static final String TAG = "TaskActivity";
 
 
 
@@ -57,8 +63,6 @@ public class TaskActivity extends AppCompatActivity {
         setContentView(R.layout.activity_task);
 
         id = getIntent().getIntExtra("id",0);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         final SharedPreferences prefs =getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
@@ -70,13 +74,14 @@ public class TaskActivity extends AppCompatActivity {
         address1 = findViewById(R.id.address1);
         address2 = findViewById(R.id.address2);
         address3 = findViewById(R.id.address3);
+        amountTv = findViewById(R.id.amount_tv);
         customer_name = findViewById(R.id.customer_name);
         customer_img = findViewById(R.id.customer_img);
         customer_card = findViewById(R.id.customer_card);
         sub_task_layout = findViewById(R.id.sub_task_layout);
         remarks = findViewById(R.id.remarks);
         done_button = findViewById(R.id.done_button);
-
+        toolBar = findViewById(R.id.toolbar);
 
 
 
@@ -107,25 +112,26 @@ public class TaskActivity extends AppCompatActivity {
     private void updateTaskDetails() {
 
 
-        getSupportActionBar().setTitle(scheduledTask.getCategory().getName());
+        toolBar.setText(scheduledTask.getCategory().getName());
+        amountTv.setText("₹ "+scheduledTask.getEarning());
+
 
         String[] parts = scheduledTask.getScheduledAt().split(" ") ;
         date.setText(parts[0]+" "+parts[1].substring(0,3).toUpperCase());
         time.setText( parts[3]+" "+parts[4]);
 
 
-        Picasso.get()
-                .load( scheduledTask.getHouse().getCoverPicUrl().toString())
-                .into(house_pic);
+        if( scheduledTask.getHouse().getCoverPicUrl()!=null )
+            Picasso.get().load( scheduledTask.getHouse().getCoverPicUrl().toString()).into(house_pic);
 
 
         address1.setText(scheduledTask.getHouse().getAddress().getStreetAddress());
         address2.setText(scheduledTask.getHouse().getAddress().getCity() +", "+ scheduledTask.getHouse().getAddress().getState());
         address3.setText(scheduledTask.getHouse().getAddress().getPincode());
 
-
-        if(scheduledTask.getCustomer()==null){
-            customer_card.setVisibility(View.INVISIBLE);
+        //if not previous day then make it invisible
+        if(!isPreviousDay(scheduledTask.getScheduledAt())){
+            customer_card.setVisibility(View.GONE);
         }else {
 
             firstName = scheduledTask.getCustomer().getUser().getFirstName();
@@ -192,12 +198,6 @@ public class TaskActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-
-        return super.onSupportNavigateUp();
-    }
 
     public void houseLocation(View view) {
 
@@ -224,7 +224,9 @@ public class TaskActivity extends AppCompatActivity {
                 .putExtra("id",id+"")
                 .putExtra("first_name",firstName)
                 .putExtra("last_name",lastName)
-        );
+                .putExtra("profile_pic_url", scheduledTask.getCustomer().getProfilePicUrl())
+                .putExtra("phone_number",scheduledTask.getCustomer().getPhoneNo()));
+
     }
 
     public void saveData(View view) {
@@ -237,21 +239,39 @@ public class TaskActivity extends AppCompatActivity {
 
 
         RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
-        Call<Void> call = availabilityInterface.setTaskComplete(id,true,remarks.getText().toString().trim(),"Token "+key);
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("complete",true);
+        jsonObject.addProperty("remark",remarks.getText().toString().trim());
+
+        Call<Void> call = availabilityInterface.setTaskComplete(id,jsonObject,"Token "+key);
         call.enqueue(new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 progressDialog.dismiss();
 
+                /*if(response.isSuccessful()){
 
-                Log.i("InfoText","saveData succ:"+response.body());
+                }else {
+                    try {
+                        Log.i(TAG, "onResponse: "+response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }*/
+
+                Log.i(TAG,"saveData succ:"+response.body());
+
+                Intent returnIntent = new Intent();
+                setResult(Activity.RESULT_OK,returnIntent);
                 finish();
+
             }
 
             @Override
             public void onFailure(Call<Void> call, Throwable t) {
                 progressDialog.dismiss();
-                Log.i("InfoText","saveData error:"+t.getMessage());
+                t.printStackTrace();
+                Log.i(TAG,"saveData error:"+t.getMessage());
             }
         });
 
@@ -279,6 +299,8 @@ public class TaskActivity extends AppCompatActivity {
                                 progressDialog.dismiss();
                                 Log.i("InfoText","cancelTask:"+response.body());
 
+                                Intent returnIntent = new Intent();
+                                setResult(Activity.RESULT_OK,returnIntent);
                                 finish();
 
                             }
@@ -345,4 +367,23 @@ public class TaskActivity extends AppCompatActivity {
         i.setData(Uri.parse(url));
         startActivity(i);
     }
+
+    public void backPress(View view) {
+        onBackPressed();
+    }
+
+    public boolean isPreviousDay(String scheduledDate){
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy hh:mm a");
+        try {
+            Date date = dateFormat.parse(scheduledDate);
+            if(date.getTime()-System.currentTimeMillis()<=24 * 60 * 60 * 1000)
+                return true;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
 }

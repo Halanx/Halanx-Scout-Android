@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhiteBackground"
+    android:fadeScrollbars="false"
     tools:context=".LoginActivity">
 
     <RelativeLayout
@@ -25,7 +26,7 @@
             android:textStyle="bold"
             android:fontFamily="@font/montserrat_regular"
             android:textColor="@color/colorPrimary"
-            android:textSize="20sp" />
+            android:textSize="14sp" />
 
         <ImageView
             android:layout_width="97dp"
@@ -39,9 +40,10 @@
         <EditText
             android:id="@+id/phone_number"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="51dp"
             android:layout_marginTop="62dp"
             android:ems="10"
+            android:textSize="14sp"
             android:hint="Phone Number"
             android:layout_below="@+id/halanx_logo"
             android:background="@drawable/edittext_border"
@@ -54,6 +56,7 @@
 
 
 
+<!--
         <EditText
             android:id="@+id/password"
             android:layout_width="match_parent"
@@ -68,16 +71,55 @@
             android:layout_marginTop="30dp"
             android:fontFamily="@font/montserrat_regular"
             android:inputType="textPassword" />
+-->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/password_layout"
+            android:layout_below="@+id/phone_number"
+            android:background="@drawable/edittext_border"
+            android:layout_marginStart="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginTop="30dp">
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="51dp"
+                android:ems="10"
+                android:hint="Password"
+                android:padding="15dp"
+                android:textSize="14sp"
+                android:layout_toLeftOf="@+id/show_hide"
+                android:background="@android:color/transparent"
+                android:fontFamily="@font/montserrat_regular"
+                android:inputType="textPassword" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="SHOW"
+                android:id="@+id/show_hide"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:onClick="showHide"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:paddingEnd="10dp"/>
+
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/forgot_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/password"
+            android:layout_below="@+id/password_layout"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
             android:text="@string/forgot_password"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:fontFamily="@font/montserrat_regular"
             android:onClick="forgotPassword"
             android:textColor="@color/colorTextButtonColor" />
@@ -85,11 +127,11 @@
         <Button
             android:id="@+id/button"
             android:layout_width="129dp"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_below="@+id/forgot_password"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             android:fontFamily="@font/montserrat_regular"
             android:textColor="@color/colorWhite"
@@ -101,29 +143,27 @@
             android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/button2"
+            android:layout_below="@+id/button"
+            android:layout_marginTop="61dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="30dp"
             android:text="New User?"
             android:fontFamily="@font/montserrat_regular"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:textColor="@color/colorGrey" />
 
         <Button
             android:id="@+id/button2"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="40dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="130dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginTop="29dp"
             android:layout_marginLeft="40dp"
             android:layout_marginRight="40dp"
-            android:layout_alignParentBottom="true"
-            android:layout_below="@+id/button"
+            android:layout_below="@+id/textView2"
             android:background="@drawable/button_shape"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
-            android:textSize="16sp"
+            android:textSize="14sp"
             android:fontFamily="@font/montserrat_regular"
             android:text="Register Here"
             android:textStyle="bold"

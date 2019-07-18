@@ -38,9 +38,6 @@ public class PaidActivity extends AppCompatActivity {
 
         noPaymentImg = findViewById(R.id.no_payment);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Paid Payments");
 
 
 
@@ -95,12 +92,9 @@ public class PaidActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onSupportNavigateUp() {
+
+
+    public void backPress(View view) {
         onBackPressed();
-
-        return super.onSupportNavigateUp();
     }
-
-
 }

@@ -10,6 +10,7 @@ import androidx.appcompat.widget.AppCompatEditText;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.BankDetail;
@@ -25,6 +26,7 @@ public class BankDetailsActivity extends AppCompatActivity {
 
     EditText account_number, confirm_account_number,account_holder_name,ifsc_code , bank_name ,bank_branch;
     String key;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,9 +45,7 @@ public class BankDetailsActivity extends AppCompatActivity {
 
 
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Bank Details");
+
 
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Loading...");
@@ -212,5 +212,9 @@ public class BankDetailsActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void backPress(View view) {
+        onBackPressed();
     }
 }

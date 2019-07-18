@@ -23,6 +23,8 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.technicalrj.halanxscouts.R;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -52,6 +54,7 @@ public class DocumentsActivity extends AppCompatActivity {
     private static final int PICK_IMAGE_AADHAR_1 = 1;
     private static final int PICK_IMAGE_AADHAR_2 = 2;
     private static final int PICK_IMAGE_PAN = 3;
+    private static int REQUEST_CODE;
     private static final String TAG = "InfoText";
     private ImageView aadhar1, aadhar2;
     private ImageView pan;
@@ -67,6 +70,76 @@ public class DocumentsActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri selectedImage = result.getUri();
+
+                if (REQUEST_CODE == PICK_IMAGE_AADHAR_1) {
+
+
+
+
+                    File aadhar1File=null;
+                    if(selectedImage==null){
+                        Bitmap photo = (Bitmap) data.getExtras().get("data");
+                        aadhar1.setImageBitmap(photo);
+                        aadhar1File = persistImage( photo ,"sdf");
+                    }else {
+                        aadhar1.setImageBitmap(getRotatedImage(selectedImage));
+                        aadhar1File = persistImage( getRotatedImage(selectedImage) ,"dsf");
+                    }
+
+                    aadhar1.setContentDescription("actual");
+                    uploadData(aadhar1File, "Aadhar","aadhar1");
+
+
+
+
+                }
+                if (REQUEST_CODE == PICK_IMAGE_AADHAR_2) {
+
+
+                    File aadhar2File=null;
+                    if(selectedImage==null){
+                        Bitmap photo = (Bitmap) data.getExtras().get("data");
+                        aadhar2.setImageBitmap(photo);
+                        aadhar2File = persistImage( photo ,"sdf");
+                    }else {
+                        aadhar2.setImageBitmap(getRotatedImage(selectedImage));
+                        aadhar2File = persistImage( getRotatedImage(selectedImage) ,"dsf");
+                    }
+                    aadhar2.setContentDescription("actual");
+                    uploadData(aadhar2File, "Aadhar","aadhar2");
+
+
+                }
+                if (REQUEST_CODE == PICK_IMAGE_PAN) {
+
+                    File panFile=null;
+                    if(selectedImage==null){
+                        Bitmap photo = (Bitmap) data.getExtras().get("data");
+                        pan.setImageBitmap(photo);
+                        panFile = persistImage( photo ,"sdf");
+                    }else {
+                        pan.setImageBitmap(getRotatedImage(selectedImage));
+                        panFile = persistImage( getRotatedImage(selectedImage) ,"dsf");
+                    }
+                    pan.setContentDescription("actual");
+                    uploadData(panFile, "PAN","pan");
+
+
+                }
+
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                error.printStackTrace();
+            }
+        }
+
+        /*
         if ((requestCode == PICK_IMAGE_AADHAR_1 || requestCode == PICK_IMAGE_AADHAR_2 || requestCode == PICK_IMAGE_PAN) && resultCode == RESULT_OK) {
 
 
@@ -135,7 +208,7 @@ public class DocumentsActivity extends AppCompatActivity {
 
 
         }
-
+        */
 
     }
 
@@ -176,8 +249,6 @@ public class DocumentsActivity extends AppCompatActivity {
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
         final SharedPreferences prefs =getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
@@ -328,8 +399,11 @@ public class DocumentsActivity extends AppCompatActivity {
 
     private void chooseImage(int permisson) {
 
+        REQUEST_CODE = permisson;
+        CropImage.activity()
+                .start(DocumentsActivity.this);
 
-        Intent intentCamera = new Intent("android.media.action.IMAGE_CAPTURE");
+        /*Intent intentCamera = new Intent("android.media.action.IMAGE_CAPTURE");
 
         Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         pickIntent.setType("image/*");
@@ -339,7 +413,7 @@ public class DocumentsActivity extends AppCompatActivity {
 
         startActivityForResult(chooserIntent, permisson);
 
-
+*/
     }
 
 
@@ -409,13 +483,17 @@ public class DocumentsActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonObject = new JSONObject(body);
                     String url = jsonObject.getString("image");
+                    int id = jsonObject.getInt("id");
 
                     if(document.equals("aadhar1")){
                         aadhar1Url = url;
+                        aadhar1Id = id;
                     }else if(document.equals("aadhar2")){
                         aadhar2Url = url;
+                        aadhar2Id = id;
                     }else if(document.equals("pan")){
                         panUrl = url;
+                        panId = id;
                     }
 
                 } catch (JSONException e) {
@@ -525,6 +603,8 @@ public class DocumentsActivity extends AppCompatActivity {
                             });
                         }
                     });
+                }else {
+                    Log.i(TAG, "onResponse: deleteimage"+response.networkResponse().toString());
                 }
 
 
@@ -756,4 +836,7 @@ public class DocumentsActivity extends AppCompatActivity {
                 matrix, true);
     }
 
+    public void backPress(View view) {
+        onBackPressed();
+    }
 }

@@ -15,12 +15,12 @@ public class Notification {
     @SerializedName("category")
     @Expose
     private Category category;
-    @SerializedName("content")
-    @Expose
-    private String content;
     @SerializedName("payload")
     @Expose
-    private String payload;
+    private Payload payload;
+    @SerializedName("content")
+    @Expose
+    private Object content;
     @SerializedName("seen")
     @Expose
     private Boolean seen;
@@ -55,20 +55,20 @@ public class Notification {
         this.category = category;
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getPayload() {
+    public Payload getPayload() {
         return payload;
     }
 
-    public void setPayload(String payload) {
+    public void setPayload(Payload payload) {
         this.payload = payload;
+    }
+
+    public Object getContent() {
+        return content;
+    }
+
+    public void setContent(Object content) {
+        this.content = content;
     }
 
     public Boolean getSeen() {

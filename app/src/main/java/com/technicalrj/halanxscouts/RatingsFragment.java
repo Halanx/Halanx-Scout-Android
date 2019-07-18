@@ -45,7 +45,6 @@ public class RatingsFragment extends Fragment {
         // Inflate the layout for this fragment
 
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Ratings");
         View view = inflater.inflate(R.layout.fragment_ratings, container, false);
         gridView = view.findViewById(R.id.things_to_improve);
         thingsToTv = view.findViewById(R.id.things_to_improve_Tv);

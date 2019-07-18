@@ -53,6 +53,7 @@
             android:text="EDIT"
             android:fontFamily="@font/montserrat_regular"
             android:textStyle="bold"
+            android:textSize="11sp"
             android:layout_alignParentEnd="true"
             android:gravity="center"
             android:textColor="@color/colorWhite"/>
@@ -66,6 +67,7 @@
             android:fontFamily="@font/montserrat_regular"
             android:textStyle="bold"
             android:gravity="center"
+            android:textSize="11sp"
             android:layout_marginTop="5dp"
             android:id="@+id/tv_delete_box"
             android:layout_below="@id/tv_edit_box"

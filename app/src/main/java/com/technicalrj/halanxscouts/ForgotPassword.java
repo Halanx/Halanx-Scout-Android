@@ -35,9 +35,7 @@ public class ForgotPassword extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Forgot Password");
+
 
         phoneNumber = findViewById(R.id.phone_number);
 
@@ -90,12 +88,7 @@ public class ForgotPassword extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
 
-        return super.onSupportNavigateUp();
-    }
 
 
 
@@ -115,5 +108,9 @@ public class ForgotPassword extends AppCompatActivity {
             return false;
 
         return true;
+    }
+
+    public void backPress(View view) {
+        onBackPressed();
     }
 }

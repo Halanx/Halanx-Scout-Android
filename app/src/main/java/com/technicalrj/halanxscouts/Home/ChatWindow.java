@@ -1,8 +1,12 @@
 package com.technicalrj.halanxscouts.Home;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.content.SharedPreferences;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,15 +14,20 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.engineio.client.Transport;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Manager;
 import com.github.nkzawa.socketio.client.Socket;
+import com.squareup.picasso.Picasso;
 import com.technicalrj.halanxscouts.Adapters.ChatAdapter;
 import com.technicalrj.halanxscouts.Home.Chat.Messages;
 import com.technicalrj.halanxscouts.Home.Chat.Result;
+import com.technicalrj.halanxscouts.Profile.ProfileImageActivity;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
 
@@ -39,7 +48,7 @@ import retrofit2.Response;
 
 public class ChatWindow extends AppCompatActivity {
 
-    String id,firstName,lastName;
+    String id,firstName,lastName , profilePicUrl,phoneNumber;
     ChatAdapter adapter;
     ArrayList<Result> results;
     String key;
@@ -47,6 +56,8 @@ public class ChatWindow extends AppCompatActivity {
     LinearLayoutManager lm;
     int page=1;
     private Socket mSocket;
+    private TextView nameTv;
+    ImageView customerImg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,23 +68,24 @@ public class ChatWindow extends AppCompatActivity {
         id = getIntent().getStringExtra("id");
         firstName = getIntent().getStringExtra("first_name");
         lastName = getIntent().getStringExtra("last_name");
+        profilePicUrl = getIntent().getStringExtra("profile_pic_url");
+        phoneNumber = getIntent().getStringExtra("phone_number");
         final SharedPreferences prefs = getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle( firstName.substring(0,1).toUpperCase() + firstName.substring(1)  +" "+ lastName.substring(0,1).toUpperCase() + lastName.substring(1) );
 
 
 
 
 
 
+        nameTv = findViewById(R.id.name_tv);
         chat_text = findViewById(R.id.chat_text);
         if(chat_text.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
         final RecyclerView rv_chat = findViewById(R.id.rv_chat);
+        customerImg = findViewById(R.id.customer_img);
         results = new ArrayList<>();
         adapter = new ChatAdapter(getApplicationContext(),results);
         lm = new LinearLayoutManager(getApplicationContext());
@@ -81,6 +93,14 @@ public class ChatWindow extends AppCompatActivity {
         lm.setStackFromEnd(false);
         rv_chat.setAdapter(adapter);
         rv_chat.setLayoutManager(lm);
+
+        nameTv.setText( firstName.substring(0,1).toUpperCase() + firstName.substring(1)  +" "+ lastName.substring(0,1).toUpperCase() + lastName.substring(1) );
+
+
+        Picasso.get()
+                .load( profilePicUrl)
+                .into(customerImg);
+
 
 
         updateChat(page);
@@ -125,12 +145,7 @@ public class ChatWindow extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
 
-        return super.onSupportNavigateUp();
-    }
 
     @Override
     public void onBackPressed() {
@@ -299,6 +314,26 @@ public class ChatWindow extends AppCompatActivity {
     };
 
 
+    public void backPress(View view) {
+        onBackPressed();
+    }
+
+    public void profileImage(View view) {
+
+        Intent intent = new Intent(this, ProfileImageActivity.class);
+        intent.putExtra("profile_pic_url",profilePicUrl);
+        startActivity(intent);
 
 
+    }
+
+    public void callCustomr(View view) {
+        try {
+            Intent callIntent = new Intent(Intent.ACTION_VIEW );
+            callIntent.setData(Uri.parse("tel:"+phoneNumber));
+            startActivity(callIntent);
+        } catch (ActivityNotFoundException activityException) {
+            Toast.makeText(this,"Calling a Phone Number Call failed",Toast.LENGTH_SHORT).show();
+        }
+    }
 }

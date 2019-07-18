@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorCardBackground"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
 
     <androidx.cardview.widget.CardView
@@ -18,46 +18,39 @@
 
 
         <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="10dp"
-            tools:context=".Profile.ProfileFragment">
+            android:layout_height="match_parent">
 
-            <!-- TODO: Update blank fragment layout -->
-
-
-            <LinearLayout
+            <TextView
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/linearLayout">
-
-                <RelativeLayout
-                    android:layout_width="92dp"
-                    android:layout_height="91dp">
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/imageView"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical|center_horizontal"
-                        android:src="@drawable/male_avatar" />
+                android:layout_height="58dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center"
+                android:text="Profile"
+                android:textSize="17sp"
+                android:textStyle="bold"/>
 
 
-                    <ImageView
-                        android:id="@+id/editImage"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_alignParentBottom="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_gravity="bottom"
-                        android:src="@drawable/pen" />
+            <View
+                android:id="@+id/line_view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/toolbar"
+                android:background="#D6D6D6"/>
 
 
-                </RelativeLayout>
+            <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="10dp"
+                android:layout_below="@+id/line_view"
+                tools:context=".Profile.ProfileFragment">
 
+                <!-- TODO: Update blank fragment layout -->
 
 
 
@@ -65,323 +58,362 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:id="@+id/linLayout"
-                    android:orientation="vertical">
+                    android:orientation="horizontal"
+                    android:id="@+id/linearLayout">
 
-                    <EditText
-                        android:id="@+id/name"
-                        android:layout_width="match_parent"
-                        android:layout_height="27dp"
-                        android:ems="10"
-                        android:inputType="textPersonName"
-                        android:background="@drawable/edittext_profile_border"
-                        android:textSize="14sp"
-                        android:padding="2dp"
-                        android:paddingStart="10dp"
-                        android:hint="Name"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:layout_marginTop="7dp"
-                        android:text="" />
+                    <RelativeLayout
+                        android:layout_width="92dp"
+                        android:layout_height="91dp">
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/imageView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical|center_horizontal"
+                            android:src="@drawable/male_avatar" />
 
-                    <TextView
-                        android:id="@+id/phone_number"
-                        android:layout_width="match_parent"
-                        android:layout_height="27dp"
-                        android:ems="10"
-                        android:inputType="textPersonName"
-                        style="@style/TextAppearance.AppCompat.Display1"
-                        android:background="@drawable/edittext_profile_border"
-                        android:padding="2dp"
-                        android:paddingStart="10dp"
-                        android:textSize="16sp"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:layout_marginTop="7dp"
-                        />
 
-                    <EditText
-                        android:id="@+id/email"
+                        <ImageView
+                            android:id="@+id/editImage"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_alignParentBottom="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_gravity="bottom"
+                            android:src="@drawable/pen" />
+
+
+                    </RelativeLayout>
+
+
+
+
+
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="27dp"
-                        android:layout_marginTop="7dp"
-                        android:background="@drawable/edittext_profile_border"
-                        android:ems="1"
-                        android:hint="example@mail.com"
-                        android:inputType="textPersonName"
-                        android:padding="2dp"
-                        android:paddingStart="10dp"
-                        android:textSize="14sp"
-                        android:fontFamily="@font/montserrat_regular"
-                        />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:id="@+id/linLayout"
+                        android:orientation="vertical">
+
+                        <EditText
+                            android:id="@+id/name"
+                            android:layout_width="match_parent"
+                            android:layout_height="27dp"
+                            android:ems="10"
+                            android:inputType="textPersonName"
+                            android:background="@drawable/edittext_profile_border"
+                            android:textSize="14sp"
+                            android:padding="2dp"
+                            android:paddingStart="10dp"
+                            android:hint="Name"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:layout_marginTop="7dp"
+                            android:text="" />
+
+                        <TextView
+                            android:id="@+id/phone_number"
+                            android:layout_width="match_parent"
+                            android:layout_height="27dp"
+                            android:ems="10"
+                            android:inputType="textPersonName"
+                            style="@style/TextAppearance.AppCompat.Display1"
+                            android:background="@drawable/edittext_profile_border"
+                            android:padding="2dp"
+                            android:paddingStart="10dp"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:layout_marginTop="7dp"
+                            />
+
+                        <EditText
+                            android:id="@+id/email"
+                            android:layout_width="match_parent"
+                            android:layout_height="27dp"
+                            android:layout_marginTop="7dp"
+                            android:background="@drawable/edittext_profile_border"
+                            android:ems="1"
+                            android:hint="example@mail.com"
+                            android:inputType="textPersonName"
+                            android:padding="2dp"
+                            android:paddingStart="10dp"
+                            android:textSize="14sp"
+                            android:fontFamily="@font/montserrat_regular"
+                            />
+
+
+                    </LinearLayout>
 
 
                 </LinearLayout>
 
 
-            </LinearLayout>
 
 
-
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="53dp"
-                android:id="@+id/documents"
-                android:layout_below="@+id/linearLayout"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:layout_marginTop="30dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                app:cardCornerRadius="7dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/colorCardBackground"
-                android:background="@color/colorCardBackground"
-                android:clickable="true">
-
-                <RelativeLayout
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="53dp">
+                    android:layout_height="53dp"
+                    android:id="@+id/documents"
+                    android:layout_below="@+id/linearLayout"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    app:cardCornerRadius="7dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/colorCardBackground"
+                    android:background="@color/colorCardBackground"
+                    android:clickable="true">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:text="Documents"
-                        android:textSize="20sp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="10dp"
-                        android:textStyle="bold" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="53dp">
 
-                    <ImageView
-                        android:layout_width="90dp"
-                        android:layout_height="20dp"
-                        android:id="@+id/doc_status"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="10dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Documents"
+                            android:textSize="14sp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="10dp"
+                            android:textStyle="bold" />
 
-                </RelativeLayout>
+                        <ImageView
+                            android:layout_width="90dp"
+                            android:layout_height="20dp"
+                            android:id="@+id/doc_status"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="10dp"/>
 
-            </androidx.cardview.widget.CardView>
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
 
 
 
 
 
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="53dp"
-                android:id="@+id/bankDetails"
-                android:layout_below="@+id/documents"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:layout_marginTop="20dp"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="7dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/colorCardBackground"
-                android:clickable="true">
-
-                <RelativeLayout
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="53dp"
+                    android:id="@+id/bankDetails"
+                    android:layout_below="@+id/documents"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:layout_marginTop="20dp"
+                    android:layout_margin="10dp"
+                    app:cardCornerRadius="7dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/colorCardBackground"
+                    android:clickable="true">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:layout_marginTop="5dp"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="10dp"
-                        android:textStyle="bold"
-                        android:text="Bank Details"
-                        />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-                    <ImageView
-                        android:layout_width="90dp"
-                        android:layout_height="20dp"
-                        android:id="@+id/bank_status"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="10dp"/>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:layout_marginTop="5dp"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="10dp"
+                            android:textStyle="bold"
+                            android:text="Bank Details"
+                            />
+
+                        <ImageView
+                            android:layout_width="90dp"
+                            android:layout_height="20dp"
+                            android:id="@+id/bank_status"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginEnd="10dp"/>
 
 
-                </RelativeLayout>
+                    </RelativeLayout>
 
-            </androidx.cardview.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="53dp"
-                android:id="@+id/work_address"
-                android:layout_below="@+id/bankDetails"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                android:visibility="gone"
-                app:cardCornerRadius="7dp"
-                app:cardElevation="2dp"
-                app:cardBackgroundColor="@color/colorCardBackground"
-                android:background="@color/colorCardBackground"
-                android:clickable="true">
-
-                <RelativeLayout
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="53dp">
+                    android:layout_height="53dp"
+                    android:id="@+id/work_address"
+                    android:layout_below="@+id/bankDetails"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:visibility="gone"
+                    app:cardCornerRadius="7dp"
+                    app:cardElevation="2dp"
+                    app:cardBackgroundColor="@color/colorCardBackground"
+                    android:background="@color/colorCardBackground"
+                    android:clickable="true">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:text="Work Address"
-                        android:textSize="20sp"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="10dp"
-                        android:textStyle="bold" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="53dp">
 
-<!--
-                    <ImageView
-                        android:layout_width="90dp"
-                        android:layout_height="20dp"
-                        android:id="@+id/work_status"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginEnd="10dp"/>
--->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Work Address"
+                            android:textSize="20sp"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="10dp"
+                            android:textStyle="bold" />
 
-                </RelativeLayout>
+                        <!--
+                                            <ImageView
+                                                android:layout_width="90dp"
+                                                android:layout_height="20dp"
+                                                android:id="@+id/work_status"
+                                                android:layout_centerVertical="true"
+                                                android:layout_alignParentEnd="true"
+                                                android:layout_marginEnd="10dp"/>
+                        -->
 
-            </androidx.cardview.widget.CardView>
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
 
 
 
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="53dp"
-                android:id="@+id/changePass"
-                app:cardBackgroundColor="@color/colorCardBackground"
-                android:layout_below="@+id/work_address"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:layout_marginTop="20dp"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="7dp"
-                app:cardElevation="2dp"
-                android:clickable="true">
-
-                <RelativeLayout
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="53dp"
+                    android:id="@+id/changePass"
+                    app:cardBackgroundColor="@color/colorCardBackground"
+                    android:layout_below="@+id/work_address"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:layout_marginTop="20dp"
+                    android:layout_margin="10dp"
+                    app:cardCornerRadius="7dp"
+                    app:cardElevation="2dp"
+                    android:clickable="true">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:text="Change Password"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="10dp"
-                        android:fontFamily="@font/montserrat_regular"
-                        />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-                </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:text="Change Password"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="10dp"
+                            android:fontFamily="@font/montserrat_regular"
+                            />
 
-            </androidx.cardview.widget.CardView>
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
 
 
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="53dp"
-                android:id="@+id/help"
-                android:layout_below="@+id/changePass"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:layout_marginTop="20dp"
-                app:cardBackgroundColor="@color/colorCardBackground"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="7dp"
-                app:cardElevation="2dp"
-                android:clickable="true">
-
-                <RelativeLayout
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="53dp"
+                    android:id="@+id/help"
+                    android:layout_below="@+id/changePass"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:layout_marginTop="20dp"
+                    app:cardBackgroundColor="@color/colorCardBackground"
+                    android:layout_margin="10dp"
+                    app:cardCornerRadius="7dp"
+                    app:cardElevation="2dp"
+                    android:clickable="true">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="10dp"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:text="Help"
-                        />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-                </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="10dp"
+                            android:fontFamily="@font/montserrat_regular"
+                            android:text="Help"
+                            />
 
-            </androidx.cardview.widget.CardView>
+                    </RelativeLayout>
+
+                </androidx.cardview.widget.CardView>
 
 
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="53dp"
-                android:id="@+id/logout"
-                android:layout_below="@+id/help"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:layout_marginTop="20dp"
-                app:cardBackgroundColor="@color/colorCardBackground"
-                android:layout_margin="10dp"
-                app:cardCornerRadius="7dp"
-                app:cardElevation="2dp"
-                android:clickable="true">
-
-                <RelativeLayout
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+                    android:layout_height="53dp"
+                    android:id="@+id/logout"
+                    android:layout_below="@+id/help"
+                    android:foreground="?android:attr/selectableItemBackground"
+                    android:layout_marginTop="20dp"
+                    app:cardBackgroundColor="@color/colorCardBackground"
+                    android:layout_margin="10dp"
+                    app:cardCornerRadius="7dp"
+                    app:cardElevation="2dp"
+                    android:clickable="true">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textSize="20sp"
-                        android:text="Logout"
-                        android:textStyle="bold"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="10dp"
-                        android:fontFamily="@font/montserrat_regular"
-                        />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
 
-                </RelativeLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="14sp"
+                            android:text="Logout"
+                            android:textStyle="bold"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="10dp"
+                            android:fontFamily="@font/montserrat_regular"
+                            />
 
-            </androidx.cardview.widget.CardView>
+                    </RelativeLayout>
 
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/termsCondi"
-                android:fontFamily="@font/montserrat_regular"
-                android:text="@string/terms_and_conditions"
-                android:textColor="@color/colorTextButtonColor"
-                android:layout_below="@+id/logout"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="30dp"
-                android:textStyle="bold" />
+                </androidx.cardview.widget.CardView>
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_below="@id/termsCondi">
-            </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/termsCondi"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:text="@string/terms_and_conditions"
+                    android:textSize="10sp"
+                    android:textColor="@color/colorTextButtonColor"
+                    android:layout_below="@+id/logout"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="30dp"
+                    android:textStyle="bold" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_below="@id/termsCondi">
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
 
 
         </RelativeLayout>
+
 
 
 

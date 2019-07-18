@@ -51,8 +51,6 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_otp_register);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
         otp1 = findViewById(R.id.otp1);
@@ -330,11 +328,7 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onSupportNavigateUp() {
+    public void backPress(View view) {
         onBackPressed();
-
-        return super.onSupportNavigateUp();
     }
-
 }

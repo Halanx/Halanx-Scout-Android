@@ -4,9 +4,13 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
@@ -33,15 +37,12 @@ public class ChangePassword extends AppCompatActivity {
 
     private String key;
     private String otp;
+    private TextView showHide, confirmShowHide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
-
-
-
-
 
 
 
@@ -51,6 +52,9 @@ public class ChangePassword extends AppCompatActivity {
         passwordTv = findViewById(R.id.password);
         confirmPasswordTv = findViewById(R.id.confirm_password);
         oldPasswordTv = findViewById(R.id.old_password);
+        showHide = findViewById(R.id.show_hide);
+        confirmShowHide = findViewById(R.id.confirm_show_hide);
+
 
     }
 
@@ -173,4 +177,36 @@ public class ChangePassword extends AppCompatActivity {
 
 
     }
+
+
+    public void showHideOnClick(View view) {
+
+        if(showHide.getText().equals("HIDE"))
+        {
+            showHide.setText("SHOW");
+            passwordTv.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        }
+        else if(showHide.getText().equals("SHOW"))
+        {
+            showHide.setText("HIDE");
+            passwordTv.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        }
+
+    }
+
+    public void confirmShowHideOnClick(View view) {
+
+        if(confirmShowHide.getText().equals("HIDE"))
+        {
+            confirmShowHide.setText("SHOW");
+            confirmPasswordTv.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        }
+        else if(confirmShowHide.getText().equals("SHOW"))
+        {
+            confirmShowHide.setText("HIDE");
+            confirmPasswordTv.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        }
+
+    }
+
 }

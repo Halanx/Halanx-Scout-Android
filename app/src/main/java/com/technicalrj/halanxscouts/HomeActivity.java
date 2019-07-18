@@ -3,6 +3,7 @@ package com.technicalrj.halanxscouts;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
@@ -59,6 +60,8 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private boolean requestingLocationUpdates;
+    private static final int TASK_CLICKED = 12;
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -66,6 +69,14 @@ public class HomeActivity extends AppCompatActivity implements BottomNavigationV
         Log.i("InfoText","onAcitivyt: in HomeAcity");
 
 
+        if (requestCode == TASK_CLICKED) {
+            if(resultCode == Activity.RESULT_OK){
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.container, new HomeFragment())
+                        .commit();
+            }
+        }
 
 
 /*        if (requestCode == DOCUMENTS_DETAILS_UPDATE || requestCode== BANK_DETAILS_UPDATE) {

@@ -11,42 +11,78 @@
         android:layout_height="match_parent"
         android:layout_margin="10dp"
         android:layout_marginBottom="100dp"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:clickable="true"
-        app:cardCornerRadius="5dp">
+        app:cardCornerRadius="11dp">
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+
+            <TextView
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center"
+                android:text="Paid"
+                android:textSize="17sp"
+                android:textStyle="bold"/>
+
             <ImageView
-                android:layout_width="215dp"
-                android:layout_height="111dp"
-                android:id="@+id/no_payment"
-                android:layout_gravity="center_horizontal"
-                android:src="@drawable/no_payment"
-                android:visibility="gone"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                android:layout_width="18dp"
+                android:layout_height="58dp"
+                android:onClick="backPress"
+                android:layout_marginStart="12dp"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/back_arrow"/>
 
 
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_notifications"
+            <View
+                android:id="@+id/line_view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/toolbar"
+                android:background="#D6D6D6"/>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
+                android:layout_below="@+id/line_view">
 
-            </androidx.recyclerview.widget.RecyclerView>
+                <ImageView
+                    android:layout_width="215dp"
+                    android:layout_height="111dp"
+                    android:id="@+id/no_payment"
+                    android:layout_gravity="center_horizontal"
+                    android:src="@drawable/no_payment"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_notifications"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                </androidx.recyclerview.widget.RecyclerView>
 
 
 
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </RelativeLayout>
+
 
 
 

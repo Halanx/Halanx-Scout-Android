@@ -35,7 +35,7 @@
             android:text="Hi.. Where are youdsfsdsfgsdfdsf"
             android:gravity="right"
             android:fontFamily="@font/montserrat_regular"
-            android:textSize="15sp"
+            android:textSize="11sp"
             android:maxWidth="250dp"
             android:paddingTop="10dp"
             android:paddingStart="20dp"
@@ -46,7 +46,7 @@
             android:id="@+id/recivied_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:layout_marginTop="10dp"
             android:paddingRight="20dp"
             android:paddingLeft="10dp"
@@ -78,7 +78,7 @@
             android:text="This is Message sdfsdff saiduf sdify isdufy sd "
             android:gravity="center|right"
             android:maxWidth="250dp"
-            android:textSize="15sp"
+            android:textSize="11sp"
             android:paddingStart="30dp"
             android:layout_alignParentEnd="true"
             />
@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/send_time"
             android:layout_alignParentEnd="true"
-            android:textSize="10sp"
+            android:textSize="11sp"
             android:layout_marginTop="10dp"
             android:paddingRight="20dp"
             android:paddingLeft="10dp"
@@ -115,7 +115,7 @@
         android:paddingBottom="7dp"
         android:text="SEEN"
         android:textColor="@color/colorTextButtonColor"
-        android:textSize="10sp" />
+        android:textSize="8sp" />
 
 
 

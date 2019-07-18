@@ -8,219 +8,260 @@
         android:layout_height="match_parent"
         android:foreground="?android:attr/selectableItemBackground"
         android:layout_margin="10dp"
-        app:cardCornerRadius="5dp"
+        app:cardCornerRadius="11dp"
         app:cardBackgroundColor="@color/colorWhite"
         android:layout_marginBottom="100dp"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
-
         <RelativeLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_margin="20dp"
-            tools:context=".Profile.DocumentsActivity">
+            android:layout_height="match_parent">
 
-            <!-- TODO: Update blank fragment layout -->
 
+            <TextView
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center"
+                android:text="Documents"
+                android:textSize="17sp"
+                android:textStyle="bold"/>
+
+            <ImageView
+                android:layout_width="18dp"
+                android:layout_height="58dp"
+                android:onClick="backPress"
+                android:layout_marginStart="12dp"
+                android:layout_alignParentStart="true"
+                android:src="@drawable/back_arrow"/>
+
+
+
+            <View
+                android:id="@+id/line_view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/toolbar"
+                android:background="#D6D6D6"/>
 
             <RelativeLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:id="@+id/adhar">
+                android:layout_height="match_parent"
+                android:layout_margin="20dp"
+                android:layout_below="@+id/line_view"
+                tools:context=".Profile.DocumentsActivity">
 
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="wrap_content"
+                <!-- TODO: Update blank fragment layout -->
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:text="Submit Aadhar (Both Sides)"
-                    android:textStyle="bold"
-                    android:layout_centerVertical="true"
-                    android:fontFamily="@font/montserrat_regular"/>
+                    android:orientation="horizontal"
+                    android:id="@+id/adhar">
+
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:text="Submit Aadhar (Both Sides)"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
 
 
 
 
 
 
-            </RelativeLayout>
+                </RelativeLayout>
 
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/adhar_images"
-                android:orientation="horizontal"
-                android:layout_below="@+id/adhar"
-                android:layout_marginTop="20dp">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/adhar_images"
+                    android:orientation="horizontal"
+                    android:layout_below="@+id/adhar"
+                    android:layout_marginTop="20dp">
 
-                <androidx.cardview.widget.CardView
-                    android:layout_width="136dp"
-                    android:layout_height="136dp"
-                    app:cardCornerRadius="8dp">
-
-                    <RelativeLayout
-                        android:layout_width="136dp"
-                        android:layout_height="136dp">
-
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/aadhar1"
-                            android:background="@drawable/edittext_border"
-                            android:onClick="uploadAadharFront"
-                            android:scaleType="centerCrop"
-                            android:contentDescription="format"
-                            android:src="@drawable/upload_image"/>
-
-
-
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_margin="6dp"
-                            android:src="@drawable/cross_icon"
-                            android:onClick="deleteAadhar1"/>
-
-
-
-                    </RelativeLayout>
-
-                </androidx.cardview.widget.CardView>
-
-
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="136dp"
-                    android:layout_height="136dp"
-                    android:layout_alignParentEnd="true"
-                    app:cardCornerRadius="8dp">
-
-                    <RelativeLayout
+                    <androidx.cardview.widget.CardView
                         android:layout_width="136dp"
                         android:layout_height="136dp"
-                        android:layout_alignParentEnd="true">
+                        app:cardCornerRadius="8dp">
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/aadhar2"
-                            android:onClick="uploadAadharBack"
-                            android:contentDescription="format"
-                            android:scaleType="centerCrop"
-                            android:background="@drawable/edittext_border"
-                            android:src="@drawable/upload_image"/>
+                        <RelativeLayout
+                            android:layout_width="136dp"
+                            android:layout_height="136dp">
 
-
-
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_margin="6dp"
-                            android:onClick="deleteAadhar2"
-                            android:src="@drawable/cross_icon"/>
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/aadhar1"
+                                android:background="@drawable/edittext_border"
+                                android:onClick="uploadAadharFront"
+                                android:scaleType="centerCrop"
+                                android:contentDescription="format"
+                                android:src="@drawable/upload_image"/>
 
 
 
-                    </RelativeLayout>
-
-
-                </androidx.cardview.widget.CardView>
-
-
-
-
-
-
-
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_margin="6dp"
+                                android:src="@drawable/cross_icon"
+                                android:onClick="deleteAadhar1"/>
 
 
 
+                        </RelativeLayout>
+
+                    </androidx.cardview.widget.CardView>
 
 
 
-            </RelativeLayout>
-
-
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="40dp"
-                android:id="@+id/subPan"
-                android:layout_below="@+id/adhar_images">
-
-                <TextView
-                    android:id="@+id/textView6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:fontFamily="@font/montserrat_regular"
-                    android:text="Submit PAN " />
-
-
-
-            </RelativeLayout>
-
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_below="@+id/subPan"
-                android:layout_marginTop="20dp">
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="136dp"
-                    android:layout_height="136dp"
-                    app:cardCornerRadius="8dp">
-
-                    <RelativeLayout
+                    <androidx.cardview.widget.CardView
                         android:layout_width="136dp"
-                        android:layout_height="136dp">
+                        android:layout_height="136dp"
+                        android:layout_alignParentEnd="true"
+                        app:cardCornerRadius="8dp">
 
-                        <ImageView
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:id="@+id/pan1"
-                            android:onClick="uploadPan"
-                            android:background="@drawable/edittext_border"
-                            android:scaleType="centerCrop"
-                            android:contentDescription="format"
-                            android:src="@drawable/upload_image"/>
+                        <RelativeLayout
+                            android:layout_width="136dp"
+                            android:layout_height="136dp"
+                            android:layout_alignParentEnd="true">
 
-
-
-                        <ImageView
-                            android:layout_width="22dp"
-                            android:layout_height="22dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_margin="6dp"
-                            android:onClick="deletePan"
-                            android:src="@drawable/cross_icon"/>
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/aadhar2"
+                                android:onClick="uploadAadharBack"
+                                android:contentDescription="format"
+                                android:scaleType="centerCrop"
+                                android:background="@drawable/edittext_border"
+                                android:src="@drawable/upload_image"/>
 
 
 
-                    </RelativeLayout>
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_margin="6dp"
+                                android:onClick="deleteAadhar2"
+                                android:src="@drawable/cross_icon"/>
 
 
-                </androidx.cardview.widget.CardView>
+
+                        </RelativeLayout>
+
+
+                    </androidx.cardview.widget.CardView>
 
 
 
+
+
+
+
+
+
+
+
+
+
+                </RelativeLayout>
+
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="40dp"
+                    android:id="@+id/subPan"
+                    android:layout_below="@+id/adhar_images">
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:text="Submit PAN "
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+
+
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_below="@+id/subPan"
+                    android:layout_marginTop="20dp">
+
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="136dp"
+                        android:layout_height="136dp"
+                        app:cardCornerRadius="8dp">
+
+                        <RelativeLayout
+                            android:layout_width="136dp"
+                            android:layout_height="136dp">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/pan1"
+                                android:onClick="uploadPan"
+                                android:background="@drawable/edittext_border"
+                                android:scaleType="centerCrop"
+                                android:contentDescription="format"
+                                android:src="@drawable/upload_image"/>
+
+
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_alignParentRight="true"
+                                android:layout_alignParentTop="true"
+                                android:layout_margin="6dp"
+                                android:onClick="deletePan"
+                                android:src="@drawable/cross_icon"/>
+
+
+
+                        </RelativeLayout>
+
+
+                    </androidx.cardview.widget.CardView>
+
+
+
+
+
+
+
+
+
+
+
+                </RelativeLayout>
 
 
 
@@ -230,15 +271,10 @@
 
 
             </RelativeLayout>
-
-
-
-
-
-
 
 
         </RelativeLayout>
+
 
 
 

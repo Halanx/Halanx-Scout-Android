@@ -31,7 +31,7 @@
                 android:id="@+id/notification_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="15dp"
+                android:textSize="13sp"
                 android:textColor="#707070"
                 android:fontFamily="@font/montserrat_regular"
                 android:textStyle="bold"
@@ -45,7 +45,7 @@
                 android:fontFamily="@font/montserrat_regular"
                 android:textStyle="bold"
                 android:layout_marginTop="5dp"
-                android:textSize="11dp"
+                android:textSize="11sp"
                 android:text="12:09 PM"/>
 
             <TextView
@@ -58,7 +58,7 @@
                 android:textColor="#B8B8B8"
                 android:fontFamily="@font/montserrat_regular"
                 android:textStyle="bold"
-                android:textSize="11dp"
+                android:textSize="11sp"
                 android:layout_marginTop="5dp"
                 android:text="25 May 2019"/>
         </RelativeLayout>

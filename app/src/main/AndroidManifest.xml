@@ -19,34 +19,43 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Profile.WorkAddressActivity"></activity>
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat"/>
+        <activity android:name=".Profile.WorkAddressActivity" android:screenOrientation="portrait"></activity>
         <activity
             android:name=".Profile.DocumentImage"
-            android:theme="@style/AppThemeNoBar" />
-        <activity android:name=".Home.TaskActivity" />
-        <activity android:name=".Wallet.DueActivity" />
+            android:theme="@style/AppThemeNoBar"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".Home.TaskActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Wallet.DueActivity" android:screenOrientation="portrait"/>
         <activity
             android:name=".Home.ScoutAcceptanceActivity"
-            android:theme="@style/AppThemeNoBar" />
+            android:theme="@style/AppThemeNoBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Profile.ProfileImageActivity"
-            android:theme="@style/AppThemeNoBar" />
-        <activity android:name=".ChangePassword" />
-        <activity android:name=".Profile.BankDetailsActivity" />
-        <activity android:name=".Profile.DocumentsActivity" />
-        <activity android:name=".ConfirmOtpPasswordActivity" />
-        <activity android:name=".Wallet.PaidActivity" />
-        <activity android:name=".Home.ChatWindow" />
+            android:theme="@style/AppThemeNoBar"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".ChangePassword"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".Profile.BankDetailsActivity" android:screenOrientation="portrait" />
+        <activity android:name=".Profile.DocumentsActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ConfirmOtpPasswordActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Wallet.PaidActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Home.ChatWindow"  android:screenOrientation="portrait"/>
         <activity
             android:name=".HomeActivity"
-            android:theme="@style/AppTheme" />
-        <activity android:name=".EnterPasswordActivity" />
-        <activity android:name=".ForgotPassword" />
-        <activity android:name=".ConfirmOtpRegisterActivity" />
-        <activity android:name=".RegisterActivity" />
+            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".EnterPasswordActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".ForgotPassword" android:screenOrientation="portrait"/>
+        <activity android:name=".ConfirmOtpRegisterActivity" android:screenOrientation="portrait" />
+        <activity android:name=".RegisterActivity" android:screenOrientation="portrait"/>
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/AppThemeNoBar">
+            android:theme="@style/AppThemeNoBar"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -62,6 +71,7 @@
 
         <activity
             android:name=".LoginActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppThemeNoBar" />
     </application>
 

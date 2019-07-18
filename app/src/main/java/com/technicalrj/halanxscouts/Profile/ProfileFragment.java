@@ -35,6 +35,8 @@ import com.squareup.picasso.Picasso;
 import com.technicalrj.halanxscouts.ChangePassword;
 import com.technicalrj.halanxscouts.LoginActivity;
 import com.technicalrj.halanxscouts.R;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -98,7 +100,32 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==PICK_IMAGE && resultCode==RESULT_OK ){
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                Uri selectedImage = result.getUri();
+
+                File profileFile=null;
+                if(selectedImage==null){
+                    Bitmap photo = (Bitmap) data.getExtras().get("data");
+                    imageView.setImageBitmap(photo);
+                    profileFile = persistImage( photo ,"sdf");
+                }else {
+                    imageView.setImageBitmap(getRotatedImage(selectedImage));
+                    profileFile = persistImage( getRotatedImage(selectedImage) ,"dsf");
+                }
+
+                uploadData(profileFile);
+
+
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+                error.printStackTrace();
+            }
+        }
+
+        /*if(requestCode==PICK_IMAGE && resultCode==RESULT_OK ){
 
 
             Uri selectedImage = data.getData();
@@ -114,7 +141,7 @@ public class ProfileFragment extends Fragment {
 
             uploadData(profileFile);
 
-        }
+        }*/
 
         if(requestCode==BANK_DETAILS_UPDATE || requestCode==DOCUMENTS_DETAILS_UPDATE ){
             if(resultCode == RESULT_OK){
@@ -152,7 +179,6 @@ public class ProfileFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Profile");
 
 
         documents = view.findViewById(R.id.documents);
@@ -261,16 +287,15 @@ public class ProfileFragment extends Fragment {
                                 final SharedPreferences prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
 
                                 OkHttpClient client = new OkHttpClient();
-                                RequestBody body = new MultipartBody.Builder()
-                                        .setType(MultipartBody.FORM)
-                                        .addFormDataPart("key",prefs.getString("login_key",""))
-                                        .build();
+                                RequestBody body = RequestBody.create(JSON, "");
 
                                 final Request request = new Request.Builder()
                                         .url("https://scout-api.halanx.com/rest-auth/logout/")
+                                        .addHeader("Authorization","Token "+prefs.getString("login_key",""))
                                         .post(body)
                                         .build();
 
+                                Log.i(TAG, "onClick: key:"+prefs.getString("login_key",""));
                                 client.newCall(request).enqueue(new Callback() {
                                     @Override
                                     public void onFailure(@NotNull Call call, @NotNull IOException e) {
@@ -278,7 +303,7 @@ public class ProfileFragment extends Fragment {
                                     }
 
                                     @Override
-                                    public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                                    public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
 
                                         if(response.isSuccessful()){
                                             getActivity().runOnUiThread(new Runnable() {
@@ -286,10 +311,15 @@ public class ProfileFragment extends Fragment {
                                                 public void run() {
                                                     Toast.makeText(getActivity(),"Logged out successfully",Toast.LENGTH_SHORT).show();
 
-
+                                                    try {
+                                                        Log.i(TAG, "run: "+response.body().string());
+                                                    } catch (IOException e) {
+                                                        e.printStackTrace();
+                                                    }
 
                                                     SharedPreferences.Editor editor = prefs.edit();
                                                     editor.remove("login_key");
+                                                    editor.putBoolean("online_status",false);
                                                     editor.apply();
 
                                                     Intent intent = new Intent(getActivity(), LoginActivity.class);
@@ -302,6 +332,7 @@ public class ProfileFragment extends Fragment {
                                             getActivity().runOnUiThread(new Runnable() {
                                                 @Override
                                                 public void run() {
+                                                    Log.i(TAG, "run: "+response.networkResponse().body());
                                                     Toast.makeText(getActivity(),"Unable to logout",Toast.LENGTH_SHORT).show();
 
                                                 }
@@ -737,7 +768,10 @@ public class ProfileFragment extends Fragment {
     }
 
     private void chooseImage(int permisson) {
-        Intent intentCamera = new Intent("android.media.action.IMAGE_CAPTURE");
+
+        CropImage.activity()
+                .start(getContext(), this);
+        /*Intent intentCamera = new Intent("android.media.action.IMAGE_CAPTURE");
 
         Intent pickIntent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         pickIntent.setType("image/*");
@@ -746,7 +780,7 @@ public class ProfileFragment extends Fragment {
         chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, new Intent[]{intentCamera});
 
         startActivityForResult(chooserIntent, permisson);
-
+*/
 
     }
 

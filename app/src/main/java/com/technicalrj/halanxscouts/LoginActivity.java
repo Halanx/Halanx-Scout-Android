@@ -5,10 +5,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText phoneNumber;
     private EditText password;
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+    private TextView showHide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +46,7 @@ public class LoginActivity extends AppCompatActivity {
 
         phoneNumber = findViewById(R.id.phone_number);
         password = findViewById(R.id.password);
+        showHide = findViewById(R.id.show_hide);
 
 
         SharedPreferences prefs = getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
@@ -180,4 +186,18 @@ public class LoginActivity extends AppCompatActivity {
 
          return true;
     }
+
+    public void showHide(View view) {
+        if(showHide.getText().equals("HIDE"))
+        {
+            showHide.setText("SHOW");
+            password.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        }
+        else if(showHide.getText().equals("SHOW"))
+        {
+            showHide.setText("HIDE");
+            password.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        }
+    }
+
 }

@@ -5,10 +5,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jetbrains.annotations.NotNull;
@@ -40,6 +44,7 @@ public class RegisterActivity extends AppCompatActivity {
     String email;
     String password;
     String confirmPassword;
+    TextView showHide, confirmShowHide;
 
     public static final MediaType JSON
             = MediaType.get("application/json; charset=utf-8");
@@ -50,10 +55,6 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Register");
-
 
         firstName = findViewById(R.id.first_name);
         lastName = findViewById(R.id.last_name);
@@ -62,6 +63,8 @@ public class RegisterActivity extends AppCompatActivity {
         termsAndConditions = findViewById(R.id.checkBox);
         passwordTv = findViewById(R.id.password);
         confirmPasswordTv = findViewById(R.id.confirm_password);
+        showHide = findViewById(R.id.show_hide);
+        confirmShowHide = findViewById(R.id.confirm_show_hide);
 
 
 
@@ -173,17 +176,46 @@ public class RegisterActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
 
-        return super.onSupportNavigateUp();
-    }
 
     public void termsAndCondi(View view) {
 
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://halanx.com/terms"));
         startActivity(intent);
+
+    }
+
+    public void backPress(View view) {
+        onBackPressed();
+    }
+
+    public void showHideOnClick(View view) {
+
+        if(showHide.getText().equals("HIDE"))
+        {
+            showHide.setText("SHOW");
+            passwordTv.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        }
+        else if(showHide.getText().equals("SHOW"))
+        {
+            showHide.setText("HIDE");
+            passwordTv.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        }
+
+    }
+
+    public void confirmShowHideOnClick(View view) {
+
+        if(confirmShowHide.getText().equals("HIDE"))
+        {
+            confirmShowHide.setText("SHOW");
+            confirmPasswordTv.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        }
+        else if(confirmShowHide.getText().equals("SHOW"))
+        {
+            confirmShowHide.setText("HIDE");
+            confirmPasswordTv.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        }
 
     }
 }

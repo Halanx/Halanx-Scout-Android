@@ -54,6 +54,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Log.d(TAG, "Message data payload correct: " + data);
             Log.d(TAG, "Data Payload full: " + remoteMessage.getData().toString());
             try {
+
+                final SharedPreferences prefs = getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
+                String key = prefs.getString("login_key", null);
+                if(key==null)
+                    return;
+
                 JSONObject json = new JSONObject(data);
                 if(json.getJSONObject("category").getString("name").equals("NewTask")){
                     handleTaskNotification(json);
@@ -139,6 +145,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             intent.putExtra("task_name",taskname);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -155,8 +162,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
         String title="",content="",imageUrl="";
         try {
-            title = json.getJSONObject("category").getString("name");
-            content = json.getString("content");
+
+            if(json.getJSONObject("category").getString("name").equals("NewPaymentReceived")){
+                title = "Payment Received";
+            } else {
+                title = json.getJSONObject("category").getString("name");
+            }
+
+            content = json.getJSONObject("payload").getString("description");
             imageUrl = json.getJSONObject("category").getString("image");
 
         } catch (JSONException e) {

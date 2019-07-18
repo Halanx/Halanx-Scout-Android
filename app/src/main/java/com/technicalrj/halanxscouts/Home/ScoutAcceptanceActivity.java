@@ -43,6 +43,7 @@ public class ScoutAcceptanceActivity extends AppCompatActivity {
     Ringtone r;
     int taskId;
     String key;
+    private int count = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -191,14 +192,19 @@ public class ScoutAcceptanceActivity extends AppCompatActivity {
                 Toast.makeText(ScoutAcceptanceActivity.this,"Task accepted",Toast.LENGTH_SHORT).show();
                 r.stop();
 
-                taskAccepted(true);
+                if(count==0) {
+                    taskAccepted(true);
+                }
                 finish();
-            }
-            if(v.getX()<=0){
+
+            }else if(v.getX()<=0){
                 Toast.makeText(ScoutAcceptanceActivity.this,"Task Rejected",Toast.LENGTH_SHORT).show();
                 r.stop();
+
+                if(count==0){
+                    taskAccepted(false);
+                }
                 finish();
-                taskAccepted(false);
             }
 
             return true;
@@ -207,7 +213,9 @@ public class ScoutAcceptanceActivity extends AppCompatActivity {
 
     private void taskAccepted(boolean bool) {
 
-
+        //TO check it is the first and only time we are calling this function
+        count++;
+        Log.i("InfoText","Task request send:"+bool);
 
         JsonObject jsonObject = new JsonObject();
 
@@ -227,6 +235,7 @@ public class ScoutAcceptanceActivity extends AppCompatActivity {
                     Log.i("InfoText","Task request status acc/rej:"+response.body());
                     Intent intent = new Intent(ScoutAcceptanceActivity.this, HomeActivity.class);
                     startActivity(intent);
+                    finishAffinity();
                 }else {
                     try {
                         Log.i("InfoText","Task request error:"+response.errorBody().string());

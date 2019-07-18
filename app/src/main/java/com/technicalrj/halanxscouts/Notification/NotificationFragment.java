@@ -50,7 +50,6 @@ public class NotificationFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Notification");
         View v = inflater.inflate(R.layout.fragment_notification, container, false);
 
 

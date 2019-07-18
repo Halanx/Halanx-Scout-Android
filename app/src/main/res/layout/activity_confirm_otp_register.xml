@@ -8,11 +8,34 @@
     tools:context=".ConfirmOtpRegisterActivity">
 
 
+
+    <TextView
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:gravity="center"
+        android:text="Confirm OTP"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:fontFamily="@font/montserrat_regular"
+        android:textColor="@color/colorPrimary"/>
+
+    <ImageView
+        android:layout_width="18dp"
+        android:layout_height="58dp"
+        android:onClick="backPress"
+        android:layout_marginStart="12dp"
+        android:layout_alignParentStart="true"
+        android:backgroundTint="#EF3939"
+        android:src="@drawable/back_arrow_red"/>
+
+
     <ImageView
         android:layout_width="97dp"
         android:layout_height="40dp"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
+        android:layout_below="@+id/toolbar"
         android:id="@+id/halanx_logo"
         android:src="@drawable/app_logo_welcome" />
 
@@ -21,7 +44,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="120dp"
+        android:layout_below="@+id/halanx_logo"
+        android:layout_marginTop="60dp"
+        android:textSize="14sp"
         android:fontFamily="@font/montserrat_regular"
         android:text="Enter OTP"
         android:textStyle="bold" />
@@ -30,49 +55,51 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:id="@+id/lin_layout"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginTop="150dp">
+        android:layout_below="@+id/textView"
+        android:layout_marginTop="25dp">
 
 
         <EditText
             android:id="@+id/otp1"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/edittext_border"
             android:inputType="number"
             android:maxLength="1"
-            android:padding="20dp" />
+            android:gravity="center" />
 
         <EditText
             android:id="@+id/otp2"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/edittext_border"
             android:inputType="number"
             android:maxLength="1"
-            android:padding="20dp" />
+            android:gravity="center" />
 
         <EditText
             android:id="@+id/otp3"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/edittext_border"
             android:inputType="number"
             android:maxLength="1"
-            android:padding="20dp" />
+            android:gravity="center" />
 
         <EditText
             android:id="@+id/otp4"
-            android:layout_width="60dp"
-            android:layout_height="wrap_content"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
             android:background="@drawable/edittext_border"
             android:inputType="number"
             android:maxLength="1"
-            android:padding="20dp" />
+            android:gravity="center" />
 
     </LinearLayout>
 
@@ -81,21 +108,26 @@
         android:id="@+id/textView3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="250dp"
+        android:layout_marginTop="25dp"
+        android:layout_below="@+id/lin_layout"
         android:layout_centerHorizontal="true"
         android:fontFamily="@font/montserrat_regular"
         android:text="Didn't Get the OTP?"
+        android:textSize="14sp"
+        android:textColor="#B8B8B8"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="290dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/textView3"
         android:layout_centerHorizontal="true"
         android:fontFamily="@font/montserrat_regular"
         android:text="@string/resend"
         android:onClick="resentOtp"
+        android:textSize="14sp"
         android:textColor="@color/colorTextButtonColor"
         android:textStyle="bold" />
 
@@ -103,7 +135,7 @@
     <Button
         android:id="@+id/button2"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_marginBottom="40dp"
         android:layout_marginLeft="40dp"
         android:layout_marginRight="40dp"
@@ -116,7 +148,7 @@
         android:text="Confirm OTP"
         android:textAllCaps="false"
         android:textColor="@color/colorWhite"
-        android:textSize="16sp"
+        android:textSize="14sp"
         android:textStyle="bold" />
 
 

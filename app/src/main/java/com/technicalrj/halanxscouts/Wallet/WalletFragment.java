@@ -45,7 +45,6 @@ public class WalletFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Wallet");
         View view  = inflater.inflate(R.layout.fragment_wallet, container, false);
 
         earning = view.findViewById(R.id.earning);
@@ -107,11 +106,11 @@ public class WalletFragment extends Fragment {
                 JsonObject jsonObject = response.body();
                 Log.i("InfoText","inside onResponse "+jsonObject.toString());
 
-                double credit =  jsonObject.get("credit").getAsDouble();
+                double total_earning =  jsonObject.get("total_earning").getAsDouble();
                 double pending_withdrawal =  jsonObject.get("pending_withdrawal").getAsDouble();
                 double debit =  jsonObject.get("debit").getAsDouble();
 
-                earning.setText(""+credit);
+                earning.setText(""+total_earning);
                 paid.setText(""+debit);
                 due.setText(""+pending_withdrawal);
 

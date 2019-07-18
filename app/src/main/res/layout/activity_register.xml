@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorWhiteBackground">
+    android:background="@color/colorWhiteBackground"
+    android:fadeScrollbars="false">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
@@ -13,11 +14,33 @@
         tools:context=".RegisterActivity">
 
 
+        <TextView
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="center"
+            android:text="Registration"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="58dp"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="12dp"
+            android:backgroundTint="#EF3939"
+            android:onClick="backPress"
+            android:src="@drawable/back_arrow_red" />
+
+
         <EditText
             android:id="@+id/first_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/halanx_logo"
+            android:layout_height="51dp"
+            android:textSize="14sp"
+            android:layout_below="@+id/toolbar"
             android:layout_marginStart="30dp"
             android:layout_marginTop="21dp"
             android:layout_marginEnd="30dp"
@@ -32,7 +55,8 @@
         <EditText
             android:id="@+id/last_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="51dp"
+            android:textSize="14sp"
             android:layout_below="@id/first_name"
             android:layout_marginStart="30dp"
             android:layout_marginTop="20dp"
@@ -47,7 +71,8 @@
         <EditText
             android:id="@+id/email"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="51dp"
+            android:textSize="14sp"
             android:layout_below="@+id/last_name"
             android:layout_marginStart="30dp"
             android:layout_marginTop="20dp"
@@ -63,7 +88,8 @@
         <EditText
             android:id="@+id/phone_number"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="51dp"
+            android:textSize="14sp"
             android:layout_below="@+id/email"
             android:layout_marginStart="30dp"
             android:layout_marginTop="20dp"
@@ -75,44 +101,125 @@
             android:inputType="phone"
             android:padding="15dp" />
 
-        <EditText
-            android:id="@+id/password"
+
+        <RelativeLayout
+            android:id="@+id/password_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="30dp"
             android:layout_below="@+id/phone_number"
-            android:background="@drawable/edittext_border"
-            android:ems="10"
-            android:fontFamily="@font/montserrat_regular"
-            android:hint="Enter New Password"
-            android:inputType="textPassword"
-            android:padding="15dp" />
-
-        <EditText
-            android:id="@+id/confirm_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginStart="30dp"
             android:layout_marginTop="20dp"
             android:layout_marginEnd="30dp"
-            android:layout_below="@+id/password"
-            android:background="@drawable/edittext_border"
-            android:ems="10"
-            android:fontFamily="@font/montserrat_regular"
-            android:hint="Confirm Password"
-            android:inputType="textPassword"
-            android:padding="15dp" />
+            android:background="@drawable/edittext_border">
+
+            <EditText
+                android:id="@+id/password"
+                android:layout_width="match_parent"
+                android:layout_height="51dp"
+                android:textSize="14sp"
+                android:layout_toLeftOf="@+id/show_hide"
+                android:background="@android:color/transparent"
+                android:ems="10"
+                android:fontFamily="@font/montserrat_regular"
+                android:hint="Enter New Password"
+                android:inputType="textPassword"
+                android:padding="15dp" />
+
+            <TextView
+                android:id="@+id/show_hide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:onClick="showHideOnClick"
+                android:paddingEnd="10dp"
+                android:text="SHOW"
+                android:textSize="10sp"
+                android:textStyle="bold" />
 
 
+        </RelativeLayout>
+
+
+        <!--
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_below="@+id/phone_number"
+                    android:background="@drawable/edittext_border"
+                    android:ems="10"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Enter New Password"
+                    android:inputType="textPassword"
+                    android:padding="15dp" />
+        -->
+
+        <RelativeLayout
+            android:id="@+id/confirm_password_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/password_layout"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="30dp"
+            android:background="@drawable/edittext_border">
+
+            <EditText
+                android:id="@+id/confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="51dp"
+                android:textSize="14sp"
+                android:layout_toLeftOf="@+id/confirm_show_hide"
+                android:background="@android:color/transparent"
+                android:ems="10"
+                android:fontFamily="@font/montserrat_regular"
+                android:hint="Confirm Password"
+                android:inputType="textPassword"
+                android:padding="15dp" />
+
+            <TextView
+                android:id="@+id/confirm_show_hide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:onClick="confirmShowHideOnClick"
+                android:paddingEnd="10dp"
+                android:text="SHOW"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+
+        </RelativeLayout>
+
+
+        <!--
+                <EditText
+                    android:id="@+id/confirm_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="30dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="30dp"
+                    android:layout_below="@+id/password"
+                    android:background="@drawable/edittext_border"
+                    android:ems="10"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:hint="Confirm Password"
+                    android:inputType="textPassword"
+                    android:padding="15dp" />
+        -->
 
 
         <LinearLayout
+            android:id="@+id/checkLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/checkLayout"
-            android:layout_below="@+id/confirm_password"
+            android:layout_below="@+id/confirm_password_layout"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20dp"
             android:orientation="horizontal">
@@ -127,54 +234,55 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_regular"
                 android:text="I Agree to "
+                android:textSize="14sp"
                 android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_regular"
+                android:onClick="termsAndCondi"
                 android:text="@string/terms_and_conditions"
                 android:textColor="@color/colorTextButtonColor"
-                android:onClick="termsAndCondi"
                 android:textStyle="bold" />
 
         </LinearLayout>
 
-        <!--
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="250dp"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="50dp"
-                android:layout_below="@+id/checkLayout"
-                android:fontFamily="@font/montserrat_regular"
-                android:gravity="center"
-                android:text="We will send you OTP via SMS at the above phone number"
-                android:textStyle="bold" />
-        -->
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/checkLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="61dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="center"
+            android:textSize="11sp"
+            android:text="We will send you OTP via SMS at the above phone number"
+            android:textColor="#B8B8B8"
+            android:textStyle="bold" />
 
 
         <Button
             android:id="@+id/button2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
-            android:layout_marginBottom="40dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/textView2"
             android:layout_alignParentBottom="true"
-            android:layout_below="@+id/checkLayout"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="22dp"
+            android:layout_marginRight="40dp"
             android:background="@drawable/button_shape"
             android:fontFamily="@font/montserrat_regular"
+            android:onClick="sendOtp"
             android:paddingLeft="20dp"
             android:paddingRight="20dp"
             android:text="Send OTP"
             android:textAllCaps="false"
             android:textColor="@color/colorWhite"
-            android:textSize="16sp"
-            android:onClick="sendOtp"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
 

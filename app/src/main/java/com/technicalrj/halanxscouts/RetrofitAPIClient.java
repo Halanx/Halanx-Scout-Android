@@ -13,6 +13,7 @@ import com.technicalrj.halanxscouts.Wallet.TaskPayment;
 import java.util.HashMap;
 import java.util.List;
 
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -77,7 +78,7 @@ public class RetrofitAPIClient {
         Call<ScheduledTask> getTasksById(@Path("id") int id,@Header("Authorization") String token);
 
         @PATCH("/scouts/tasks/{id}/")
-        Call<Void> setTaskComplete(@Path("id") int id,@Query("complete") boolean complete ,@Query("remark") String remark , @Header("Authorization") String token);
+        Call<Void> setTaskComplete(@Path("id") int id, @Body JsonObject jsonObject, @Header("Authorization") String token);
 
         @DELETE("/scouts/tasks/{id}/")
         Call<String> cancelTask(@Path("id") int id,@Header("Authorization") String token);

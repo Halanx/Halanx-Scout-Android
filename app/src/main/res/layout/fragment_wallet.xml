@@ -1,36 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:foreground="?android:attr/selectableItemBackground"
     android:layout_margin="10dp"
-    app:cardCornerRadius="5dp"
-    app:cardBackgroundColor="@color/colorWhite"
     android:layout_marginBottom="100dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardBackgroundColor="@color/colorWhite"
+    app:cardCornerRadius="11dp">
 
 
-
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".WalletFragment"
         android:background="@color/colorWhite"
-        android:layout_margin="10dp"
-        android:padding="10dp">
+        tools:context=".WalletFragment">
 
         <!-- TODO: Update blank fragment layout -->
 
+
+        <TextView
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="center"
+            android:text="Earnings"
+            android:textSize="17sp"
+            android:textStyle="bold" />
+
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/toolbar"
+            android:background="#D6D6D6" />
+
         <androidx.cardview.widget.CardView
+            android:id="@+id/rel_layout"
             android:layout_width="match_parent"
             android:layout_height="126dp"
+            android:layout_below="@+id/view"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="21dp"
+            android:layout_marginEnd="10dp"
             android:foreground="?android:attr/selectableItemBackground"
-            app:cardCornerRadius="13dp"
-            android:id="@+id/rel_layout"
-            >
+            app:cardCornerRadius="13dp">
 
 
             <RelativeLayout
@@ -45,36 +62,36 @@
                     android:layout_centerVertical="true">
 
                     <TextView
+                        android:id="@+id/textView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/textView"
+                        android:fontFamily="@font/montserrat_regular"
                         android:text="Total Earning"
                         android:textColor="@color/colorWhite"
-                        android:textStyle="bold"
-                        android:fontFamily="@font/montserrat_regular"
-                        android:textSize="20dp" />
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
 
 
                     <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="₹ "
                         android:id="@+id/textView34"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:paddingTop="10dp"
+                        android:text="₹ "
                         android:textColor="@color/colorWhite"
                         android:textSize="60sp" />
 
                     <TextView
+                        android:id="@+id/earning"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/earning"
-                        android:text=""
                         android:layout_toRightOf="@+id/textView34"
-                        android:paddingTop="10dp"
                         android:fontFamily="@font/montserrat_regular"
-                        android:textStyle="bold"
+                        android:paddingTop="10dp"
+                        android:text=""
                         android:textColor="@color/colorWhite"
-                        android:textSize="60sp" />
+                        android:textSize="60sp"
+                        android:textStyle="bold" />
 
 
                 </RelativeLayout>
@@ -87,31 +104,30 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="1"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
+            android:layout_below="@+id/rel_layout"
             android:background="@color/colorWhite"
-            android:layout_below="@+id/rel_layout">
+            android:orientation="horizontal"
+            android:paddingTop="21dp"
+            android:paddingBottom="10dp"
+            android:weightSum="1">
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/rel_layout2"
                 android:layout_width="match_parent"
                 android:layout_height="126dp"
-                android:foreground="?android:attr/selectableItemBackground"
-                app:cardCornerRadius="13dp"
-                android:layout_weight="0.5"
-                android:layout_marginStart="1dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="1dp"
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="1dp"
-                android:layout_marginTop="1dp"
-                android:id="@+id/rel_layout2"
-                >
+                android:layout_weight="0.5"
+                android:foreground="?android:attr/selectableItemBackground"
+                app:cardCornerRadius="13dp">
 
 
                 <RelativeLayout
+                    android:id="@+id/earning_layout"
                     android:layout_width="match_parent"
                     android:layout_height="126dp"
-                    android:id="@+id/earning_layout"
                     android:background="@drawable/paid_background">
 
                     <RelativeLayout
@@ -123,35 +139,34 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_regular"
                             android:text="Paid"
                             android:textColor="@color/colorWhite"
-                            android:textStyle="bold"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:textSize="15dp" />
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
 
 
                         <TextView
+                            android:id="@+id/textView35"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/textView35"
-                            android:text="₹ "
                             android:paddingTop="10dp"
+                            android:text="₹ "
                             android:textColor="@color/colorWhite"
                             android:textSize="30sp" />
 
 
                         <TextView
+                            android:id="@+id/paid"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:id="@+id/paid"
-                            android:text=""
                             android:layout_toEndOf="@+id/textView35"
                             android:fontFamily="@font/montserrat_regular"
-                            android:textStyle="bold"
                             android:paddingTop="10dp"
+                            android:text=""
                             android:textColor="@color/colorWhite"
-                            android:textSize="30sp" />
-
+                            android:textSize="30sp"
+                            android:textStyle="bold" />
 
 
                     </RelativeLayout>
@@ -162,20 +177,22 @@
             </androidx.cardview.widget.CardView>
 
 
-
             <androidx.cardview.widget.CardView
+                android:id="@+id/rel_layout3"
                 android:layout_width="match_parent"
                 android:layout_height="126dp"
+                android:layout_marginStart="1dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="1dp"
                 android:layout_weight="0.5"
-                app:cardCornerRadius="13dp"
-                android:layout_margin="1dp"
-                android:id="@+id/rel_layout3">
+                app:cardCornerRadius="13dp">
 
 
                 <RelativeLayout
+                    android:id="@+id/due_layout"
                     android:layout_width="match_parent"
                     android:layout_height="126dp"
-                    android:id="@+id/due_layout"
                     android:background="@drawable/due_background">
 
                     <RelativeLayout
@@ -187,11 +204,11 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/montserrat_regular"
                             android:text="Due"
                             android:textColor="@color/colorGrey"
-                            android:textStyle="bold"
-                            android:fontFamily="@font/montserrat_regular"
-                            android:textSize="15dp" />
+                            android:textSize="15dp"
+                            android:textStyle="bold" />
 
 
                         <TextView
@@ -209,14 +226,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="0dp"
-                            android:paddingTop="10dp"
                             android:layout_toEndOf="@+id/textView36"
-                            android:text=""
                             android:fontFamily="@font/montserrat_regular"
-                            android:textStyle="bold"
+                            android:paddingTop="10dp"
+                            android:text=""
                             android:textColor="@color/colorGrey"
-                            android:textSize="30sp" />
-
+                            android:textSize="30sp"
+                            android:textStyle="bold" />
 
 
                     </RelativeLayout>
@@ -227,14 +243,7 @@
             </androidx.cardview.widget.CardView>
 
 
-
-
         </LinearLayout>
-
-
-
-
-
 
 
     </RelativeLayout>

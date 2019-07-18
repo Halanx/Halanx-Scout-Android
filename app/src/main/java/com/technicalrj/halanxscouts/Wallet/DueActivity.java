@@ -38,9 +38,6 @@ public class DueActivity extends AppCompatActivity {
         final SharedPreferences prefs = getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setTitle("Due Payments");
 
         noPaymentImg = findViewById(R.id.no_payment);
 
@@ -93,11 +90,7 @@ public class DueActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    public boolean onSupportNavigateUp() {
+    public void backPress(View view) {
         onBackPressed();
-
-        return super.onSupportNavigateUp();
     }
-
 }

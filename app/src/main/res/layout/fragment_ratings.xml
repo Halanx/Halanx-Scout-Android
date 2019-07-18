@@ -4,14 +4,13 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:foreground="?android:attr/selectableItemBackground"
-    android:layout_margin="10dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.cardview.widget.CardView android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:foreground="?android:attr/selectableItemBackground"
         android:layout_margin="10dp"
-        app:cardCornerRadius="5dp"
+        app:cardCornerRadius="11dp"
         app:cardBackgroundColor="@color/colorWhite"
         android:layout_marginBottom="100dp"
         xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -21,17 +20,37 @@
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp"
             tools:context=".RatingsFragment">
 
             <!-- TODO: Update blank fragment layout -->
 
 
+            <TextView
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:fontFamily="@font/montserrat_regular"
+                android:gravity="center"
+                android:text="Ratings"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+
+            <View
+                android:id="@+id/line_view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/toolbar"
+                android:background="#D6D6D6" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="126dp"
                 android:id="@+id/rel_layout"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/line_view"
                 android:background="@drawable/rating_background_color">
 
                 <RelativeLayout
@@ -94,6 +113,8 @@
                 android:layout_below="@+id/things_to_improve_Tv"
                 android:id="@+id/things_to_improve"
                 android:layout_marginTop="30dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:numColumns="2">
             </GridView>
 

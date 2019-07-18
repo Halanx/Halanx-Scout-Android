@@ -1,16 +1,20 @@
 package com.technicalrj.halanxscouts.Adapters;
 
 
+import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +24,10 @@ import com.technicalrj.halanxscouts.Home.TaskActivity;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Nishant on 19/12/17.
@@ -29,6 +36,7 @@ import java.util.ArrayList;
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolder> {
 
+    private static final int TASK_CLICKED = 12;
     Context c;
     ArrayList<ScheduledTask> scheduledTaskList;
 
@@ -82,12 +90,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
             public void onClick(View v) {
                 Intent intent = new Intent(c, TaskActivity.class);
                 intent.putExtra("id",scheduledTaskList.get(position).getId());
-                c.startActivity(intent);
+               ((Activity) c).startActivityForResult(intent,TASK_CLICKED);
             }
         });
 
-        if(scheduledTaskList.get(position).getCustomer()==null){
-            holder.lin_layout.setVisibility(View.INVISIBLE);
+        //if not previous day then make it invisible
+        if(!isPreviousDay(scheduledTaskList.get(position).getScheduledAt())){
+            holder.tenantLayout.setVisibility(View.GONE);
+            holder.lineView.setVisibility(View.GONE);
             return;
         }
 
@@ -110,7 +120,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
                 c.startActivity(new Intent(c, ChatWindow.class)
                         .putExtra("id",scheduledTaskList.get(position).getConversation()+"")
                         .putExtra("first_name",firstName)
-                        .putExtra("last_name",lastName));
+                        .putExtra("last_name",lastName)
+                        .putExtra("profile_pic_url", scheduledTaskList.get(position).getCustomer().getProfilePicUrl())
+                        .putExtra("phone_number",scheduledTaskList.get(position).getCustomer().getPhoneNo()));
             }
         });
 
@@ -149,6 +161,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
         ImageView customer_img,house_location , chat_icon ,call_icon;
         TextView task_name,address,earning,date_time,customer_name;
         LinearLayout lin_layout;
+        RelativeLayout tenantLayout;
+        View lineView;
 
         public HomesViewHolder(View itemView) {
             super(itemView);
@@ -163,6 +177,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
             call_icon = itemView.findViewById(R.id.call_icon);
             chat_icon = itemView.findViewById(R.id.chat_icon);
             lin_layout = itemView.findViewById(R.id.ll_layout);
+            tenantLayout = itemView.findViewById(R.id.tenantLayout);
+            lineView = itemView.findViewById(R.id.line_view);
 
 
         }
@@ -171,5 +187,25 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
 
 
     }
+
+
+    public boolean isPreviousDay(String scheduledDate){
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy hh:mm a");
+        try {
+            Date date = dateFormat.parse(scheduledDate);
+            Log.i("TaskAdapter", "isPreviousDay: date.getTime:"+date.getTime()+" current:"+System.currentTimeMillis()+" diff:"+(date.getTime()-System.currentTimeMillis()) );
+            if(date.getTime()-System.currentTimeMillis()<=24 * 60 * 60 * 1000)
+                return true;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        return false;
+    }
+
+
+
 
 }

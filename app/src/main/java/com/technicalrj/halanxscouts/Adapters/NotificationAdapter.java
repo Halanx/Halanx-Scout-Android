@@ -45,7 +45,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
 
         Log.i("InfoText","notificationArrayList.get(position).getContent():"+notificationArrayList.get(position).getContent());
-        holder.notification_content.setText(notificationArrayList.get(position).getContent());
+        holder.notification_content.setText("Rs "+notificationArrayList.get(position).getPayload().getAmount()+" Credited in your Bank Account");
         String[] parts =   notificationArrayList.get(position).getTimestamp().split(" ");
 
         holder.time.setText(parts[0]+" "+parts[1] + " " + parts[2]);

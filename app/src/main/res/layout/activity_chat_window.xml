@@ -6,12 +6,76 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5"
     tools:context=".Home.ChatWindow">
-    
+
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="58dp"
+        android:id="@+id/toolbar_layout"
+        android:elevation="2dp"
+        android:background="@color/colorWhite">
+
+
+        <TextView
+            android:id="@+id/name_tv"
+            android:layout_width="match_parent"
+            android:layout_height="58dp"
+            android:fontFamily="@font/montserrat_regular"
+            android:gravity="center"
+            android:textSize="17sp"
+            android:textStyle="bold"/>
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="58dp"
+            android:id="@+id/back_arrow"
+            android:onClick="backPress"
+            android:layout_marginStart="21dp"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/back_arrow"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/customer_img"
+            android:layout_width="45dp"
+            android:layout_height="46dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginStart="12dp"
+            android:onClick="profileImage"
+            android:layout_toRightOf="@+id/back_arrow"
+            android:scaleType="centerCrop"
+            android:src="@drawable/profile_icon" />
+
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="callCustomr"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="10dp"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/call_icon"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/call_icon_group" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_chat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar_layout"
         android:layout_above="@id/rl_send_mssg"
         android:layout_margin="7dp">
 

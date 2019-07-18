@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
@@ -37,6 +38,7 @@ import com.technicalrj.halanxscouts.RetrofitAPIClient;
 
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -81,9 +83,12 @@ public class HomeFragment extends Fragment {
     }
 
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-
-
+        Log.i(TAG, "onActivityResult: "+"home fragment");
+    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -92,7 +97,6 @@ public class HomeFragment extends Fragment {
 
 
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle("Home");
         View v =  inflater.inflate(R.layout.fragment_home, container, false);
         this.inflater  = inflater;
 
@@ -348,6 +352,10 @@ public class HomeFragment extends Fragment {
 
                         Log.i("InfoText","start:"+selectedDate+" "+startTime +" endtimee:"+ selectedDate+" "+endTime);
 
+                        if(!bothTimeValid(selectedDate,startTime,endTime)){
+                            Toast.makeText(getActivity(),"End time must be after the Start time",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
                         addScheduleToServer(selectedDate+" "+startTime , selectedDate+" "+endTime);
 
 
@@ -699,7 +707,10 @@ public class HomeFragment extends Fragment {
                 String endTime = to.getText().toString() ;
 
                 Log.i("InfoText","start:"+selectedDate+" "+startTime +" endtimee:"+ selectedDate+" "+endTime);
-
+                if(!bothTimeValid(selectedDate,startTime,endTime)){
+                    Toast.makeText(getActivity(),"End time must be after the Start time",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 updateScheduleToServer(selectedDate+" "+startTime , selectedDate+" "+endTime,id,clickedView);
 
             }
@@ -710,6 +721,25 @@ public class HomeFragment extends Fragment {
 
 
         dialog.show();
+    }
+
+    private boolean bothTimeValid(String selectedDate, String startTime, String endTime) {
+        //23 July 2019 07:00 PM;
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy hh:mm a");
+        try {
+            Date sTime = dateFormat.parse(selectedDate+" "+startTime);
+            Date eTime = dateFormat.parse(selectedDate+" "+endTime);
+
+            if(eTime.getTime()>sTime.getTime())
+                return true;
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return false;
     }
 
     private void updateScheduleToServer(final String startTime, String endTime, int id, final View clickedView) {
