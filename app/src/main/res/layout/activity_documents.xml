@@ -94,7 +94,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="136dp"
                         android:layout_height="136dp"
-                        app:cardCornerRadius="8dp">
+                        app:cardCornerRadius="5dp">
 
                         <RelativeLayout
                             android:layout_width="136dp"
@@ -133,7 +133,7 @@
                         android:layout_width="136dp"
                         android:layout_height="136dp"
                         android:layout_alignParentEnd="true"
-                        app:cardCornerRadius="8dp">
+                        app:cardCornerRadius="5dp">
 
                         <RelativeLayout
                             android:layout_width="136dp"
@@ -217,7 +217,7 @@
                     <androidx.cardview.widget.CardView
                         android:layout_width="136dp"
                         android:layout_height="136dp"
-                        app:cardCornerRadius="8dp">
+                        app:cardCornerRadius="5dp">
 
                         <RelativeLayout
                             android:layout_width="136dp"

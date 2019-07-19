@@ -18,14 +18,15 @@
             android:id="@+id/notification_icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/notification_icon_group"
             android:scaleType="centerCrop" />
 
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
+            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/notification_content"
@@ -35,7 +36,7 @@
                 android:textColor="#707070"
                 android:fontFamily="@font/montserrat_regular"
                 android:textStyle="bold"
-                android:text="Rs 1500 Credited in your Bank Account"/>
+                android:text="Rs. Credited in your Bank Accoount"/>
             <TextView
                 android:id="@+id/time"
                 android:layout_width="wrap_content"

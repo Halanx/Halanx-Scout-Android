@@ -85,6 +85,7 @@ public class NotificationFragment extends Fragment {
 
 
 
+
                 ArrayList<Notification> notifications = (ArrayList<Notification>) response.body();
                 if(notifications.size()==0){
                     noNotification.setVisibility(View.VISIBLE);

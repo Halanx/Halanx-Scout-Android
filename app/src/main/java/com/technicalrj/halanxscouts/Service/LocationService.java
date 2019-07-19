@@ -22,6 +22,7 @@ import com.technicalrj.halanxscouts.RetrofitAPIClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,6 +86,13 @@ public class LocationService extends Service {
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     Log.i(TAG, "onResponse: "+response.toString());
+                    if(!response.isSuccessful()){
+                        try {
+                            Log.i(TAG, "onResponse: error:"+response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
 
                 @Override

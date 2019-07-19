@@ -627,8 +627,8 @@ public class ProfileFragment extends Fragment {
 
                         final JSONObject jsonObject = new JSONObject(body);
 
-                        String phoneNumber = jsonObject.getString("phone_no");
-                        phoneNumberTv.setText(phoneNumber);
+                        final String phoneNumber = jsonObject.getString("phone_no");
+
 
 
                         JSONObject user = jsonObject.getJSONObject("user");
@@ -665,7 +665,7 @@ public class ProfileFragment extends Fragment {
 
                                 name.setText(firstName +" "+lastName);
                                 emailTv.setText(email);
-
+                                phoneNumberTv.setText(phoneNumber);
 
                                 if(!document_submission){
                                     docStatus.setImageDrawable(getResources().getDrawable(R.drawable.not_submitted));

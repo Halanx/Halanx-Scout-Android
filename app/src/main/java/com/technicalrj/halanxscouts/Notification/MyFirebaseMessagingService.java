@@ -17,7 +17,9 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+import com.google.gson.Gson;
 import com.technicalrj.halanxscouts.Home.ScoutAcceptanceActivity;
+import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.HomeActivity;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.R;
@@ -52,7 +54,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String data = remoteMessage.getData().get("data");
 
             Log.d(TAG, "Message data payload correct: " + data);
-            Log.d(TAG, "Data Payload full: " + remoteMessage.getData().toString());
+            Log.d(TAG, "Data PaymentPayload full: " + remoteMessage.getData().toString());
             try {
 
                 final SharedPreferences prefs = getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
@@ -165,11 +167,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
             if(json.getJSONObject("category").getString("name").equals("NewPaymentReceived")){
                 title = "Payment Received";
+                content = json.getJSONObject("payload").getString("description");
             } else {
                 title = json.getJSONObject("category").getString("name");
+                ScheduledTask scheduledTask  = new Gson().fromJson(json.getJSONObject("payload").toString(),ScheduledTask.class);
+                content =   scheduledTask.getCategory().getName()+" For "+ scheduledTask.getHouse().getName() +", "+
+                        scheduledTask.getHouse().getAddress().getStreetAddress()+ ", "+ scheduledTask.getHouse().getAddress().getCity()+ " "+ "is Cancelled";
+
             }
 
-            content = json.getJSONObject("payload").getString("description");
             imageUrl = json.getJSONObject("category").getString("image");
 
         } catch (JSONException e) {

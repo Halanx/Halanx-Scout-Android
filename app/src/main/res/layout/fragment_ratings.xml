@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<androidx.cardview.widget.CardView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
     android:foreground="?android:attr/selectableItemBackground"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="11dp"
+    app:cardBackgroundColor="@color/colorWhite"
+    android:layout_marginBottom="100dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <androidx.cardview.widget.CardView android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:layout_margin="10dp"
-        app:cardCornerRadius="11dp"
-        app:cardBackgroundColor="@color/colorWhite"
-        android:layout_marginBottom="100dp"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
         <RelativeLayout
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="30dp"
             tools:context=".RatingsFragment">
 
             <!-- TODO: Update blank fragment layout -->
@@ -107,7 +106,7 @@
 
 
 
-            <GridView
+            <com.technicalrj.halanxscouts.ExpandableHeightGridView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/things_to_improve_Tv"
@@ -116,7 +115,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:numColumns="2">
-            </GridView>
+            </com.technicalrj.halanxscouts.ExpandableHeightGridView>
 
 
 
@@ -124,8 +123,9 @@
         </RelativeLayout>
 
 
+    </ScrollView>
 
-    </androidx.cardview.widget.CardView>
 
 
-</ScrollView>
+
+</androidx.cardview.widget.CardView>

@@ -16,12 +16,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Task;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
@@ -150,11 +152,47 @@ public class TaskActivity extends AppCompatActivity {
         for (int i = 0; i <subTaskArrayList.size() ; i++) {
             View view = LayoutInflater.from(this).inflate(R.layout.subtask_layout,null);
 
-            CheckBox checkBox = view.findViewById(R.id.checkbox);
+            final CheckBox checkBox = view.findViewById(R.id.checkbox);
             TextView sub_task_desc = view.findViewById(R.id.sub_task_desc);
             sub_task_desc.setText(subTaskArrayList.get(i).getName());
 
-            checkBox.setOnClickListener(new View.OnClickListener() {
+
+            /*if(!canDaskBeDone(scheduledTask.getScheduledAt())){
+                checkBox.setEnabled(false);
+            }*/
+
+
+            checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                    if(!canDaskBeDone(scheduledTask.getScheduledAt())){
+                        Toast.makeText(TaskActivity.this,"Task Can only be completed after the Scheduled Time",Toast.LENGTH_SHORT).show();
+                        checkBox.setChecked(false);
+                        return;
+                    }
+
+                    Log.i("InfoText","checkAllTaskDone():"+checkAllTaskDone());
+                    if(checkAllTaskDone()){
+                        //enable button
+
+                        done_button.setEnabled(true);
+                        done_button.setBackground(getResources().getDrawable(R.drawable.button_shape));
+
+                    }else {
+                        //disable it
+
+                        done_button.setEnabled(false);
+                        done_button.setBackground(getResources().getDrawable(R.drawable.button_shape_dark_grey));
+
+                    }
+
+
+                }
+            });
+
+
+            /*checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -174,7 +212,7 @@ public class TaskActivity extends AppCompatActivity {
                     }
 
                 }
-            });
+            });*/
 
             sub_task_layout.addView(view);
         }
@@ -384,6 +422,22 @@ public class TaskActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    public boolean canDaskBeDone(String scheduledDate){
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy hh:mm a");
+        try {
+            Date date = dateFormat.parse(scheduledDate);
+            if(System.currentTimeMillis() >= date.getTime()  )
+                return true;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+
+
     }
 
 }

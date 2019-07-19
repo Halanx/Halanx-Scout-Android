@@ -10,8 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.Notification.NoficationPojo.Notification;
+import com.technicalrj.halanxscouts.Notification.NoficationPojo.PaymentPayload;
 import com.technicalrj.halanxscouts.R;
 
 import java.util.ArrayList;
@@ -43,9 +46,23 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public void onBindViewHolder(final HomesViewHolder holder, final int position) {
 
+        if(notificationArrayList.get(position).getCategory().getName().equals("House Visit Cancelled")){
 
-        Log.i("InfoText","notificationArrayList.get(position).getContent():"+notificationArrayList.get(position).getContent());
-        holder.notification_content.setText("Rs "+notificationArrayList.get(position).getPayload().getAmount()+" Credited in your Bank Account");
+            ScheduledTask scheduledTask  = new Gson().fromJson(notificationArrayList.get(position).getPayload().toString(),ScheduledTask.class);
+            holder.notification_content.setText(scheduledTask.getCategory().getName()+" For "+ scheduledTask.getHouse().getName() +", "+
+                    scheduledTask.getHouse().getAddress().getStreetAddress()+ ", "+ scheduledTask.getHouse().getAddress().getCity()+ ", "+
+                    scheduledTask.getHouse().getAddress().getState() + " is Cancelled");
+
+
+        }else if(notificationArrayList.get(position).getCategory().getName().equals("NewPaymentReceived")){
+
+            PaymentPayload paymentPayload  = new Gson().fromJson(notificationArrayList.get(position).getPayload().toString(),PaymentPayload.class);
+            holder.notification_content.setText("Rs "+paymentPayload.getAmount()+" Credited in your Bank Account");
+
+        }
+
+
+        Log.i("InfoText","notificationArrayList.get(position).getContent():"+notificationArrayList.get(position).getCategory().getName());
         String[] parts =   notificationArrayList.get(position).getTimestamp().split(" ");
 
         holder.time.setText(parts[0]+" "+parts[1] + " " + parts[2]);

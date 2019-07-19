@@ -147,6 +147,8 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<List<ScheduleAvailability>> call, final Response<List<ScheduleAvailability>> response) {
                 final ArrayList<ScheduleAvailability> list = (ArrayList<ScheduleAvailability>) response.body();
 
+                if(list==null)
+                    return;
 
                 for (int i = 0; i <list.size() ; i++) {
 

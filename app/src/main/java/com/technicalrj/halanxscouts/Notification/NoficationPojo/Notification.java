@@ -1,6 +1,7 @@
 
 package com.technicalrj.halanxscouts.Notification.NoficationPojo;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -17,7 +18,7 @@ public class Notification {
     private Category category;
     @SerializedName("payload")
     @Expose
-    private Payload payload;
+    private JsonObject payload;
     @SerializedName("content")
     @Expose
     private Object content;
@@ -55,11 +56,13 @@ public class Notification {
         this.category = category;
     }
 
-    public Payload getPayload() {
+    public JsonObject getPayload() {
+
+
         return payload;
     }
 
-    public void setPayload(Payload payload) {
+    public void setPayload(JsonObject payload) {
         this.payload = payload;
     }
 

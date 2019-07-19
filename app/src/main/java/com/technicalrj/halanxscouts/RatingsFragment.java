@@ -31,7 +31,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class RatingsFragment extends Fragment {
 
     String key;
-    GridView gridView;
+    ExpandableHeightGridView gridView;
     TextView thingsToTv;
 
     public RatingsFragment() {
@@ -74,8 +74,11 @@ public class RatingsFragment extends Fragment {
                     for (ReviewTag review :reviewTags) {
                         strings[i] = review.getName();
                     }
+
                     ArrayAdapter<String > adapter = new ArrayAdapter<String>(getActivity(), R.layout.ratings_row, R.id.tag,strings);
                     gridView.setAdapter(adapter);
+                    gridView.setExpanded(true);
+
 
                     if(strings.length==0){
                         thingsToTv.setVisibility(View.GONE);
