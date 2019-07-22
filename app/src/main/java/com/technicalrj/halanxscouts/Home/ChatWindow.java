@@ -13,8 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,6 +60,8 @@ public class ChatWindow extends AppCompatActivity {
     private Socket mSocket;
     private TextView nameTv;
     ImageView customerImg;
+    ProgressBar progressBar;
+    Button sendButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +84,8 @@ public class ChatWindow extends AppCompatActivity {
 
 
         nameTv = findViewById(R.id.name_tv);
+        progressBar = findViewById(R.id.progress_bar);
+        sendButton = findViewById(R.id.send_button);
         chat_text = findViewById(R.id.chat_text);
         if(chat_text.requestFocus()) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
@@ -193,6 +199,8 @@ public class ChatWindow extends AppCompatActivity {
     }
 
     public void sendText(View view) {
+        sendButton.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
 
         final String text = chat_text.getText().toString().trim();
         Log.i("ChatWindow", "sendText: "+text);
@@ -211,13 +219,20 @@ public class ChatWindow extends AppCompatActivity {
                     Log.i("InfoText","id:"+response.body().getId());
 
                     results.add(0,response.body());
-
+                    sendButton.setVisibility(View.VISIBLE);
+                    progressBar.setVisibility(View.GONE);
 
                     adapter.notifyDataSetChanged();
                     chat_text.setText("");
                 }else {
                     try {
                         Log.i("InfoText","sending messege error:"+response.errorBody().string());
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(ChatWindow.this,"Some Error Occured",Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

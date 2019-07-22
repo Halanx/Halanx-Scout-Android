@@ -1,11 +1,15 @@
 package com.technicalrj.halanxscouts.Home;
 
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.media.MediaPlayer;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
@@ -13,6 +17,8 @@ import androidx.dynamicanimation.animation.SpringForce;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -40,10 +46,13 @@ public class ScoutAcceptanceActivity extends AppCompatActivity {
 
     TextView tv_task,tv_time;
     FloatingActionButton accept_button;
-    Ringtone r;
+    //Ringtone r;
     int taskId;
     String key;
     private int count = 0;
+    private static final long[] VIBRATE_PATTERN = { 500, 500 };
+    Vibrator vibrator;
+    MediaPlayer player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +75,25 @@ public class ScoutAcceptanceActivity extends AppCompatActivity {
         accept_button.setOnTouchListener(touchListener);
 
 
-        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-        r.play();
+
+        vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // API 26 and above
+            vibrator.vibrate(VibrationEffect.createWaveform(VIBRATE_PATTERN, 0));
+        } else {
+            // Below API 26
+            vibrator.vibrate(VIBRATE_PATTERN, 0);
+        }
+
+
+        Uri notification = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE
+                + "://" + this.getPackageName() + "/raw/scout_ringtone");
+        player = MediaPlayer.create(this, notification);;
+        player.setLooping(true);
+        player.start();
+
+        //r = RingtoneManager.getRingtone(this, notification);
+        //r.play();
 
         (findViewById(R.id.swipe_right)).setAnimation(getRightAnimationSet());
         (findViewById(R.id.swipe_right_2)).setAnimation(getRightAnimationSet());
@@ -87,6 +112,8 @@ public class ScoutAcceptanceActivity extends AppCompatActivity {
             @Override
             public void run() {
                 finish();
+                player.stop();
+                vibrator.cancel();
             }
         }, 2*60*1000);
 
@@ -190,21 +217,23 @@ public class ScoutAcceptanceActivity extends AppCompatActivity {
             Log.i("InfoText","getx"+v.getX());
             if(v.getX()>=getWidth()- 270){
                 Toast.makeText(ScoutAcceptanceActivity.this,"Task accepted",Toast.LENGTH_SHORT).show();
-                r.stop();
+                player.stop();
 
                 if(count==0) {
                     taskAccepted(true);
                 }
                 finish();
+                vibrator.cancel();
 
             }else if(v.getX()<=0){
                 Toast.makeText(ScoutAcceptanceActivity.this,"Task Rejected",Toast.LENGTH_SHORT).show();
-                r.stop();
+                player.stop();
 
                 if(count==0){
                     taskAccepted(false);
                 }
                 finish();
+                vibrator.cancel();
             }
 
             return true;
@@ -218,6 +247,7 @@ public class ScoutAcceptanceActivity extends AppCompatActivity {
         Log.i("InfoText","Task request send:"+bool);
 
         JsonObject jsonObject = new JsonObject();
+        vibrator.cancel();
 
         if(bool)
             jsonObject.addProperty("status","accepted");
@@ -270,7 +300,8 @@ public class ScoutAcceptanceActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        r.stop();
+        player.stop();
+        vibrator.cancel();
 
     }
 }

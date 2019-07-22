@@ -36,8 +36,10 @@ import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -358,6 +360,12 @@ public class HomeFragment extends Fragment {
                             Toast.makeText(getActivity(),"End time must be after the Start time",Toast.LENGTH_SHORT).show();
                             return;
                         }
+                        //Check if start time ahead of current time
+                        if(!startTimeValid(selectedDate,startTime)){
+                            Toast.makeText(getActivity(),"Start time must be after the Current Time",Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
                         addScheduleToServer(selectedDate+" "+startTime , selectedDate+" "+endTime);
 
 
@@ -384,14 +392,13 @@ public class HomeFragment extends Fragment {
     private void changeOnlineStatus() {
 
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("gcm_id",gcmId);
         jsonObject.addProperty("active",!onlineStatus);
 
         RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
         Call<Profile> call = availabilityInterface.updateOnlineStatus(jsonObject,"Token "+key);
         call.enqueue(new Callback<Profile>() {
             @Override
-            public void onResponse(Call<Profile> call, Response<Profile> response) {
+            public void onResponse(Call<Profile> call, final Response<Profile> response) {
                 if(response.isSuccessful()){
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -421,7 +428,19 @@ public class HomeFragment extends Fragment {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getActivity(),"Some Error Occurred",Toast.LENGTH_SHORT).show();
+
+                            try {
+                                JSONObject jsonObject1 = new JSONObject( response.errorBody().string());
+                                if(jsonObject1.has("status") && jsonObject1.getString("status").equals("error") ){
+                                    Toast.makeText(getActivity(),jsonObject1.getString("message"),Toast.LENGTH_SHORT).show();
+                                }
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
                         }
                     });
                 }
@@ -429,6 +448,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Profile> call, Throwable t) {
+                t.printStackTrace();
             }
         });
 
@@ -657,12 +677,6 @@ public class HomeFragment extends Fragment {
                 mTimePicker.setTitle("Select Time");
                 mTimePicker.show();
 
-
-
-
-
-
-
             }
         }) ;
 
@@ -713,6 +727,11 @@ public class HomeFragment extends Fragment {
                     Toast.makeText(getActivity(),"End time must be after the Start time",Toast.LENGTH_SHORT).show();
                     return;
                 }
+                //Check if start time ahead of current time
+                if(!startTimeValid(selectedDate,startTime)){
+                    Toast.makeText(getActivity(),"Start time must be after the Current Time",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 updateScheduleToServer(selectedDate+" "+startTime , selectedDate+" "+endTime,id,clickedView);
 
             }
@@ -744,6 +763,24 @@ public class HomeFragment extends Fragment {
         return false;
     }
 
+    private boolean startTimeValid(String selectedDate, String startTime) {
+        //23 July 2019 07:00 PM;
+
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy hh:mm a");
+        try {
+            Date sTime = dateFormat.parse(selectedDate+" "+startTime);
+
+            if(sTime.getTime()>System.currentTimeMillis())
+                return true;
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
     private void updateScheduleToServer(final String startTime, String endTime, int id, final View clickedView) {
 
 
@@ -765,13 +802,14 @@ public class HomeFragment extends Fragment {
             @Override
             public void onResponse(Call<ScheduleAvailability> call, Response<ScheduleAvailability> response) {
 
-                final ScheduleAvailability newScheduleAvailability = response.body();
-
-                Log.i("InfoText","update response :"+response.message());
-
 
 
                 if(response.isSuccessful()){
+
+                    final ScheduleAvailability newScheduleAvailability = response.body();
+                    Log.i("InfoText","update response :"+newScheduleAvailability.toString());
+
+
 
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -785,10 +823,22 @@ public class HomeFragment extends Fragment {
                 }else {
                     try {
                         JSONObject jObjError = new JSONObject(response.errorBody().string());
+
+
+                        if(jObjError.toString().contains("non_field_errors"))
+                            Toast.makeText(getActivity(), jObjError.getJSONArray("non_field_errors").get(0)+"", Toast.LENGTH_SHORT).show();
+                        else
+                            Toast.makeText(getActivity(), jObjError.getString("error"), Toast.LENGTH_SHORT).show();
+                    }catch (Exception e){
+                        Toast.makeText(getContext(), "Some Error Occurred", Toast.LENGTH_LONG).show();
+                    }
+
+                    /*try {
+                        JSONObject jObjError = new JSONObject(response.errorBody().string());
                         Toast.makeText(getActivity(), jObjError.getJSONArray("non_field_errors").get(0)+"", Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
+                    }*/
                 }
 
 
@@ -934,6 +984,9 @@ public class HomeFragment extends Fragment {
         ScheduleAvailability scheduleAvailability = new ScheduleAvailability();
         scheduleAvailability.setStartTime(startTime);
         scheduleAvailability.setEndTime(endTime);
+
+        Log.i(TAG, "addScheduleToServer: startTime:"+startTime);
+        Log.i(TAG, "addScheduleToServer: endTime:"+endTime);
         retrofit2.Call<ScheduleAvailability> call1 = availabilityInterface.addSchedule(scheduleAvailability,"Token "+key);
 
         call1.enqueue(new retrofit2.Callback<ScheduleAvailability>() {
@@ -961,9 +1014,13 @@ public class HomeFragment extends Fragment {
                         public void run() {
                             try {
                                 JSONObject jObjError = new JSONObject(response.errorBody().string());
-                                Toast.makeText(getActivity(), jObjError.getJSONArray("non_field_errors").get(0)+"", Toast.LENGTH_SHORT).show();
-                            } catch (Exception e) {
-                                Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+
+                                if(jObjError.toString().contains("non_field_errors"))
+                                    Toast.makeText(getActivity(), jObjError.getJSONArray("non_field_errors").get(0)+"", Toast.LENGTH_SHORT).show();
+                                else
+                                    Toast.makeText(getActivity(), jObjError.getString("error"), Toast.LENGTH_SHORT).show();
+                            } catch (Exception e){
+                                Toast.makeText(getContext(), "Some Error Occurred", Toast.LENGTH_LONG).show();
                             }
                         }
                     });

@@ -105,6 +105,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:id="@+id/send_button"
             android:text="SEND"
             android:layout_marginEnd="5dp"
             android:layout_marginTop="5dp"
@@ -115,6 +116,16 @@
             android:onClick="sendText"
             android:backgroundTint="@color/colorTextButtonColor"
             android:background="@drawable/button_shape"
+            android:layout_alignParentEnd="true"/>
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/progress_bar"
+            android:layout_marginEnd="40dp"
+            android:visibility="gone"
+            style="?android:attr/progressBarStyleSmallTitle"
+            android:layout_centerVertical="true"
             android:layout_alignParentEnd="true"/>
 
 

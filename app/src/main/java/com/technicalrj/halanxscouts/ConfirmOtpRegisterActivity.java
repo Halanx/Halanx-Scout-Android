@@ -4,7 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -45,12 +47,10 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
             = MediaType.get("application/json; charset=utf-8");
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_confirm_otp_register);
-
 
 
         otp1 = findViewById(R.id.otp1);
@@ -63,7 +63,6 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
         email = getIntent().getStringExtra("email");
         phoneNumber = getIntent().getStringExtra("phoneNumber");
         password = getIntent().getStringExtra("password");
-
 
 
 
@@ -81,7 +80,7 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                    otp2.requestFocus();
+                otp2.requestFocus();
             }
         });
 
@@ -133,15 +132,9 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-               confirmOtp(otp4);
+                confirmOtp(otp4);
             }
         });
-
-
-
-
-
-
 
 
     }
@@ -158,13 +151,11 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
         progressDialog.setMessage("Loading...");
 
 
-        if(otp11.isEmpty() ||otp22.isEmpty()  || otp33.isEmpty()  || otp44.isEmpty()  ){
-            Toast.makeText(this,"Otp Not Valid",Toast.LENGTH_LONG).show();
-        }else {
+        if (otp11.isEmpty() || otp22.isEmpty() || otp33.isEmpty() || otp44.isEmpty()) {
+            Toast.makeText(this, "Otp Not Valid", Toast.LENGTH_LONG).show();
+        } else {
             String otpString = otp11 + otp22 + otp33 + otp44;
             int otp = Integer.valueOf(otpString);
-
-
 
 
             progressDialog.show();
@@ -173,15 +164,13 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
             OkHttpClient client = new OkHttpClient();
 
 
-
-            String json = "{ \"first_name\" : \""+ firstName+ "\","
-                            +"\"last_name\": \""+ lastName+ "\","
-                            +"\"phone_no\": \""+ phoneNumber+ "\", "
-                            +"\"otp\": "+otp+", "
-                            +"\"password\": \""+ password+ "\","
-                            +"\"email\": \""+email+ "\" "
-                            +" }" ;
-
+            String json = "{ \"first_name\" : \"" + firstName + "\","
+                    + "\"last_name\": \"" + lastName + "\","
+                    + "\"phone_no\": \"" + phoneNumber + "\", "
+                    + "\"otp\": " + otp + ", "
+                    + "\"password\": \"" + password + "\","
+                    + "\"email\": \"" + email + "\" "
+                    + " }";
 
 
             RequestBody body = RequestBody.create(JSON, json);
@@ -197,11 +186,11 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
                     .build();*/
 
 
-            Log.i("InfoText",firstName + lastName + phoneNumber +otp+password + email);
+            Log.i("InfoText", firstName + lastName + phoneNumber + otp + password + email);
 
             final Request request = new Request.Builder()
-                    .url(halanxScout+"/scouts/register/")
-                    .addHeader("Content-Type","application/json")
+                    .url(halanxScout + "/scouts/register/")
+                    .addHeader("Content-Type", "application/json")
                     .post(body)
                     .build();
 
@@ -209,7 +198,7 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(@NotNull Call call, @NotNull IOException e) {
                     e.printStackTrace();
-                    Log.i("InfoText","Error in register");
+                    Log.i("InfoText", "Error in register");
                     progressDialog.dismiss();
                 }
 
@@ -219,28 +208,23 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
                     final int code = response.networkResponse().code();
 
 
-
                     //Log.i("InfoText","responsebody :"+response1.toString());
-                    Log.i("InfoText","responseMessge :"+response.networkResponse().message());
-                    Log.i("InfoText","responseBody :"+response.networkResponse().body());
+                    Log.i("InfoText", "responseMessge :" + response.networkResponse().message());
+                    Log.i("InfoText", "responseBody :" + response.networkResponse().body());
 
-                    Log.i("InfoText","code regiser: "+code);
+                    Log.i("InfoText", "code regiser: " + code);
 
                     String messageString = null;
                     try {
-                        JSONObject jsonObject= new JSONObject (response.body().string());
-                        messageString =jsonObject.toString();
-                        Log.i("InfoText","Detail :"+messageString);
+                        JSONObject jsonObject = new JSONObject(response.body().string());
+                        messageString = jsonObject.toString();
+                        Log.i("InfoText", "Detail :" + messageString);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
 
-
-
-
-
-                    if(response.isSuccessful()){
+                    if (response.isSuccessful()) {
                         try {
 
                             progressDialog.dismiss();
@@ -254,7 +238,6 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
                             editor.apply();
 
 
-
                             Intent intent = new Intent(ConfirmOtpRegisterActivity.this, HomeActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
@@ -266,23 +249,18 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
                         }
 
 
-
-
-
-                    }else {
+                    } else {
                         ConfirmOtpRegisterActivity.this.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 progressDialog.dismiss();
 
 
-
-                                if(code==400){
-                                    Toast.makeText(ConfirmOtpRegisterActivity.this,"Incorrect Otp Or Scout with this Phone Number already exists!", Toast.LENGTH_SHORT).show();
-                                }else if(code==409){
-                                    Toast.makeText(ConfirmOtpRegisterActivity.this,"Scout with this Phone Number already exists!", Toast.LENGTH_SHORT).show();
+                                if (code == 400) {
+                                    Toast.makeText(ConfirmOtpRegisterActivity.this, "Incorrect Otp Or Scout with this Phone Number already exists!", Toast.LENGTH_SHORT).show();
+                                } else if (code == 409) {
+                                    Toast.makeText(ConfirmOtpRegisterActivity.this, "Scout with this Phone Number already exists!", Toast.LENGTH_SHORT).show();
                                 }
-
 
 
                             }
@@ -293,9 +271,7 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
             });
 
 
-
         }
-
 
 
     }
@@ -323,12 +299,49 @@ public class ConfirmOtpRegisterActivity extends AppCompatActivity {
 
             }
         });
-
-
     }
 
 
     public void backPress(View view) {
         onBackPressed();
     }
+
+
+    class Node {
+        int data;
+        Node left, right;
+
+        Node(int item) {
+            data = item;
+            left = right = null;
+        }
+    }
+
+    class BST {
+        Node LCA(Node node, int n1, int n2) {
+            // Your code here
+
+
+            if(node==null)
+                return null;
+
+            if(node.data==n1 || node.data==n2)
+                return node;
+
+            Node l = LCA(node.left,n1,n2);
+            Node r = LCA(node.right,n1,n2);
+
+            if(l!=null && r!=null){
+                return node;
+            }
+
+            return (l!=null)?  l:  r;
+
+
+
+        }
+    }
+
+
+
 }

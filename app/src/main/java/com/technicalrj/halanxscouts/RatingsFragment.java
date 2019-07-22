@@ -17,6 +17,7 @@ import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.ReviewTag;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -75,6 +76,8 @@ public class RatingsFragment extends Fragment {
                         strings[i] = review.getName();
                     }
 
+                    if(getActivity()==null)
+                        return;
                     ArrayAdapter<String > adapter = new ArrayAdapter<String>(getActivity(), R.layout.ratings_row, R.id.tag,strings);
                     gridView.setAdapter(adapter);
                     gridView.setExpanded(true);
@@ -93,6 +96,7 @@ public class RatingsFragment extends Fragment {
                 progressDialog.dismiss();
             }
         });
+
 
 
 
