@@ -199,13 +199,15 @@ public class ChatWindow extends AppCompatActivity {
     }
 
     public void sendText(View view) {
-        sendButton.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
+
 
         final String text = chat_text.getText().toString().trim();
         Log.i("ChatWindow", "sendText: "+text);
         if(text.equals(""))
             return;
+
+        sendButton.setVisibility(View.GONE);
+        progressBar.setVisibility(View.VISIBLE);
 
         HashMap<String,String> map  = new HashMap<>();
         map.put("content",text);
