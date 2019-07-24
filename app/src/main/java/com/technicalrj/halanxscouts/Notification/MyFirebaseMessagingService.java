@@ -38,7 +38,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
     public MyFirebaseMessagingService() {
-
         Log.i(TAG,"MyFirebaseMessagingService");
     }
 

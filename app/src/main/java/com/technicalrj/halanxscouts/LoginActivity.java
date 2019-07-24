@@ -4,6 +4,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.method.HideReturnsTransformationMethod;
@@ -108,6 +111,18 @@ public class LoginActivity extends AppCompatActivity {
                         .url(halanxScout+"/rest-auth/login/")
                         .post(body)
                         .build();
+
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(@NonNull Call call, IOException e) {
+
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+
+                    }
+                });
 
                 client.newCall(request).enqueue(new Callback() {
                     @Override

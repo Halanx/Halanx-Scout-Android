@@ -38,6 +38,8 @@
             android:layout_below="@+id/toolbar"
             android:background="#D6D6D6" />
 
+
+
         <androidx.cardview.widget.CardView
             android:id="@+id/rel_layout"
             android:layout_width="match_parent"
@@ -244,6 +246,7 @@
 
 
         </LinearLayout>
+
 
 
     </RelativeLayout>

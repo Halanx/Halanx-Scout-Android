@@ -297,6 +297,24 @@
 
                 </androidx.cardview.widget.CardView>
 
+                <Button
+                    android:id="@+id/add_photos"
+                    android:layout_width="170dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/button_shape"
+                    android:enabled="false"
+                    android:fontFamily="@font/montserrat_regular"
+                    android:layout_marginTop="30dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:visibility="gone"
+                    android:text="Add Photos"
+                    android:layout_gravity="center_horizontal"
+                    android:textAllCaps="false"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
@@ -327,15 +345,15 @@
                             android:id="@+id/customer_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Janvi Kapoor"
+                            android:layout_centerVertical="true"
                             android:layout_marginStart="10dp"
                             android:layout_toRightOf="@id/customer_img"
-                            android:textColor="#8B8B8B"
                             android:fontFamily="@font/montserrat_regular"
-                            android:textStyle="bold"
+                            android:text="Janvi Kapoor"
+                            android:textColor="#8B8B8B"
                             android:textSize="16dp"
 
-                            android:layout_centerVertical="true"/>
+                            android:textStyle="bold" />
 
 
                         <RelativeLayout

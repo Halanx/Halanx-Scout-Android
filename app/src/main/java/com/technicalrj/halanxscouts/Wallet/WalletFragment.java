@@ -1,7 +1,9 @@
 package com.technicalrj.halanxscouts.Wallet;
 
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,10 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.google.gson.JsonObject;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
+
+import java.util.Calendar;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,7 +50,7 @@ public class WalletFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
 
-        View view  = inflater.inflate(R.layout.fragment_wallet, container, false);
+        final View view  = inflater.inflate(R.layout.fragment_wallet, container, false);
 
         earning = view.findViewById(R.id.earning);
         paid = view.findViewById(R.id.paid);
@@ -56,6 +61,7 @@ public class WalletFragment extends Fragment {
 
         final SharedPreferences prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
+
 
 
 
@@ -87,6 +93,7 @@ public class WalletFragment extends Fragment {
         return view;
 
     }
+
 
     private void updatePayment() {
 
@@ -126,5 +133,8 @@ public class WalletFragment extends Fragment {
         });
 
     }
+
+
+
 
 }
