@@ -46,6 +46,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public void onBindViewHolder(final HomesViewHolder holder, final int position) {
 
+
+
         if(notificationArrayList.get(position).getCategory().getName().equals("House Visit Cancelled")){
 
             ScheduledTask scheduledTask  = new Gson().fromJson(notificationArrayList.get(position).getPayload().toString(),ScheduledTask.class);

@@ -3,6 +3,7 @@ package com.technicalrj.halanxscouts.Home;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -314,8 +316,12 @@ public class HomeFragment extends Fragment {
                         Calendar mcurrentTime = Calendar.getInstance();
                         int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
                         //TO disable time between 0:00 Am to  9 A.M
-                        hour = hour>=0 && hour<9 ? hour+12 : hour;
 
+                        if(hour>=21 && hour<24){
+                            hour = (hour - 12);
+                        } else if (hour >= 0 && hour < 9) {
+                            hour = (12 + hour);
+                        }
 
                         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
                         LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -333,10 +339,12 @@ public class HomeFragment extends Fragment {
                             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
                                 Log.i("Timedate", "onTimeChanged: " + hourOfDay);
 
-                                if (hourOfDay >= 0 && hourOfDay < 9) {
+
+                                if(hourOfDay>=21 && hourOfDay<24){
+                                    timePicker.setCurrentHour(hourOfDay - 12);
+                                } else if (hourOfDay >= 0 && hourOfDay < 9) {
                                     timePicker.setCurrentHour(12 + hourOfDay);
                                 }
-
 
                             }
                         });
@@ -404,8 +412,12 @@ public class HomeFragment extends Fragment {
 
                         Calendar mcurrentTime = Calendar.getInstance();
                         int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
-                        hour = hour>=0 && hour<9 ? hour+12 : hour;
 
+                        if(hour>=21 && hour<24){
+                            hour = (hour - 12);
+                        } else if (hour >= 0 && hour < 9) {
+                            hour = (12 + hour);
+                        }
                         final AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getActivity());
                         LayoutInflater inflater = getActivity().getLayoutInflater();
                         View dialogView = inflater.inflate(R.layout.time_dialog, null);
@@ -422,7 +434,9 @@ public class HomeFragment extends Fragment {
                             public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
                                 Log.i("Timedate", "onTimeChanged: " + hourOfDay);
 
-                                if (hourOfDay >= 0 && hourOfDay < 9) {
+                                if(hourOfDay>=21 && hourOfDay<24){
+                                    timePicker.setCurrentHour(hourOfDay - 12);
+                                } else if (hourOfDay >= 0 && hourOfDay < 9) {
                                     timePicker.setCurrentHour(12 + hourOfDay);
                                 }
 
@@ -777,7 +791,9 @@ public class HomeFragment extends Fragment {
                     public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
                         Log.i("Timedate", "onTimeChanged: " + hourOfDay);
 
-                        if (hourOfDay >= 0 && hourOfDay < 9) {
+                        if(hourOfDay>=21 && hourOfDay<24){
+                            timePicker.setCurrentHour(hourOfDay - 12);
+                        } else if (hourOfDay >= 0 && hourOfDay < 9) {
                             timePicker.setCurrentHour(12 + hourOfDay);
                         }
 
@@ -871,7 +887,9 @@ public class HomeFragment extends Fragment {
                     public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
                         Log.i("Timedate", "onTimeChanged: " + hourOfDay);
 
-                        if (hourOfDay >= 0 && hourOfDay < 9) {
+                        if(hourOfDay>=21 && hourOfDay<24){
+                            timePicker.setCurrentHour(hourOfDay - 12);
+                        } else if (hourOfDay >= 0 && hourOfDay < 9) {
                             timePicker.setCurrentHour(12 + hourOfDay);
                         }
 

@@ -15,10 +15,9 @@
         app:cardCornerRadius="11dp">
 
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
 
 
@@ -30,8 +29,7 @@
                 android:gravity="center"
                 android:text="Notification"
                 android:textSize="17sp"
-                android:textStyle="bold"
-                app:layout_constraintTop_toTopOf="parent"/>
+                android:textStyle="bold"/>
 
 
             <View
@@ -39,22 +37,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_below="@+id/toolbar"
-                android:background="#D6D6D6"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"/>
+                android:background="#D6D6D6"/>
 
 
             <ImageView
                 android:layout_width="265dp"
                 android:layout_height="150dp"
                 android:id="@+id/no_notification"
-                android:layout_gravity="center_horizontal"
                 android:visibility="gone"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true"
                 android:src="@drawable/no_notification_img"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"/>
+                />
 
 
 
@@ -62,15 +56,14 @@
                 android:id="@+id/rv_notifications"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:listitem="@layout/adapter_notification"
-                app:layout_constraintTop_toBottomOf="@+id/line_view">
+                android:layout_below="@+id/line_view"
+                tools:listitem="@layout/adapter_notification">
             </androidx.recyclerview.widget.RecyclerView>
 
 
 
 
-        </LinearLayout>
+        </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 

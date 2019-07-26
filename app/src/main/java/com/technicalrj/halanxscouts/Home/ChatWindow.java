@@ -25,11 +25,13 @@ import com.github.nkzawa.engineio.client.Transport;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Manager;
 import com.github.nkzawa.socketio.client.Socket;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.technicalrj.halanxscouts.Adapters.ChatAdapter;
 import com.technicalrj.halanxscouts.Home.Chat.Messages;
 import com.technicalrj.halanxscouts.Home.Chat.Result;
 import com.technicalrj.halanxscouts.Profile.ProfileImageActivity;
+import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
 
@@ -62,6 +64,8 @@ public class ChatWindow extends AppCompatActivity {
     ImageView customerImg;
     ProgressBar progressBar;
     Button sendButton;
+    public final static String nodeBaseUrl = "https://share.halanx.com/";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,39 +117,47 @@ public class ChatWindow extends AppCompatActivity {
 
 
         try {
-            IO.Options opts = new IO.Options();
-            mSocket = IO.socket("https://consumerchat.herokuapp.com");
+            mSocket = IO.socket(nodeBaseUrl);
             mSocket.on(Socket.EVENT_CONNECT, onConnect);
 
-            mSocket.io().on(Manager.EVENT_TRANSPORT, new Emitter.Listener() {
-                @Override
-                public void call(Object... args) {
-                    Transport transport = (Transport)args[0];
-                    transport.on(Transport.EVENT_REQUEST_HEADERS, new Emitter.Listener() {
-                        @Override
-                        public void call(Object... args) {
-                            Map<String, List<String>> headers = (Map<String, List<String>>)args[0];
-                            // modify request headers
-                            headers.put("Authorization", Arrays.asList( "Token "+key));
-                            headers.put("PARTICIPANT-TYPE", Arrays.asList("scout"));
-                            // modify request headers
-                        }
-                    }).on(Transport.EVENT_RESPONSE_HEADERS, new Emitter.Listener() {
-                        @Override
-                        public void call(Object... args) {
-                            Log.i("InfoText", "error header call: "+args[0]);
-                        }
-                    });
-                }
-            });
+
             mSocket.connect();
-            mSocket.on("chat_event", chat_event);
+            mSocket.on("onMessage", onMessage);
+            mSocket.on("onChat", onChat);
+            //mSocket.on("chat_event", chat_event);
             mSocket.on(Socket.EVENT_DISCONNECT, onDisconnect);
             mSocket.on(Socket.EVENT_CONNECT_ERROR, onConnectError);
 
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+
+
+        RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
+        Call<Profile> call = availabilityInterface.getProfile("Token "+key);
+        call.enqueue(new Callback<Profile>() {
+            @Override
+            public void onResponse(Call<Profile> call, Response<Profile> response) {
+
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("id", response.body().getId());
+                    json.put("chat_type","chat_between_scout_and_customer");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                mSocket.emit("setCache", json);
+
+            }
+
+            @Override
+            public void onFailure(Call<Profile> call, Throwable t) {
+
+            }
+        });
+
+
 
 
 
@@ -248,6 +260,88 @@ public class ChatWindow extends AppCompatActivity {
         });
 
     }
+
+
+    private Emitter.Listener onMessage = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    finish();
+                    startActivity(getIntent());
+                    JSONObject json = null;
+                    try {
+                        json = new JSONObject(String.valueOf(args[0]));
+                        Log.i("InfoText","done");
+                        Result result = new Result();
+
+                        result.setId(json.getInt("id"));
+                        result.setCreatedAt(json.getString("created_at"));
+                        result.setIsRead(json.getBoolean("is_read"));
+                        result.setContent(json.getString("content"));
+
+                        results.add(0,result);
+                        Log.i("InfoText", String.valueOf(result));
+
+
+
+                        adapter.notifyDataSetChanged();
+
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    {
+                    }
+                }
+            });
+        }
+    };
+    private Emitter.Listener onChat = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    JSONObject json = null;
+                    try {
+                        json = new JSONObject(String.valueOf(args[0]));
+
+                        Gson gson = new Gson();
+                        Result result = gson.fromJson(json.getJSONObject("message_data").toString(),Result.class);
+                        Log.i("InfoText","done");
+
+                        /*result.setId(json.getInt("id"));
+                        result.setCreatedAt(json.getString("created_at"));
+                        result.setIsRead(json.getBoolean("is_read"));
+                        result.setContent(json.getString("content"));
+                        result.setRole(json.get());
+*/
+
+                        results.add(0,result);
+                        Log.i("InfoText", String.valueOf(result));
+
+
+
+                        adapter.notifyDataSetChanged();
+
+
+
+
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    {
+                        Log.e("error", String.valueOf(String.valueOf(args[0])));
+                    }
+                }
+            });
+        }
+    };
 
     private Emitter.Listener chat_event = new Emitter.Listener() {
         @Override
