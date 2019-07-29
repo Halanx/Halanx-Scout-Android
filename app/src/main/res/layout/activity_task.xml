@@ -205,7 +205,7 @@
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="125dp">
+                        android:layout_height="wrap_content">
 
                         <ImageView
                             android:id="@+id/house_pic"
@@ -225,7 +225,7 @@
                             android:id="@+id/address1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="109D 80 ft. Road Karol Bagh"
+                            android:text="109D 80 ft. Road Karol Bagh "
                             android:textSize="14sp"
                             android:fontFamily="@font/montserrat_regular"
                             android:textStyle="bold"

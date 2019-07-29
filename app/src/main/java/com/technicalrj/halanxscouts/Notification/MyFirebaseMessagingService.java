@@ -182,13 +182,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
             }else if(category.equals("NewMessageReceived")){
-                title =   json.getJSONObject("payload").getJSONObject("task").getJSONObject("customer").getJSONObject("user").getString("first_name") +" Send you a Message";
+                title =   json.getJSONObject("payload").getString("customer_name") +" Send you a Message";
                 content = json.getJSONObject("payload").getString("content");
 
 
                 intent = new Intent(getApplicationContext(), ChatWindow.class);
                 intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra("id",json.getJSONObject("payload").getJSONObject("task").getInt("id")+"");
+                intent.putExtra("id",json.getJSONObject("payload").getInt("task_id")+"");
 
                 pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
             }
