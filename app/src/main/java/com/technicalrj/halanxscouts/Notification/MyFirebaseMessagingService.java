@@ -18,6 +18,7 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
+import com.technicalrj.halanxscouts.Home.ChatWindow;
 import com.technicalrj.halanxscouts.Home.ScoutAcceptanceActivity;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.HomeActivity;
@@ -45,6 +46,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         Log.d(TAG, "From: " + remoteMessage.getFrom());
+
 
 
 
@@ -107,9 +109,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         // Saving reg id to shared preferences
         storeRegIdInPref(token);
 
-
-
-
     }
 
 
@@ -152,27 +151,46 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         }
 
 
-
-
-
-
     }
 
     private void handleDataMessage(JSONObject json) {
         Log.e(TAG, "push json: " + json.toString());
 
         String title="",content="",imageUrl="";
+        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+        intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent=PendingIntent.getActivity(this, 0, intent, 0);;
+
         try {
 
-            if(json.getJSONObject("category").getString("name").equals("NewPaymentReceived")){
+            String category = json.getJSONObject("category").getString("name");
+            if(category.equals("NewPaymentReceived")){
                 title = "Payment Received";
                 content = json.getJSONObject("payload").getString("description");
-            } else {
-                title = json.getJSONObject("category").getString("name");
+
+                intent = new Intent(getApplicationContext(), HomeActivity.class);
+                intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+            } else if(category.equals("House Visit Cancelled")){
+                title = category;
                 ScheduledTask scheduledTask  = new Gson().fromJson(json.getJSONObject("payload").toString(),ScheduledTask.class);
                 content =   scheduledTask.getCategory().getName()+" For "+ scheduledTask.getHouse().getName() +", "+
                         scheduledTask.getHouse().getAddress().getStreetAddress()+ ", "+ scheduledTask.getHouse().getAddress().getCity()+ " "+ "is Cancelled";
 
+                intent = new Intent(getApplicationContext(), HomeActivity.class);
+                intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+            }else if(category.equals("NewMessageReceived")){
+                title =   json.getJSONObject("payload").getJSONObject("task").getJSONObject("customer").getJSONObject("user").getString("first_name") +" Send you a Message";
+                content = json.getJSONObject("payload").getString("content");
+
+
+                intent = new Intent(getApplicationContext(), ChatWindow.class);
+                intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                intent.putExtra("id",json.getJSONObject("payload").getJSONObject("task").getInt("id")+"");
+
+                pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
             }
 
             imageUrl = json.getJSONObject("category").getString("image");
@@ -181,19 +199,16 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             e.printStackTrace();
         }
 
-        Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
-        intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+
         NotificationCompat.Builder builder;
 
         Log.i(TAG,"Build.VERSION.SDK_INT:"+Build.VERSION.SDK_INT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             Log.i(TAG," Build.VERSION_CODES.O");
-            CharSequence name = "noti_channel";
-            String description = "noti_channel_desc";;
+            CharSequence name = "Halanx Scout";
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel("noti_id", name, importance);
-            channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);

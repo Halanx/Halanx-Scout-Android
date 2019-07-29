@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -171,7 +172,7 @@ public class ConfirmOtpPasswordActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                public void onResponse(@NotNull Call call, @NotNull final Response response) throws IOException {
 
                     final int code = response.networkResponse().code();
 
@@ -213,10 +214,20 @@ public class ConfirmOtpPasswordActivity extends AppCompatActivity {
                             public void run() {
                                 progressDialog.dismiss();
 
-                                if(code==400||code==404){
+
+
+
+
+
+
+
+
+
+                                Log.i("ConfirmOtpPass", "run: "+response.networkResponse().toString());
+                                if(code==404){
                                     Toast.makeText(ConfirmOtpPasswordActivity.this,"Incorrect Otp", Toast.LENGTH_SHORT).show();
-                                }else if(code==409){
-                                    Toast.makeText(ConfirmOtpPasswordActivity.this,"Scout with this Phone Number already exists!", Toast.LENGTH_SHORT).show();
+                                }else if(code==403){
+                                    Toast.makeText(ConfirmOtpPasswordActivity.this,"No scout exists with this phone No.", Toast.LENGTH_SHORT).show();
                                 }
 
 
@@ -271,4 +282,9 @@ public class ConfirmOtpPasswordActivity extends AppCompatActivity {
     public void backPress(View view) {
         onBackPressed();
     }
+
+
+
+
+
 }

@@ -260,7 +260,7 @@ public class TaskActivity extends AppCompatActivity {
 
     public void chatCustomer(View view) {
         startActivity(new Intent(this,ChatWindow.class)
-                .putExtra("id",id+"")
+                .putExtra("id",scheduledTask.getId()+"")
                 .putExtra("first_name",firstName)
                 .putExtra("last_name",lastName)
                 .putExtra("profile_pic_url", scheduledTask.getCustomer().getProfilePicUrl())
