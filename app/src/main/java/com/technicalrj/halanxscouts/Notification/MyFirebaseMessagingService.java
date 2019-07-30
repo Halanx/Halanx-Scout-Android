@@ -27,6 +27,8 @@ import com.technicalrj.halanxscouts.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Calendar;
 import java.util.Date;
 
 
@@ -170,7 +172,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                 intent = new Intent(getApplicationContext(), HomeActivity.class);
                 intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+                pendingIntent = PendingIntent.getActivity(this, (int) Calendar.getInstance().getTimeInMillis(), intent, 0);
 
             } else if(category.equals("House Visit Cancelled")){
                 title = category;
@@ -180,17 +182,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                 intent = new Intent(getApplicationContext(), HomeActivity.class);
                 intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+                pendingIntent = PendingIntent.getActivity(this, (int) Calendar.getInstance().getTimeInMillis(), intent, 0);
             }else if(category.equals("NewMessageReceived")){
                 title =   json.getJSONObject("payload").getString("customer_name") +" Send you a Message";
                 content = json.getJSONObject("payload").getString("content");
 
 
-                intent = new Intent(getApplicationContext(), ChatWindow.class);
-                intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                intent.putExtra("id",json.getJSONObject("payload").getInt("task_id")+"");
+                Log.i(TAG, "handleDataMessage: taskId in notification:"+json.getJSONObject("payload").getInt("task_id"));
+                intent = new Intent(this, ChatWindow.class);
+                intent.putExtra("conversation",json.getJSONObject("payload").getInt("task_id"));
+                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-                pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+                pendingIntent = PendingIntent.getActivity(this, (int) Calendar.getInstance().getTimeInMillis(), intent, 0);
             }
 
             imageUrl = json.getJSONObject("category").getString("image");

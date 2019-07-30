@@ -118,7 +118,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
             @Override
             public void onClick(View v) {
                 c.startActivity(new Intent(c, ChatWindow.class)
-                        .putExtra("id",scheduledTaskList.get(position).getId()+"")
+                        .putExtra("conversation",scheduledTaskList.get(position).getId())
                         .putExtra("first_name",firstName)
                         .putExtra("last_name",lastName)
                         .putExtra("profile_pic_url", scheduledTaskList.get(position).getCustomer().getProfilePicUrl())

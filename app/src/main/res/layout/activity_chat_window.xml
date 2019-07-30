@@ -43,8 +43,7 @@
             android:layout_marginStart="12dp"
             android:onClick="profileImage"
             android:layout_toRightOf="@+id/back_arrow"
-            android:scaleType="centerCrop"
-            android:src="@drawable/profile_icon" />
+            android:scaleType="centerCrop" />
 
 
         <RelativeLayout

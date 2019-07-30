@@ -1,5 +1,6 @@
 package com.technicalrj.halanxscouts.Home;
 
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -46,6 +47,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,6 +66,7 @@ public class ChatWindow extends AppCompatActivity {
     private TextView nameTv;
     ImageView customerImg;
     ProgressBar progressBar;
+    ProgressDialog progressDialog;
     Button sendButton;
     public final static String nodeBaseUrl = "https://share.halanx.com/";
     RecyclerView rv_chat;
@@ -74,7 +77,7 @@ public class ChatWindow extends AppCompatActivity {
         setContentView(R.layout.activity_chat_window);
 
 
-        taskId = getIntent().getStringExtra("id");
+        taskId = getIntent().getIntExtra("conversation",0)+"";
 
 
         final SharedPreferences prefs = getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
@@ -87,6 +90,8 @@ public class ChatWindow extends AppCompatActivity {
 
 
         nameTv = findViewById(R.id.name_tv);
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Loading...");
         progressBar = findViewById(R.id.progress_bar);
         sendButton = findViewById(R.id.send_button);
         chat_text = findViewById(R.id.chat_text);
@@ -124,7 +129,10 @@ public class ChatWindow extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        Log.i("ChatWindow", "onCreate: taskId:"+taskId);
 
+
+        progressDialog.show();
         RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
         Call<ScheduledTask> call = availabilityInterface.getTasksById(Integer.valueOf(taskId),"Token "+key);
         call.enqueue(new Callback<ScheduledTask>() {
@@ -176,9 +184,8 @@ public class ChatWindow extends AppCompatActivity {
         super.onBackPressed();
     }
 
+
     private void updateChat(final int currentPage) {
-
-
 
         RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
         Call<Messages> call = availabilityInterface.getMessages(conversationId,currentPage,"Token "+key,"scout");
@@ -187,7 +194,6 @@ public class ChatWindow extends AppCompatActivity {
             public void onResponse(Call<Messages> call, Response<Messages> response) {
 
                 Messages messages= response.body();
-
                 if(messages==null || messages.getCount()==0)
                     return;
 
@@ -196,6 +202,7 @@ public class ChatWindow extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
 
                 if(messages.getNext()==null){
+                    progressDialog.dismiss();
                     return;
                 }
 
@@ -203,15 +210,14 @@ public class ChatWindow extends AppCompatActivity {
                 updateChat(currentPage+1);
                 page++;
 
-
             }
 
             @Override
             public void onFailure(Call<Messages> call, Throwable t) {
                 t.printStackTrace();
+                progressDialog.dismiss();
             }
         });
-
 
     }
 
@@ -447,7 +453,7 @@ public class ChatWindow extends AppCompatActivity {
 
 
     }
-
+//-8 5 3 1 6
     public void callCustomr(View view) {
         try {
             Intent callIntent = new Intent(Intent.ACTION_VIEW );
@@ -458,5 +464,35 @@ public class ChatWindow extends AppCompatActivity {
         }
     }
 
+
+    private static void dsf(){
+        Scanner scanner = new Scanner(System.in);
+        int T = scanner.nextInt();
+
+        while (T-->0){
+
+            int n= scanner.nextInt();
+            int[] A = new int[n];
+
+            for (int i = 0; i <n ; i++) {
+                A[i] = scanner.nextInt();
+            }
+
+            int max = Integer.MIN_VALUE,mul=1;
+            for (int i = 0; i < n; i++) {
+
+                if(A[i]==0){
+                    mul=1;
+                    continue;
+                }
+
+                mul = A[i]*mul;
+                max = Math.max(max,mul);
+            }
+
+            System.out.println(max);
+
+        }
+    }
 
 }

@@ -83,6 +83,8 @@ public class HomeFragment extends Fragment {
     private ImageView noTasksImg;
     private HorizontalScrollView horizontalScrollView;
     private ConstraintLayout addScheduleEmpty;
+    private boolean isScheduleLoaded , isTaskLoaded;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -156,17 +158,21 @@ public class HomeFragment extends Fragment {
                     return;
 
                 for (int i = 0; i < list.size(); i++) {
-
-
                     addScheduleInList(list.get(i));
-
                 }
-                progressDialog.dismiss();
+
+                isScheduleLoaded = true;
+                if(isTaskLoaded){
+                    progressDialog.dismiss();
+                }
             }
 
             @Override
             public void onFailure(retrofit2.Call<List<ScheduleAvailability>> call, Throwable t) {
-                progressDialog.dismiss();
+                isScheduleLoaded = true;
+                if(isTaskLoaded){
+                    progressDialog.dismiss();
+                }
             }
         });
 
@@ -185,26 +191,51 @@ public class HomeFragment extends Fragment {
         call2.enqueue(new Callback<List<ScheduledTask>>() {
             @Override
             public void onResponse(Call<List<ScheduledTask>> call, Response<List<ScheduledTask>> response) {
-                if (response.body() != null) {
 
-                    if (response.body().size() > 0) {
-                        scheduledTaskList.addAll(response.body());
-                        taskAdapter.notifyDataSetChanged();
-                        noTasksImg.setVisibility(View.GONE);
-                    } else {
-                        noTasksImg.setVisibility(View.VISIBLE);
+                if(response.isSuccessful()){
+                    if (response.body() != null) {
+
+                        if (response.body().size() > 0) {
+                            scheduledTaskList.addAll(response.body());
+                            taskAdapter.notifyDataSetChanged();
+                            noTasksImg.setVisibility(View.GONE);
+                        } else {
+                            noTasksImg.setVisibility(View.VISIBLE);
+                        }
+
                     }
+                    isTaskLoaded = true;
+                    if(isScheduleLoaded){
+                        progressDialog.dismiss();
+                    }
+                }else {
 
-                    progressDialog.dismiss();
-
-
+                    isTaskLoaded = true;
+                    if(isScheduleLoaded){
+                        progressDialog.dismiss();
+                    }
+                    noTasksImg.setVisibility(View.VISIBLE);
+                    try {
+                        Log.i(TAG, "onResponse: "+response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
+
+
             }
 
             @Override
             public void onFailure(Call<List<ScheduledTask>> call, Throwable t) {
 
-                progressDialog.dismiss();
+                noTasksImg.setVisibility(View.VISIBLE);
+                t.printStackTrace();
+                Log.i(TAG, "onFailure: "+t.getMessage());
+
+                isTaskLoaded = true;
+                if(isScheduleLoaded){
+                    progressDialog.dismiss();
+                }
             }
         });
 
