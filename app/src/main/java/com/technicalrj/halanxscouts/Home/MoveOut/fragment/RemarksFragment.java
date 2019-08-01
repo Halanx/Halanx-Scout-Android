@@ -1,31 +1,40 @@
-package com.technicalrj.halanxscouts.Home.MoveOut;
+package com.technicalrj.halanxscouts.Home.MoveOut.fragment;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.technicalrj.halanxscouts.HomeActivity;
 import com.technicalrj.halanxscouts.R;
 
-public class RemarkActivity extends AppCompatActivity {
+public class RemarksFragment extends Fragment {
 
     private EditText remarks;
     private Button done_button;
 
+    public static RemarksFragment newInstance() {
 
+        Bundle args = new Bundle();
+
+        RemarksFragment fragment = new RemarksFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_remark);
-
-        remarks = findViewById(R.id.remarks);
-        done_button   = findViewById(R.id.done_button);
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_remarks, container, false);
+        remarks = view.findViewById(R.id.remarks);
+        done_button   = view.findViewById(R.id.done_button);
 
 
         remarks.addTextChangedListener(new TextWatcher() {
@@ -50,10 +59,10 @@ public class RemarkActivity extends AppCompatActivity {
 
             }
         });
+        return view;
     }
 
-
-    public void enableButton(boolean val){
+    private void enableButton(boolean val){
 
         if(val){
             done_button.setEnabled(true);
@@ -68,10 +77,10 @@ public class RemarkActivity extends AppCompatActivity {
 
     public void submitRemark(View view) {
 
-        String rem = remarks.getText().toString();
-
-        startActivity(new Intent(this, HomeActivity.class));
-        finishAffinity();
+//        String rem = remarks.getText().toString();
+//
+//        startActivity(new Intent(this, HomeActivity.class));
+//        finishAffinity();
 
     }
 
