@@ -44,38 +44,23 @@
             android:layout_marginEnd="10dp"/>
 
 
-        <RelativeLayout
+        <RadioButton
             android:layout_width="75dp"
             android:layout_height="wrap_content"
+            android:id="@+id/damaged1"
+            android:textStyle="bold"
             android:layout_marginEnd="10dp"
-            android:gravity="center">
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/damaged1"
-                android:textStyle="bold"
-                android:buttonTint="#FCDD34"/>
-
-
-        </RelativeLayout>
+            android:gravity="center"
+            android:buttonTint="#FCDD34"/>
 
 
 
-        <RelativeLayout
+        <RadioButton
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <RadioButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/missing1"
-                android:textStyle="bold"
-                android:buttonTint="#EF3939"/>
-
-
-        </RelativeLayout>
+            android:id="@+id/missing1"
+            android:textStyle="bold"
+            android:buttonTint="#EF3939"/>
 
 
 

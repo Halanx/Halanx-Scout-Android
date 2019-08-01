@@ -18,7 +18,6 @@ public class AmenitiesActivity extends AppCompatActivity {
     private RecyclerView amenitiesRecycler;
     private AmenetiesAdapter amenetiesAdapter;
     private Button done_button;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

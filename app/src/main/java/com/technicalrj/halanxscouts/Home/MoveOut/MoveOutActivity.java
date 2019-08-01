@@ -9,13 +9,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import com.kofigyan.stateprogressbar.StateProgressBar;
 import com.technicalrj.halanxscouts.R;
+
+import java.util.ArrayList;
 
 public class MoveOutActivity extends AppCompatActivity {
 
     private Button done_button;
     private CheckBox checkBox;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,13 @@ public class MoveOutActivity extends AppCompatActivity {
 
         done_button   = findViewById(R.id.done_button);
         checkBox = findViewById(R.id.checkBox);
+
+        String[] descriptionData = {"Details", "Status", "Photo", "Confirm"};
+        StateProgressBar stateProgressBar = (StateProgressBar) findViewById(R.id.your_state_progress_bar_id);
+        stateProgressBar.setStateDescriptionData(descriptionData);
+
+
+        stateProgressBar.setCurrentStateNumber(StateProgressBar.StateNumber.TWO);
 
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -59,4 +68,7 @@ public class MoveOutActivity extends AppCompatActivity {
         }
 
     }
+
+
+
 }
