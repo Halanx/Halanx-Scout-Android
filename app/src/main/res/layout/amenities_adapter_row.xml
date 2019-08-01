@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="45dp"
+    android:paddingStart="10dp"
+    android:paddingEnd="10dp"
+    android:id="@+id/rel_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:layout_width="22dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/sn1"
+        android:text="01"
+        android:layout_centerVertical="true"
+        android:textColor="#4D4D4D"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/amenities1"
+        android:layout_toEndOf="@+id/sn1"
+        android:layout_marginStart="16dp"
+        android:layout_centerVertical="true"
+        android:text="Chair"
+        android:textStyle="bold"/>
+
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:orientation="horizontal"
+        android:id="@+id/radiogroup"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        >
+
+        <RadioButton
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/ok1"
+            android:textStyle="bold"
+            android:buttonTint="#0EDC4C"
+            android:layout_marginEnd="10dp"/>
+
+
+        <RelativeLayout
+            android:layout_width="75dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="10dp"
+            android:gravity="center">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/damaged1"
+                android:textStyle="bold"
+                android:buttonTint="#FCDD34"/>
+
+
+        </RelativeLayout>
+
+
+
+        <RelativeLayout
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/missing1"
+                android:textStyle="bold"
+                android:buttonTint="#EF3939"/>
+
+
+        </RelativeLayout>
+
+
+
+    </RadioGroup>
+
+
+
+
+
+
+
+
+
+</RelativeLayout>

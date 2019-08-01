@@ -13,6 +13,7 @@
     <color name="colorGreen">#0EDC4C</color>
     <color name="colorDisabled">#707070</color>
     <color name="colorEnabled">#EF3939</color>
+    <color name="colorGrayAdapter">#FAFAFA</color>
 
 
 </resources>

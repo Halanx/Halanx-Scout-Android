@@ -23,20 +23,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.Task;
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
+import com.technicalrj.halanxscouts.Home.MoveOut.AmenitiesActivity;
+import com.technicalrj.halanxscouts.Home.MoveOut.MoveOutActivity;
+import com.technicalrj.halanxscouts.Home.MoveOut.RemarkActivity;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.Home.TaskFolder.SubTask;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Scanner;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,6 +64,8 @@ public class TaskActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
+
+        startActivity(new Intent(this, MoveOutActivity.class));
 
         id = getIntent().getIntExtra("id",0);
 

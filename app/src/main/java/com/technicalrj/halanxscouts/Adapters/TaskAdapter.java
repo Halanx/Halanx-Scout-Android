@@ -61,7 +61,11 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
             return;
 
         holder.task_name.setText(scheduledTaskList.get(position).getCategory().getName());
-        holder.address.setText(scheduledTaskList.get(position).getHouse().getAddress().getStreetAddress());
+
+
+        if(scheduledTaskList.get(position)!=null)
+            holder.address.setText(scheduledTaskList.get(position).getHouse().getAddress().getStreetAddress());
+
         holder.earning.setText(scheduledTaskList.get(position).getEarning()+"");
 
         String[] parts = scheduledTaskList.get(position).getScheduledAt().split(" ") ;
