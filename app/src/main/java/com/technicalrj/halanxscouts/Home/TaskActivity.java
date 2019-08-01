@@ -25,9 +25,7 @@ import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 import com.squareup.picasso.Picasso;
-import com.technicalrj.halanxscouts.Home.MoveOut.AmenitiesActivity;
 import com.technicalrj.halanxscouts.Home.MoveOut.MoveOutActivity;
-import com.technicalrj.halanxscouts.Home.MoveOut.RemarkActivity;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.Home.TaskFolder.SubTask;
 import com.technicalrj.halanxscouts.R;
