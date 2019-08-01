@@ -6,6 +6,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Category {
 
+    public static final String HOUSE_VISIT = "House Visit";
+    public static final String MOVE_OUT = "Move Out";
+
     @SerializedName("id")
     @Expose
     private Integer id;

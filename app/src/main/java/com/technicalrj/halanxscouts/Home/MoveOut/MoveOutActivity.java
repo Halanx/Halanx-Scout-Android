@@ -4,11 +4,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.technicalrj.halanxscouts.Home.HomeFragment;
 import com.technicalrj.halanxscouts.Home.MoveOut.fragment.AmenitiesFragment;
@@ -27,16 +31,19 @@ public class MoveOutActivity extends AppCompatActivity implements PropertyDetail
     private static final String AMENITIES_FRAGMENT_TAG = "amenities_tag";
     private static final String REMARKS_FRAGMENT_TAG = "remarks_tag";
 
-    private Button done_button;
-    private CheckBox checkBox;
+    private TextView amountTextView;
 
+    private int taskId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_move_out);
 
+        taskId = getIntent().getIntExtra("id",0);
+
         ImageView backButtonImageView = findViewById(R.id.back_button_image_view);
+        amountTextView = findViewById(R.id.amount_tv);
 
         backButtonImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,7 +53,7 @@ public class MoveOutActivity extends AppCompatActivity implements PropertyDetail
         });
 
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_layout, PropertyDetailsFragment.newInstance(), PROPERTY_DETAILS_FRAGMENT_TAG)
+        ft.replace(R.id.frame_layout, PropertyDetailsFragment.newInstance(taskId), PROPERTY_DETAILS_FRAGMENT_TAG)
                 .addToBackStack(PROPERTY_DETAILS_FRAGMENT_TAG)
                 .commit();
 
@@ -59,6 +66,19 @@ public class MoveOutActivity extends AppCompatActivity implements PropertyDetail
         ft.replace(R.id.frame_layout, AmenitiesFragment.newInstance(), AMENITIES_FRAGMENT_TAG)
                 .addToBackStack(AMENITIES_FRAGMENT_TAG)
                 .commit();
+    }
+
+    @Override
+    public void setAmount(int amount) {
+        amountTextView.setText("₹ "+amount);
+    }
+
+    @Override
+    public void onRefreshTaskList() {
+        Intent returnIntent = new Intent();
+        setResult(Activity.RESULT_OK,returnIntent);
+        finish();
+
     }
 
     @Override
@@ -88,18 +108,6 @@ public class MoveOutActivity extends AppCompatActivity implements PropertyDetail
 
     }
 
-    public void enableButton(boolean val){
-
-        if(val){
-            done_button.setEnabled(true);
-            done_button.setBackground(getResources().getDrawable(R.drawable.button_shape));
-        }else {
-            done_button.setEnabled(false);
-            done_button.setBackground(getResources().getDrawable(R.drawable.button_shape_dark_grey));
-
-        }
-
-    }
 }
 
 

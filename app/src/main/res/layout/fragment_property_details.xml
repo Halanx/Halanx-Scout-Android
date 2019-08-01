@@ -167,7 +167,8 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/textView17"
+                    android:paddingTop="4dp"
+                    android:id="@+id/more_info_text_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/address3"
@@ -183,6 +184,7 @@
 
 
                 <ImageView
+                    android:id="@+id/house_location_image_view"
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_margin="5dp"
@@ -243,6 +245,7 @@
                     android:padding="5dp">
 
                     <ImageView
+                        android:id="@+id/call_image_view"
                         android:layout_width="45dp"
                         android:layout_height="45dp"
                         android:src="@drawable/call_icon_group" />
@@ -258,6 +261,7 @@
                     android:padding="5dp">
 
                     <ImageView
+                        android:id="@+id/chat_image_view"
                         android:layout_width="45dp"
                         android:layout_height="45dp"
                         android:src="@drawable/chat_icon_group" />
@@ -309,11 +313,12 @@
             android:layout_marginBottom="25dp">
 
             <TextView
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
                 android:id="@+id/cancel_action"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/montserrat_regular"
-                android:onClick="cancelTask"
                 android:text="CANCEL TASK"
                 android:layout_centerVertical="true"
                 android:textColor="#707070"

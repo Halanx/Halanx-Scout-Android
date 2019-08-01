@@ -20,7 +20,9 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 import com.technicalrj.halanxscouts.Home.ChatWindow;
+import com.technicalrj.halanxscouts.Home.MoveOut.MoveOutActivity;
 import com.technicalrj.halanxscouts.Home.TaskActivity;
+import com.technicalrj.halanxscouts.Home.TaskFolder.Category;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.R;
 
@@ -92,9 +94,19 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
         holder.lin_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(c, TaskActivity.class);
-                intent.putExtra("id",scheduledTaskList.get(position).getId());
-               ((Activity) c).startActivityForResult(intent,TASK_CLICKED);
+//                scheduledTaskList.get(position).getCategory()
+                ScheduledTask scheduledTask = scheduledTaskList.get(position);
+
+                if(scheduledTask.getCategory().getName().equalsIgnoreCase(Category.MOVE_OUT)){
+                    Intent intent = new Intent(c, MoveOutActivity.class);
+                    intent.putExtra("id",scheduledTaskList.get(position).getId());
+                    ((Activity) c).startActivityForResult(intent,TASK_CLICKED);
+
+                } else if(scheduledTask.getCategory().getName().equalsIgnoreCase(Category.HOUSE_VISIT)){
+                    Intent intent = new Intent(c, TaskActivity.class);
+                    intent.putExtra("id",scheduledTaskList.get(position).getId());
+                    ((Activity) c).startActivityForResult(intent,TASK_CLICKED);
+                }
             }
         });
 
