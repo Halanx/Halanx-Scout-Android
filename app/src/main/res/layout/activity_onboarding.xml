@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F5"
+    tools:context=".Home.Onboarding.OnboardingActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="false"
+        >
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/toolbar_cardview"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                app:cardCornerRadius="8dp">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/back_button_image_view"
+                        android:layout_width="18dp"
+                        android:layout_height="58dp"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginStart="12dp"
+                        android:src="@drawable/back_arrow" />
+
+
+                    <TextView
+                        android:id="@+id/activity_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:fontFamily="@font/montserrat_regular"
+                        android:textSize="17sp"
+                        android:text="Property Onboarding"
+                        android:textStyle="bold" />
+
+
+                    <RelativeLayout
+                        android:layout_width="58dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true">
+
+                        <ImageView
+                            android:layout_width="58dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@drawable/task_payment" />
+
+                        <TextView
+                            android:id="@+id/amount_tv"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:paddingEnd="5dp"
+                            android:text=""
+                            android:textColor="@color/colorWhite"
+                            android:textSize="11sp" />
+
+                    </RelativeLayout>
+
+
+                </RelativeLayout>
+
+
+            </androidx.cardview.widget.CardView>
+
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/timeline_cardview"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:layout_below="@+id/toolbar_cardview"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp">
+
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical">
+
+                    <com.kofigyan.stateprogressbar.StateProgressBar
+                        android:id="@+id/your_state_progress_bar_id"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:spb_currentStateNumber="one"
+                        app:spb_maxStateNumber="four"
+                        app:spb_stateBackgroundColor="#BDBDBD"
+                        app:spb_stateForegroundColor="#EF3939"
+                        app:spb_stateNumberBackgroundColor="#808080"
+                        app:spb_stateNumberForegroundColor="#eeeeee"
+                        app:spb_stateTextSize="7sp"
+                        app:spb_stateSize="5dp"
+                        app:spb_stateLineThickness="1dp"
+                        app:spb_descriptionTopSpaceIncrementer="8dp"
+                        app:spb_currentStateDescriptionColor="#EF3939"
+                        app:spb_stateDescriptionColor="#8B8B8B"
+                        app:spb_animateToCurrentProgressState="true"
+                        app:spb_animationDuration="3000"
+                        app:spb_checkStateCompleted="true"
+                        />
+
+
+                    <!--
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="horizontal"
+                                            android:layout_centerHorizontal="true"
+                                            android:layout_below="@+id/your_state_progress_bar_id"
+                                            android:layout_marginTop="10dp">
+
+                                            <ImageView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:background="@drawable/marker"/>
+
+                                            <View
+                                                android:layout_width="100dp"
+                                                android:layout_height="1dp"
+                                                android:background="#F5F5F5"
+                                                android:layout_gravity="center_vertical"
+                                                />
+
+                                            <ImageView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:background="@drawable/marker"/>
+
+                                            <View
+                                                android:layout_width="100dp"
+                                                android:layout_height="1dp"
+                                                android:layout_gravity="center_vertical"
+                                                android:background="#F5F5F5"/>
+
+
+                                            <ImageView
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:background="@drawable/marker"/>
+
+
+
+                                        </LinearLayout>
+                    -->
+
+
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+
+            <FrameLayout
+                android:id="@+id/frame_layout"
+                android:paddingTop="8dp"
+                android:layout_below="@id/timeline_cardview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+        </RelativeLayout>
+
+
+    </ScrollView>
+
+
+</RelativeLayout>

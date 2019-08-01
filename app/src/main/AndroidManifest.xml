@@ -18,7 +18,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Home.MoveOut.fragment.RemarksFragment"></activity>
+        <activity android:name=".Home.Onboarding.OnboardingActivity"></activity>
+        <activity android:name=".Home.MoveOut.fragment.RemarksFragment" />
         <activity android:name=".Home.MoveOut.fragment.AmenitiesFragment" />
         <activity android:name=".Home.MoveOut.MoveOutActivity" />
         <activity

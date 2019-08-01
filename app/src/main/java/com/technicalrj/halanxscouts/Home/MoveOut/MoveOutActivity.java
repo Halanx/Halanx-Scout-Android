@@ -61,6 +61,9 @@ public class MoveOutActivity extends AppCompatActivity implements PropertyDetail
                 .addToBackStack(PROPERTY_DETAILS_FRAGMENT_TAG)
                 .commit();
 
+
+
+
     }
 
 
@@ -102,6 +105,7 @@ public class MoveOutActivity extends AppCompatActivity implements PropertyDetail
             finish();
         } else {
 
+            // For the progress bar
             int x = stateProgressBar.getCurrentStateNumber();
             if (x == 3) {
                 stateProgressBar.setCurrentStateNumber(StateProgressBar.StateNumber.TWO);
