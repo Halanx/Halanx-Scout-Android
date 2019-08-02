@@ -86,12 +86,6 @@ public class RemarksFragment extends Fragment {
             }
         });
 
-//        submitRemarksButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                submitAmenitiesAndRemarks();
-//            }
-//        });
 
         remarks.addTextChangedListener(new TextWatcher() {
             @Override
@@ -149,7 +143,6 @@ public class RemarksFragment extends Fragment {
                                 }
 
                             } else {
-                                progressDialog.dismiss();
                                 showErrorDialog(false);
                             }
                         }
@@ -247,57 +240,6 @@ public class RemarksFragment extends Fragment {
                     }
                 });
     }
-
-//    public void cancelTask(View view) {
-//        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                switch (which){
-//                    case DialogInterface.BUTTON_POSITIVE:
-//
-//                        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-//                        progressDialog.setMessage("Loading...");
-//                        progressDialog.show();
-//
-//                        RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
-//                        Call<String> call = availabilityInterface.cancelTask(taskId,"Token "+key);
-//                        call.enqueue(new Callback<String>() {
-//                            @Override
-//                            public void onResponse(Call<String> call, Response<String> response) {
-//                                progressDialog.dismiss();
-//                                Log.i("InfoText","cancelTask:"+response.body());
-//
-//                                Intent returnIntent = new Intent();
-//                                getActivity().setResult(Activity.RESULT_OK,returnIntent);
-//                                getActivity().finish();
-//
-//                            }
-//
-//                            @Override
-//                            public void onFailure(Call<String> call, Throwable t) {
-//                                progressDialog.dismiss();
-//
-//                            }
-//                        });
-//
-//
-//
-//                        break;
-//
-//                    case DialogInterface.BUTTON_NEGATIVE:
-//                        dialog.dismiss();
-//                        break;
-//                }
-//            }
-//        };
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.AlertDialogCustom);
-//        builder.setMessage("Are you sure to Cancel this task?")
-//                .setPositiveButton("Yes", dialogClickListener)
-//                .setNegativeButton("No", dialogClickListener)
-//                .show();
-//
-//    }
 
     private void showErrorDialog(final boolean isTaskComplete){
         AlertDialog alertDialog = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom)
