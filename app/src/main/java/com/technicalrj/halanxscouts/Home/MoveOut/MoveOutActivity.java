@@ -63,7 +63,7 @@ public class MoveOutActivity extends AppCompatActivity implements PropertyDetail
     @Override
     public void onCheckAmenitiesClicked() {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_layout, AmenitiesFragment.newInstance(), AMENITIES_FRAGMENT_TAG)
+        ft.replace(R.id.frame_layout, AmenitiesFragment.newInstance(taskId), AMENITIES_FRAGMENT_TAG)
                 .addToBackStack(AMENITIES_FRAGMENT_TAG)
                 .commit();
     }

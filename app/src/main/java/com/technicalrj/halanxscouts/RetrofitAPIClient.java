@@ -3,6 +3,7 @@ package com.technicalrj.halanxscouts;
 import com.google.gson.JsonObject;
 import com.technicalrj.halanxscouts.Home.Chat.Messages;
 import com.technicalrj.halanxscouts.Home.Chat.Result;
+import com.technicalrj.halanxscouts.Home.MoveOut.AmenitiesResponse;
 import com.technicalrj.halanxscouts.Home.ScheduleAvailability;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.Notification.NoficationPojo.Notification;
@@ -127,7 +128,14 @@ public class RetrofitAPIClient {
         @PATCH("/scouts/")
         Call<Profile> updateLocation(@Body JsonObject jsonObject , @Header("Authorization") String token);
 
+        @GET("/scouts/tasks/{task_id}/subtask/move_out/amenity_check/")
+        Call<AmenitiesResponse> getListOfAmenities(@Header("Authorization") String token,
+                                                   @Path("task_id") String taskId);
 
+        @PATCH("/scouts/tasks/{task_id}/subtask/move_out/amenity_check/")
+        Call<AmenitiesResponse> updateAmenities(@Header("Authorization") String token,
+                                                @Path("task_id") String taskId,
+                                                @Body AmenitiesResponse.AmenityJsonData amenityData);
 
     }
 

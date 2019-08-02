@@ -70,6 +70,8 @@ public class PropertyDetailsFragment extends Fragment {
     private ImageView customer_img;
     private CardView customer_card;
     private String firstName,lastName;
+    private CardView rootCardView;
+
     private RetrofitAPIClient.DataInterface availabilityInterface;
 
     public PropertyDetailsFragment() {
@@ -101,6 +103,7 @@ public class PropertyDetailsFragment extends Fragment {
         SharedPreferences prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
 
+        rootCardView = view.findViewById(R.id.root_card_view);
         done_button   = view.findViewById(R.id.done_button);
         CheckBox checkBox = view.findViewById(R.id.checkBox);
         date = view.findViewById(R.id.date);
@@ -357,6 +360,7 @@ public class PropertyDetailsFragment extends Fragment {
     }
 
     private void fetchDetails(){
+        rootCardView.setVisibility(View.INVISIBLE);
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
         progressDialog.show();
@@ -365,10 +369,11 @@ public class PropertyDetailsFragment extends Fragment {
         call.enqueue(new Callback<ScheduledTask>() {
             @Override
             public void onResponse(Call<ScheduledTask> call, Response<ScheduledTask> response) {
+                progressDialog.dismiss();
                 if(response.body() != null){
+                    rootCardView.setVisibility(View.VISIBLE);
                     scheduledTask = response.body();
                     updateTaskDetails();
-                    progressDialog.dismiss();
                 } else {
                     showErrorDialog();
                 }
@@ -376,6 +381,7 @@ public class PropertyDetailsFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ScheduledTask> call, Throwable t) {
+                rootCardView.setVisibility(View.INVISIBLE);
                 progressDialog.dismiss();
                 showErrorDialog();
             }

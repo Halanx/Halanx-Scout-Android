@@ -2,38 +2,72 @@ package com.technicalrj.halanxscouts.Home.MoveOut.fragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.technicalrj.halanxscouts.Adapters.AmenetiesAdapter;
+import com.technicalrj.halanxscouts.Home.MoveOut.AmenitiesResponse;
 import com.technicalrj.halanxscouts.R;
+import com.technicalrj.halanxscouts.RetrofitAPIClient;
 
-public class AmenitiesFragment extends Fragment {
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+import static android.content.Context.MODE_PRIVATE;
+
+public class AmenitiesFragment extends Fragment implements AmenetiesAdapter.OnAmenityCheckedListener {
 
 
     private RecyclerView amenitiesRecycler;
     private AmenetiesAdapter amenetiesAdapter;
     private Button done_button;
     private TextView backTextView;
+    private CardView rootCardView;
 
     private OnAmenitiesInteractionListener listener;
+    private int taskId;
+    private String key;
 
-    public static AmenitiesFragment newInstance() {
+    private PropertyDetailsFragment.OnPropertyDetailsInteractionListener refreshTaskListListener;
+
+    private ArrayList<AmenitiesResponse.Amenity> amenityArrayList;
+
+    private RetrofitAPIClient.DataInterface dataInterface;
+    private String TAG = AmenitiesFragment.class.getSimpleName();
+
+    public static AmenitiesFragment newInstance(int taskId) {
 
         Bundle args = new Bundle();
-
+        args.putInt("id", taskId);
         AmenitiesFragment fragment = new AmenitiesFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        taskId = getArguments().getInt("id");
     }
 
     @Nullable
@@ -41,11 +75,16 @@ public class AmenitiesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_amenities, container, false);
 
+        SharedPreferences prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
+        key = prefs.getString("login_key", null);
+
+        rootCardView = view.findViewById(R.id.root_card_view);
         done_button   = view.findViewById(R.id.done_button);
         backTextView = view.findViewById(R.id.cancel_action);
         amenitiesRecycler = view.findViewById(R.id.amenities_recyclerview);
 
-        amenetiesAdapter = new AmenetiesAdapter(getActivity());
+        amenityArrayList = new ArrayList<>();
+        amenetiesAdapter = new AmenetiesAdapter(getActivity(), amenityArrayList, this);
         amenitiesRecycler.setAdapter(amenetiesAdapter);
         amenitiesRecycler.setNestedScrollingEnabled(false);
         amenitiesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -68,14 +107,12 @@ public class AmenitiesFragment extends Fragment {
             }
         });
 
-        enableButton(true);
+        dataInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
+
+        fetchDetails();
+
         return view;
     }
-
-    public void goToRemark(View view) {
-
-    }
-
 
 
     private void enableButton(boolean val){
@@ -91,9 +128,74 @@ public class AmenitiesFragment extends Fragment {
 
     }
 
+
+    private void fetchDetails(){
+
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+
+        rootCardView.setVisibility(View.INVISIBLE);
+
+        Log.d(TAG, "fetchDetails: "+taskId);
+
+        dataInterface.getListOfAmenities("Token "+key, String.valueOf(taskId))
+                .enqueue(new Callback<AmenitiesResponse>() {
+                    @Override
+                    public void onResponse(Call<AmenitiesResponse> call, Response<AmenitiesResponse> response) {
+                        progressDialog.dismiss();
+                        if(response.body() != null){
+                            rootCardView.setVisibility(View.VISIBLE);
+                            amenityArrayList.addAll(response.body().getListOfAmenity());
+                            amenetiesAdapter.notifyDataSetChanged();
+                        } else {
+                            rootCardView.setVisibility(View.INVISIBLE);
+                            showErrorDialog();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<AmenitiesResponse> call, Throwable t) {
+                        progressDialog.dismiss();
+                        rootCardView.setVisibility(View.INVISIBLE);
+                        Log.d(TAG, "onFailure: ");
+                        t.printStackTrace();
+                        showErrorDialog();
+                    }
+                });
+    }
+
+    private void showErrorDialog(){
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom)
+                .setCancelable(false)
+                .setMessage("Couldn't load data!")
+                .setPositiveButton("TRY AGAIN", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        fetchDetails();
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        if(refreshTaskListListener != null){
+                            refreshTaskListListener.onRefreshTaskList();
+                        }
+                    }
+                })
+                .create();
+        alertDialog.show();
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        if(context instanceof PropertyDetailsFragment.OnPropertyDetailsInteractionListener){
+            refreshTaskListListener = (PropertyDetailsFragment.OnPropertyDetailsInteractionListener) context;
+        }
+
         if(context instanceof OnAmenitiesInteractionListener){
             listener = (OnAmenitiesInteractionListener) context;
         }
@@ -103,6 +205,37 @@ public class AmenitiesFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         listener = null;
+        refreshTaskListListener = null;
+    }
+
+    @Override
+    public void onAmenityChecked(RadioGroup radioGroup, int radioButtonId, View rootView) {
+        int position = amenitiesRecycler.getChildAdapterPosition(rootView);
+        AmenitiesResponse.Amenity amenity = amenityArrayList.get(position);
+        if(radioButtonId == R.id.ok1){
+            amenity.setStatus(AmenitiesResponse.STATUS_OK);
+        } else if(radioButtonId == R.id.damaged1){
+            amenity.setStatus(AmenitiesResponse.STATUS_DAMAGED);
+        } else if(radioButtonId == R.id.missing1){
+            amenity.setStatus(AmenitiesResponse.STATUS_MISSING);
+        } else {
+            amenity.setStatus(AmenitiesResponse.STATUS_NOT_SELECTED);
+        }
+
+        if(checkIfAllAmenitiesSelected()){
+            enableButton(true);
+        }
+
+    }
+
+    private boolean checkIfAllAmenitiesSelected(){
+        for(AmenitiesResponse.Amenity amenity : amenityArrayList){
+            if(amenity.getStatus() == null || amenity.getStatus().equalsIgnoreCase("") ||
+                amenity.getStatus().equalsIgnoreCase(AmenitiesResponse.STATUS_NOT_SELECTED)){
+                return false;
+            }
+        }
+        return true;
     }
 
     public interface OnAmenitiesInteractionListener{
