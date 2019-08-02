@@ -6,7 +6,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +13,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kofigyan.stateprogressbar.StateProgressBar;
 import com.technicalrj.halanxscouts.Home.HomeFragment;
 import com.technicalrj.halanxscouts.Home.MoveOut.fragment.AmenitiesFragment;
 import com.technicalrj.halanxscouts.Home.MoveOut.fragment.PropertyDetailsFragment;
@@ -22,7 +22,7 @@ import com.technicalrj.halanxscouts.R;
 
 
 public class MoveOutActivity extends AppCompatActivity implements PropertyDetailsFragment.OnPropertyDetailsInteractionListener,
-        AmenitiesFragment.OnAmenitiesInteractionListener{
+        AmenitiesFragment.OnAmenitiesInteractionListener {
 
 
     private static final String TAG = MoveOutActivity.class.getSimpleName();
@@ -32,8 +32,10 @@ public class MoveOutActivity extends AppCompatActivity implements PropertyDetail
     private static final String REMARKS_FRAGMENT_TAG = "remarks_tag";
 
     private TextView amountTextView;
+    private StateProgressBar stateProgressBar;
 
     private int taskId;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,14 @@ public class MoveOutActivity extends AppCompatActivity implements PropertyDetail
 
         ImageView backButtonImageView = findViewById(R.id.back_button_image_view);
         amountTextView = findViewById(R.id.amount_tv);
+
+
+        String[] descriptionData = {"Property Details", "Amenities Checkup", "Remark"};
+        stateProgressBar = (StateProgressBar) findViewById(R.id.your_state_progress_bar_id);
+        stateProgressBar.setStateDescriptionData(descriptionData);
+        stateProgressBar.setStateNumberTextSize(0);
+        stateProgressBar.setStateDescriptionSize(14f);
+        stateProgressBar.setStateDescriptionTypeface("font/montserrat_regular.otf");
 
         backButtonImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,6 +76,10 @@ public class MoveOutActivity extends AppCompatActivity implements PropertyDetail
         ft.replace(R.id.frame_layout, AmenitiesFragment.newInstance(taskId), AMENITIES_FRAGMENT_TAG)
                 .addToBackStack(AMENITIES_FRAGMENT_TAG)
                 .commit();
+
+        stateProgressBar.setCurrentStateNumber(StateProgressBar.StateNumber.TWO);
+
+
     }
 
     @Override
@@ -87,6 +101,9 @@ public class MoveOutActivity extends AppCompatActivity implements PropertyDetail
         ft.replace(R.id.frame_layout, RemarksFragment.newInstance(), REMARKS_FRAGMENT_TAG)
                 .addToBackStack(REMARKS_FRAGMENT_TAG)
                 .commit();
+
+        stateProgressBar.setCurrentStateNumber(StateProgressBar.StateNumber.THREE);
+
     }
 
     @Override
@@ -100,9 +117,18 @@ public class MoveOutActivity extends AppCompatActivity implements PropertyDetail
         FragmentManager fm = getSupportFragmentManager();
         PropertyDetailsFragment propertyDetailsFragment = (PropertyDetailsFragment) fm.findFragmentByTag(PROPERTY_DETAILS_FRAGMENT_TAG);
 
-        if(propertyDetailsFragment != null && propertyDetailsFragment.isVisible()){
+        if (propertyDetailsFragment != null && propertyDetailsFragment.isVisible()) {
             finish();
         } else {
+
+            // For the progress bar
+            int x = stateProgressBar.getCurrentStateNumber();
+            if (x == 3) {
+                stateProgressBar.setCurrentStateNumber(StateProgressBar.StateNumber.TWO);
+            } else if (x == 2) {
+                stateProgressBar.setCurrentStateNumber(StateProgressBar.StateNumber.ONE);
+            }
+
             fm.popBackStack();
         }
 
