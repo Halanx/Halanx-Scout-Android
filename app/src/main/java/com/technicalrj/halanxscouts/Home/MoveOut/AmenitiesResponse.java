@@ -14,6 +14,7 @@ public class AmenitiesResponse {
     public static final String STATUS_MISSING = "missing";
     public static final String STATUS_DAMAGED = "damaged";
     public static final String STATUS_NOT_SELECTED = "not_selected";
+    public static final String AMENITY_KEY = "amenity_key";
 
     private int id;
 

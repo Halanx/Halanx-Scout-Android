@@ -42,6 +42,7 @@ public class AmenitiesFragment extends Fragment implements AmenetiesAdapter.OnAm
     private Button done_button;
     private TextView backTextView;
     private CardView rootCardView;
+    private TextView noAmenitiesTextView;
 
     private OnAmenitiesInteractionListener listener;
     private int taskId;
@@ -53,6 +54,8 @@ public class AmenitiesFragment extends Fragment implements AmenetiesAdapter.OnAm
 
     private RetrofitAPIClient.DataInterface dataInterface;
     private String TAG = AmenitiesFragment.class.getSimpleName();
+
+    private AmenitiesResponse amenitiesResponse;
 
     public static AmenitiesFragment newInstance(int taskId) {
 
@@ -82,6 +85,7 @@ public class AmenitiesFragment extends Fragment implements AmenetiesAdapter.OnAm
         done_button   = view.findViewById(R.id.done_button);
         backTextView = view.findViewById(R.id.cancel_action);
         amenitiesRecycler = view.findViewById(R.id.amenities_recyclerview);
+        noAmenitiesTextView = view.findViewById(R.id.no_amenities_text_view);
 
         amenityArrayList = new ArrayList<>();
         amenetiesAdapter = new AmenetiesAdapter(getActivity(), amenityArrayList, this);
@@ -93,7 +97,7 @@ public class AmenitiesFragment extends Fragment implements AmenetiesAdapter.OnAm
             @Override
             public void onClick(View view) {
                 if(listener != null){
-                    listener.onLoadRemarksClicked();
+                    listener.onLoadRemarksClicked(amenitiesResponse.getAmenityJsonData());
                 }
             }
         });
@@ -139,15 +143,32 @@ public class AmenitiesFragment extends Fragment implements AmenetiesAdapter.OnAm
 
         Log.d(TAG, "fetchDetails: "+taskId);
 
-        dataInterface.getListOfAmenities("Token "+key, String.valueOf(taskId))
+        dataInterface.getListOfAmenities("Token "+key, taskId)
                 .enqueue(new Callback<AmenitiesResponse>() {
                     @Override
                     public void onResponse(Call<AmenitiesResponse> call, Response<AmenitiesResponse> response) {
                         progressDialog.dismiss();
                         if(response.body() != null){
+                            amenitiesResponse = response.body();
                             rootCardView.setVisibility(View.VISIBLE);
-                            amenityArrayList.addAll(response.body().getListOfAmenity());
-                            amenetiesAdapter.notifyDataSetChanged();
+                            amenityArrayList.addAll(amenitiesResponse.getListOfAmenity());
+
+                            if(amenityArrayList.size() > 0) {
+                                noAmenitiesTextView.setVisibility(View.GONE);
+
+                                for (int i = 0; i < amenityArrayList.size(); i++) {
+                                    AmenitiesResponse.Amenity amenity = amenityArrayList.get(i);
+                                    amenity.setStatus(AmenitiesResponse.STATUS_NOT_SELECTED);
+                                    amenityArrayList.set(i, amenity);
+                                }
+                                amenetiesAdapter.notifyDataSetChanged();
+                                if (checkIfAllAmenitiesSelected()) {
+                                    enableButton(true);
+                                }
+                            } else {
+                                noAmenitiesTextView.setVisibility(View.VISIBLE);
+                                enableButton(true);
+                            }
                         } else {
                             rootCardView.setVisibility(View.INVISIBLE);
                             showErrorDialog();
@@ -209,7 +230,7 @@ public class AmenitiesFragment extends Fragment implements AmenetiesAdapter.OnAm
     }
 
     @Override
-    public void onAmenityChecked(RadioGroup radioGroup, int radioButtonId, View rootView) {
+    public void onAmenityChecked(final RadioGroup radioGroup, final int radioButtonId, final View rootView) {
         int position = amenitiesRecycler.getChildAdapterPosition(rootView);
         AmenitiesResponse.Amenity amenity = amenityArrayList.get(position);
         if(radioButtonId == R.id.ok1){
@@ -240,7 +261,7 @@ public class AmenitiesFragment extends Fragment implements AmenetiesAdapter.OnAm
 
     public interface OnAmenitiesInteractionListener{
 
-        void onLoadRemarksClicked();
+        void onLoadRemarksClicked(AmenitiesResponse.AmenityJsonData amenityJsonData);
 
         void onAmenitiesBackPressed();
     }

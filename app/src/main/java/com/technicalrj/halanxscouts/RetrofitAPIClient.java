@@ -1,6 +1,7 @@
 package com.technicalrj.halanxscouts;
 
 import com.google.gson.JsonObject;
+import com.squareup.okhttp.ResponseBody;
 import com.technicalrj.halanxscouts.Home.Chat.Messages;
 import com.technicalrj.halanxscouts.Home.Chat.Result;
 import com.technicalrj.halanxscouts.Home.MoveOut.AmenitiesResponse;
@@ -130,12 +131,17 @@ public class RetrofitAPIClient {
 
         @GET("/scouts/tasks/{task_id}/subtask/move_out/amenity_check/")
         Call<AmenitiesResponse> getListOfAmenities(@Header("Authorization") String token,
-                                                   @Path("task_id") String taskId);
+                                                   @Path("task_id") int taskId);
 
         @PATCH("/scouts/tasks/{task_id}/subtask/move_out/amenity_check/")
         Call<AmenitiesResponse> updateAmenities(@Header("Authorization") String token,
-                                                @Path("task_id") String taskId,
+                                                @Path("task_id") int taskId,
                                                 @Body AmenitiesResponse.AmenityJsonData amenityData);
+
+        @PATCH("/scouts/tasks/{task_id}/subtask/move_out/remarks/")
+        Call<Void> updateMoveOutRemarks(@Header("Authorization") String token,
+                                                @Path("task_id") int taskId,
+                                                @Body JsonObject jsonObject);
 
     }
 

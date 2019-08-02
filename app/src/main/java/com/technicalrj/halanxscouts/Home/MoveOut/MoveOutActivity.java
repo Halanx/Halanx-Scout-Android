@@ -96,9 +96,9 @@ public class MoveOutActivity extends AppCompatActivity implements PropertyDetail
     }
 
     @Override
-    public void onLoadRemarksClicked() {
+    public void onLoadRemarksClicked(AmenitiesResponse.AmenityJsonData amenityJsonData) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_layout, RemarksFragment.newInstance(), REMARKS_FRAGMENT_TAG)
+        ft.replace(R.id.frame_layout, RemarksFragment.newInstance(taskId, amenityJsonData), REMARKS_FRAGMENT_TAG)
                 .addToBackStack(REMARKS_FRAGMENT_TAG)
                 .commit();
 

@@ -5,10 +5,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
@@ -22,6 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.JsonObject;
+import com.technicalrj.halanxscouts.Home.MoveOut.AmenitiesResponse;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
 
@@ -37,16 +37,33 @@ public class RemarksFragment extends Fragment {
     private Button done_button;
     private TextView cancel;
     public static final String TAG = RemarksFragment.class.getName();
+
     private int taskId;
+    private AmenitiesResponse.AmenityJsonData amenityJsonData;
     private String key;
 
-    public static RemarksFragment newInstance() {
+    private RetrofitAPIClient.DataInterface dataInterface;
+
+    private PropertyDetailsFragment.OnPropertyDetailsInteractionListener refreshTaskListListener;
+
+    public static RemarksFragment newInstance(int taskId, AmenitiesResponse.AmenityJsonData amenityJsonData) {
 
         Bundle args = new Bundle();
-
+        args.putInt("id", taskId);
+        args.putParcelable(AmenitiesResponse.AMENITY_KEY, amenityJsonData);
         RemarksFragment fragment = new RemarksFragment();
         fragment.setArguments(args);
         return fragment;
+    }
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle bundle = getArguments();
+        taskId = bundle.getInt("id");
+        amenityJsonData = bundle.getParcelable(AmenitiesResponse.AMENITY_KEY);
     }
 
     @Nullable
@@ -57,33 +74,24 @@ public class RemarksFragment extends Fragment {
         cancel = view.findViewById(R.id.cancel_action);
         done_button   = view.findViewById(R.id.done_button);
 
-
-        taskId = getArguments().getInt("id");
-
-
         final SharedPreferences prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
 
-
-
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelTask(v);
-            }
-        });
-
-
+        dataInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
 
         done_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                submitRemark(v);
+                submitAmenitiesAndRemarks();
             }
         });
 
-
-
+//        submitRemarksButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                submitAmenitiesAndRemarks();
+//            }
+//        });
 
         remarks.addTextChangedListener(new TextWatcher() {
             @Override
@@ -94,9 +102,9 @@ public class RemarksFragment extends Fragment {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 if(s.toString().trim().equals("")){
-                    enableButton(false);
+                    enableButton(false, done_button);
                 }else {
-                    enableButton(true);
+                    enableButton(true, done_button);
                 }
             }
 
@@ -107,113 +115,229 @@ public class RemarksFragment extends Fragment {
         return view;
     }
 
-    private void enableButton(boolean val){
+    private void enableButton(boolean val, Button button){
 
         if(val){
-            done_button.setEnabled(true);
-            done_button.setBackground(getResources().getDrawable(R.drawable.button_shape));
-        }else {
-            done_button.setEnabled(false);
-            done_button.setBackground(getResources().getDrawable(R.drawable.button_shape_dark_grey));
+            button.setEnabled(true);
+        } else {
+            button.setEnabled(false);
 
         }
 
     }
 
-    public void submitRemark(View view) {
+    private void submitAmenitiesAndRemarks(){
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+
+        if(amenityJsonData.getAmenityData().getAmenityHashMap().size() > 0) {
+
+            dataInterface.updateAmenities("Token " + key, taskId, amenityJsonData)
+                    .enqueue(new Callback<AmenitiesResponse>() {
+                        @Override
+                        public void onResponse(Call<AmenitiesResponse> call, Response<AmenitiesResponse> response) {
+                            progressDialog.dismiss();
+                            if (response.code() == 200) {
+
+                                String remark = remarks.getText().toString().trim();
+
+                                if(remark.equals("")){
+                                    markTaskAsComplete();
+                                } else {
+                                    submitRemarks();
+                                }
+
+                            } else {
+                                progressDialog.dismiss();
+                                showErrorDialog(false);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<AmenitiesResponse> call, Throwable t) {
+                            progressDialog.dismiss();
+                            Log.d(TAG, "onFailure: ");
+                            t.printStackTrace();
+                            showErrorDialog(false);
+
+                        }
+                    });
+        } else {
+            String remark = remarks.getText().toString().trim();
+            if(remark.equals("")){
+                markTaskAsComplete();
+            } else {
+                submitRemarks();
+            }
+        }
+    }
+
+    private void submitRemarks(){
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
         progressDialog.show();
 
-
-        RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
         JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("complete",true);
-        jsonObject.addProperty("remark",remarks.getText().toString().trim());
+        jsonObject.addProperty("content", remarks.getText().toString().trim());
 
-        Call<Void> call = availabilityInterface.setTaskComplete(taskId,jsonObject,"Token "+key);
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                progressDialog.dismiss();
+        dataInterface.updateMoveOutRemarks("Token " + key, taskId, jsonObject)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        progressDialog.dismiss();
 
-                /*if(response.isSuccessful()){
+                        if (response.code() == 200) {
 
-                }else {
-                    try {
-                        Log.i(TAG, "onResponse: "+response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                            Log.i(TAG, "saveData succ:" + response.body());
+//                                                enableButton(true, done_button);
+                            markTaskAsComplete();
+
+                        } else {
+                            showErrorDialog(false);
+                        }
                     }
-                }*/
 
-                Log.i(TAG,"saveData succ:"+response.body());
-
-                Intent returnIntent = new Intent();
-                getActivity().setResult(Activity.RESULT_OK,returnIntent);
-                getActivity().finish();
-
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                progressDialog.dismiss();
-                t.printStackTrace();
-                Log.i(TAG,"saveData error:"+t.getMessage());
-            }
-        });
-
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        progressDialog.dismiss();
+                        t.printStackTrace();
+                        Log.i(TAG, "saveData error:" + t.getMessage());
+                        showErrorDialog(false);
+                    }
+                });
     }
 
-    public void cancelTask(View view) {
-        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
+    private void markTaskAsComplete(){
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
 
-                        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-                        progressDialog.setMessage("Loading...");
-                        progressDialog.show();
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("complete",true);
+        dataInterface.setTaskComplete(taskId, jsonObject, "Token "+key)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        progressDialog.dismiss();
+                        if(response.code() == 200){
+                            AlertDialog alertDialog = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom)
+                                    .setCancelable(false)
+                                    .setMessage("Task completed successfully!")
+                                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            refreshTaskListListener.onRefreshTaskList();
+                                        }
+                                    }).create();
+                            alertDialog.show();
+                        } else {
+                            showErrorDialog(true);
+                        }
+                    }
 
-                        RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
-                        Call<String> call = availabilityInterface.cancelTask(taskId,"Token "+key);
-                        call.enqueue(new Callback<String>() {
-                            @Override
-                            public void onResponse(Call<String> call, Response<String> response) {
-                                progressDialog.dismiss();
-                                Log.i("InfoText","cancelTask:"+response.body());
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        progressDialog.dismiss();
+                        Log.d(TAG, "onFailure: ");
+                        t.printStackTrace();
+                        showErrorDialog(true);
+                    }
+                });
+    }
 
-                                Intent returnIntent = new Intent();
-                                getActivity().setResult(Activity.RESULT_OK,returnIntent);
-                                getActivity().finish();
+//    public void cancelTask(View view) {
+//        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                switch (which){
+//                    case DialogInterface.BUTTON_POSITIVE:
+//
+//                        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+//                        progressDialog.setMessage("Loading...");
+//                        progressDialog.show();
+//
+//                        RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
+//                        Call<String> call = availabilityInterface.cancelTask(taskId,"Token "+key);
+//                        call.enqueue(new Callback<String>() {
+//                            @Override
+//                            public void onResponse(Call<String> call, Response<String> response) {
+//                                progressDialog.dismiss();
+//                                Log.i("InfoText","cancelTask:"+response.body());
+//
+//                                Intent returnIntent = new Intent();
+//                                getActivity().setResult(Activity.RESULT_OK,returnIntent);
+//                                getActivity().finish();
+//
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Call<String> call, Throwable t) {
+//                                progressDialog.dismiss();
+//
+//                            }
+//                        });
+//
+//
+//
+//                        break;
+//
+//                    case DialogInterface.BUTTON_NEGATIVE:
+//                        dialog.dismiss();
+//                        break;
+//                }
+//            }
+//        };
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.AlertDialogCustom);
+//        builder.setMessage("Are you sure to Cancel this task?")
+//                .setPositiveButton("Yes", dialogClickListener)
+//                .setNegativeButton("No", dialogClickListener)
+//                .show();
+//
+//    }
 
-                            }
+    private void showErrorDialog(final boolean isTaskComplete){
+        AlertDialog alertDialog = new AlertDialog.Builder(getActivity(), R.style.AlertDialogCustom)
+                .setCancelable(false)
+                .setMessage("Couldn't load data!")
+                .setPositiveButton("TRY AGAIN", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        if(isTaskComplete){
+                            markTaskAsComplete();
+                        } else {
+                            submitAmenitiesAndRemarks();
+                        }
+                    }
+                })
+                .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                        if(refreshTaskListListener != null){
+                            refreshTaskListListener.onRefreshTaskList();
+                        }
+                    }
+                })
+                .create();
+        alertDialog.show();
+    }
 
-                            @Override
-                            public void onFailure(Call<String> call, Throwable t) {
-                                progressDialog.dismiss();
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if(context instanceof PropertyDetailsFragment.OnPropertyDetailsInteractionListener){
+            refreshTaskListListener = (PropertyDetailsFragment.OnPropertyDetailsInteractionListener) context;
+        }
+    }
 
-                            }
-                        });
-
-
-
-                        break;
-
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        dialog.dismiss();
-                        break;
-                }
-            }
-        };
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(),R.style.AlertDialogCustom);
-        builder.setMessage("Are you sure to Cancel this task?")
-                .setPositiveButton("Yes", dialogClickListener)
-                .setNegativeButton("No", dialogClickListener)
-                .show();
-
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        refreshTaskListListener = null;
     }
 }

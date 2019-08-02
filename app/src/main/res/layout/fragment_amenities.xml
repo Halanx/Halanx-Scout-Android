@@ -196,6 +196,15 @@
 
         </androidx.recyclerview.widget.RecyclerView>
 
+        <TextView
+            android:visibility="visible"
+            android:paddingTop="16dp"
+            android:id="@+id/no_amenities_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Amenities found!"
+            android:layout_gravity="center_horizontal"/>
+
 
 
 
