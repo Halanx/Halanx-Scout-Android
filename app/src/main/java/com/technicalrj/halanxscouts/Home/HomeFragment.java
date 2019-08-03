@@ -124,6 +124,7 @@ public class HomeFragment extends Fragment {
 
         prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
+        Log.d(TAG, "onCreateView: token: "+key);
         onlineStatus = prefs.getBoolean("online_status", false);
 
 

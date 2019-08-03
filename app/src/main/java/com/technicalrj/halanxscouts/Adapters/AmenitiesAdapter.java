@@ -1,11 +1,9 @@
 package com.technicalrj.halanxscouts.Adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -13,21 +11,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.nkzawa.socketio.client.On;
 import com.technicalrj.halanxscouts.Home.MoveOut.AmenitiesResponse;
 import com.technicalrj.halanxscouts.R;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class AmenetiesAdapter extends RecyclerView.Adapter<AmenetiesAdapter.ViewHolder> {
+public class AmenitiesAdapter extends RecyclerView.Adapter<AmenitiesAdapter.ViewHolder> {
 
     private Context context;
     private ArrayList<AmenitiesResponse.Amenity> amenityArrayList;
-    private String TAG = AmenetiesAdapter.class.getSimpleName();
+    private String TAG = AmenitiesAdapter.class.getSimpleName();
     private OnAmenityCheckedListener listener;
 
-    public AmenetiesAdapter(Context context, ArrayList<AmenitiesResponse.Amenity> amenityArrayList,
+    public AmenitiesAdapter(Context context, ArrayList<AmenitiesResponse.Amenity> amenityArrayList,
                             OnAmenityCheckedListener listener) {
         this.context = context;
         this.amenityArrayList = amenityArrayList;

@@ -8,6 +8,7 @@ import com.technicalrj.halanxscouts.Home.MoveOut.AmenitiesResponse;
 import com.technicalrj.halanxscouts.Home.ScheduleAvailability;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.Notification.NoficationPojo.Notification;
+import com.technicalrj.halanxscouts.Pojo.LocationOnBoarding;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.BankDetail;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.Wallet.TaskPayment;
@@ -142,6 +143,11 @@ public class RetrofitAPIClient {
         Call<Void> updateMoveOutRemarks(@Header("Authorization") String token,
                                                 @Path("task_id") int taskId,
                                                 @Body JsonObject jsonObject);
+
+        @POST("/scouts/tasks/{task_id}/subtask/property_onboard/house_address/")
+        Call<Void> updateAddress(@Header("Authorization") String token,
+                                 @Path("task_id") int taskId,
+                                 @Body LocationOnBoarding locationOnBoarding);
 
     }
 

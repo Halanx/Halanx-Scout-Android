@@ -21,7 +21,7 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.technicalrj.halanxscouts.Adapters.AmenetiesAdapter;
+import com.technicalrj.halanxscouts.Adapters.AmenitiesAdapter;
 import com.technicalrj.halanxscouts.Home.MoveOut.AmenitiesResponse;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
@@ -34,11 +34,11 @@ import retrofit2.Response;
 
 import static android.content.Context.MODE_PRIVATE;
 
-public class AmenitiesFragment extends Fragment implements AmenetiesAdapter.OnAmenityCheckedListener {
+public class AmenitiesFragment extends Fragment implements AmenitiesAdapter.OnAmenityCheckedListener {
 
 
     private RecyclerView amenitiesRecycler;
-    private AmenetiesAdapter amenetiesAdapter;
+    private AmenitiesAdapter amenitiesAdapter;
     private Button done_button;
     private TextView backTextView;
     private CardView rootCardView;
@@ -88,8 +88,8 @@ public class AmenitiesFragment extends Fragment implements AmenetiesAdapter.OnAm
         noAmenitiesTextView = view.findViewById(R.id.no_amenities_text_view);
 
         amenityArrayList = new ArrayList<>();
-        amenetiesAdapter = new AmenetiesAdapter(getActivity(), amenityArrayList, this);
-        amenitiesRecycler.setAdapter(amenetiesAdapter);
+        amenitiesAdapter = new AmenitiesAdapter(getActivity(), amenityArrayList, this);
+        amenitiesRecycler.setAdapter(amenitiesAdapter);
         amenitiesRecycler.setNestedScrollingEnabled(false);
         amenitiesRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -161,7 +161,7 @@ public class AmenitiesFragment extends Fragment implements AmenetiesAdapter.OnAm
                                     amenity.setStatus(AmenitiesResponse.STATUS_NOT_SELECTED);
                                     amenityArrayList.set(i, amenity);
                                 }
-                                amenetiesAdapter.notifyDataSetChanged();
+                                amenitiesAdapter.notifyDataSetChanged();
                                 if (checkIfAllAmenitiesSelected()) {
                                     enableButton(true);
                                 }
