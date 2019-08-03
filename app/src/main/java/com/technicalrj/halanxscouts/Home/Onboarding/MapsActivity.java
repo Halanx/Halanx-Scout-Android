@@ -385,8 +385,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                                 Intent intent = new Intent();
                                 intent.putExtra(com.technicalrj.halanxscouts.Constants.LOCATION_DATA, addressOutput);
-                                intent.putExtra(com.technicalrj.halanxscouts.Constants.LOCATION_LAT, selectedLatLng.latitude);
-                                intent.putExtra(com.technicalrj.halanxscouts.Constants.LOCATION_LNG, selectedLatLng.longitude);
+                                intent.putExtra(com.technicalrj.halanxscouts.Constants.LOCATION_LAT, String.valueOf(selectedLatLng.latitude));
+                                intent.putExtra(com.technicalrj.halanxscouts.Constants.LOCATION_LNG, String.valueOf(selectedLatLng.longitude));
                                 setResult(RESULT_OK, intent);
                                 finish();
                             }

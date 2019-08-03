@@ -115,6 +115,8 @@ public class AddressFragment extends Fragment {
                 String exactLocation = data.getStringExtra(Constants.LOCATION_DATA);
                 houseLat = data.getStringExtra(Constants.LOCATION_LAT);
                 houseLng = data.getStringExtra(Constants.LOCATION_LNG);
+                Log.d(TAG, "onActivityResult: lat: "+houseLat);
+                Log.d(TAG, "onActivityResult: lng: "+houseLng);
                 locationTextView.setText(exactLocation);
             }
         }
@@ -122,62 +124,63 @@ public class AddressFragment extends Fragment {
 
     private void submitAddress(){
 
-        listener.onAddressUpdated();
+        if(houseLat == null || houseLng == null){
+            Toast.makeText(getActivity(), "Please mark house location on Map!", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
+        String street = streetEditText.getText().toString().trim();
+        String city = cityEditText.getText().toString().trim();
+        String state = stateEditText.getText().toString().trim();
 
-//        if(houseLat == null || houseLng == null){
-//            Toast.makeText(getActivity(), "Please mark house location on Map!", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        String street = streetEditText.getText().toString().trim();
-//        String city = cityEditText.getText().toString().trim();
-//        String state = stateEditText.getText().toString().trim();
-//
-//        if(street.equals("")){
-//            Toast.makeText(getActivity(), "Please enter house number!", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        if(city.equals("")){
-//            Toast.makeText(getActivity(), "Please enter city!", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        if(state.equals("")){
-//            Toast.makeText(getActivity(), "Please enter state!", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//
-//        LocationOnBoarding locationOnBoarding = new LocationOnBoarding(
-//                houseLng, houseLat, locationTextView.getText().toString(), street, city, state
-//        );
-//
-//        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
-//        progressDialog.setMessage("Loading...");
-//        progressDialog.setCancelable(false);
-//        progressDialog.show();
-//
-//        dataInterface.updateAddress(key, taskId, locationOnBoarding)
-//                .enqueue(new Callback<Void>() {
-//                    @Override
-//                    public void onResponse(Call<Void> call, Response<Void> response) {
-//                        progressDialog.dismiss();
-//                        if(response.code() == 201){
-//                            listener.onAddressUpdated();
-//                        } else {
-//                            showErrorDialog();
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<Void> call, Throwable t) {
-//                        progressDialog.dismiss();
-//                        Log.d(TAG, "onFailure: ");
-//                        t.printStackTrace();
-//                        showErrorDialog();
-//                    }
-//                });
+        if(street.equals("")){
+            Toast.makeText(getActivity(), "Please enter house number!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(city.equals("")){
+            Toast.makeText(getActivity(), "Please enter city!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if(state.equals("")){
+            Toast.makeText(getActivity(), "Please enter state!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        LocationOnBoarding locationOnBoarding = new LocationOnBoarding(
+                houseLng, houseLat, locationTextView.getText().toString(), street, city, state
+        );
+
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        dataInterface.updateAddress("Token " +key, taskId, locationOnBoarding)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        progressDialog.dismiss();
+
+                        //Todo handle 500 response code
+
+                        if(response.code() == 201 || response.code() == 500){
+                            listener.onAddressUpdated();
+                        } else {
+                            Log.d(TAG, "onResponse: "+response.code());
+                            showErrorDialog();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        progressDialog.dismiss();
+                        Log.d(TAG, "onFailure: ");
+                        t.printStackTrace();
+                        showErrorDialog();
+                    }
+                });
 
 
 
