@@ -127,7 +127,7 @@ public class RemarksFragment extends Fragment {
 
         if(amenityJsonData.getAmenityData().getAmenityHashMap().size() > 0) {
 
-            dataInterface.updateAmenities("Token " + key, taskId, amenityJsonData)
+            dataInterface.updateMoveOutAmenities("Token " + key, taskId, amenityJsonData)
                     .enqueue(new Callback<AmenitiesResponse>() {
                         @Override
                         public void onResponse(Call<AmenitiesResponse> call, Response<AmenitiesResponse> response) {

@@ -42,6 +42,10 @@ public class AmenitiesResponse {
         @SerializedName("data")
         private AmenityData amenityData;
 
+        public AmenityJsonData(AmenityData amenityData) {
+            this.amenityData = amenityData;
+        }
+
         protected AmenityJsonData(Parcel in) {
             amenityData = in.readParcelable(AmenityData.class.getClassLoader());
         }
@@ -81,6 +85,10 @@ public class AmenitiesResponse {
 
         @SerializedName("amenities_dict")
         private HashMap<String, Amenity> amenityHashMap;
+
+        public AmenityData(HashMap<String, Amenity> amenityHashMap) {
+            this.amenityHashMap = amenityHashMap;
+        }
 
         protected AmenityData(Parcel in) {
             int hashMapSize = in.readInt();
@@ -131,20 +139,24 @@ public class AmenitiesResponse {
 
     public static class Amenity implements Parcelable {
 
-        private String id;
+        private int id;
 
         private String status;
 
         private String name;
 
-        public Amenity(String id, String status, String name) {
+        public Amenity(int id) {
+            this.id = id;
+        }
+
+        public Amenity(int id, String status, String name) {
             this.id = id;
             this.status = status;
             this.name = name;
         }
 
         protected Amenity(Parcel in) {
-            id = in.readString();
+            id = in.readInt();
             status = in.readString();
             name = in.readString();
         }
@@ -161,11 +173,11 @@ public class AmenitiesResponse {
             }
         };
 
-        public String getId() {
+        public int getId() {
             return id;
         }
 
-        public void setId(String id) {
+        public void setId(int id) {
             this.id = id;
         }
 
@@ -192,7 +204,7 @@ public class AmenitiesResponse {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            dest.writeString(id);
+            dest.writeInt(id);
             dest.writeString(status);
             dest.writeString(name);
         }

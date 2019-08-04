@@ -51,9 +51,14 @@ AmenitiesOnBoardingFragment.OnAmenitiesOnBoardingInteractionListener{
         stateProgressBar.setStateDescriptionTypeface("font/montserrat_regular.otf");
 
 
+//        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+//        ft.replace(R.id.frame_layout, AddressFragment.newInstance(taskId), ADDRESS_FRAGMENT_TAG)
+//                .addToBackStack(ADDRESS_FRAGMENT_TAG)
+//                .commit();
+
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_layout, AddressFragment.newInstance(taskId), ADDRESS_FRAGMENT_TAG)
-                .addToBackStack(ADDRESS_FRAGMENT_TAG)
+        ft.replace(R.id.frame_layout, AmenitiesOnBoardingFragment.newInstance(taskId), AMENITIES_FRAGMENT_TAG)
+                .addToBackStack(AMENITIES_FRAGMENT_TAG)
                 .commit();
 
         backButtonImageView.setOnClickListener(new View.OnClickListener() {
@@ -121,7 +126,7 @@ AmenitiesOnBoardingFragment.OnAmenitiesOnBoardingInteractionListener{
     public void onPhotoUploaded() {
         stateProgressBar.setCurrentStateNumber(StateProgressBar.StateNumber.THREE);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_layout, AmenitiesOnBoardingFragment.newInstance(), AMENITIES_FRAGMENT_TAG)
+        ft.replace(R.id.frame_layout, AmenitiesOnBoardingFragment.newInstance(taskId), AMENITIES_FRAGMENT_TAG)
                 .addToBackStack(AMENITIES_FRAGMENT_TAG)
                 .commit();
     }

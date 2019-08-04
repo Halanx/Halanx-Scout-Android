@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.technicalrj.halanxscouts.Pojo.AmenityOnBoarding;
 import com.technicalrj.halanxscouts.R;
@@ -37,11 +39,23 @@ public class AmenityOnBoardingAdapter extends RecyclerView.Adapter<AmenityOnBoar
     }
 
     @Override
-    public void onBindViewHolder(@NonNull AmenityOnBoardingViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final AmenityOnBoardingViewHolder holder, int position) {
         AmenityOnBoarding amenityOnBoarding = amenityArrayList.get(position);
+        holder.nameTextView.setVisibility(View.VISIBLE);
+        holder.nameTextView.setText(amenityOnBoarding.getName());
         Picasso.get()
                 .load(amenityOnBoarding.getImage())
-                .into(holder.imageView);
+                .into(holder.imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        holder.nameTextView.setVisibility(View.INVISIBLE);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
         holder.selectImageView.setActivated(amenityOnBoarding.isSelected());
     }
 
@@ -54,11 +68,13 @@ public class AmenityOnBoardingAdapter extends RecyclerView.Adapter<AmenityOnBoar
 
         private ImageView imageView;
         private ImageView selectImageView;
+        private TextView nameTextView;
 
         public AmenityOnBoardingViewHolder(@NonNull final View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image_view);
             selectImageView = itemView.findViewById(R.id.select_image_view);
+            nameTextView = itemView.findViewById(R.id.name_text_view);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
