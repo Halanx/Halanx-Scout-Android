@@ -242,6 +242,7 @@ public class AmenitiesFragment extends Fragment implements AmenitiesAdapter.OnAm
         } else {
             amenity.setStatus(AmenitiesResponse.STATUS_NOT_SELECTED);
         }
+        amenityArrayList.set(position, amenity);
 
         if(checkIfAllAmenitiesSelected()){
             enableButton(true);

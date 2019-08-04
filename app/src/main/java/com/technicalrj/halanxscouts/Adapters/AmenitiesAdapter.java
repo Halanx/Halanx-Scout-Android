@@ -42,7 +42,7 @@ public class AmenitiesAdapter extends RecyclerView.Adapter<AmenitiesAdapter.View
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         AmenitiesResponse.Amenity amenity = amenityArrayList.get(position);
-        holder.sn.setText(amenity.getId());
+        holder.sn.setText(""+amenity.getId());
         holder.amenities.setText(amenity.getName());
 
         if(position%2==1){
