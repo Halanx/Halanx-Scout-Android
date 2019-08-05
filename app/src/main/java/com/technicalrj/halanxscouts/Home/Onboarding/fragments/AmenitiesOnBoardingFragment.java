@@ -37,6 +37,7 @@ import java.util.HashMap;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -54,7 +55,9 @@ public class AmenitiesOnBoardingFragment extends Fragment implements AmenityOnBo
 
     private int taskId;
 
-    private RetrofitAPIClient.DataInterface dataInterface;
+    private RetrofitAPIClient.DataInterface halanxDataInterface;
+    private RetrofitAPIClient.DataInterface scoutDataInterface;
+
     private String TAG = AmenitiesFragment.class.getSimpleName();
 
     public static AmenitiesOnBoardingFragment newInstance(int taskId) {
@@ -97,7 +100,8 @@ public class AmenitiesOnBoardingFragment extends Fragment implements AmenityOnBo
         amenityRecyclerView.setLayoutManager(layoutManager);
         amenityRecyclerView.setAdapter(amenityAdapter);
 
-        dataInterface = RetrofitAPIClient.getHalanxRetrofitClient().create(RetrofitAPIClient.DataInterface.class);
+        halanxDataInterface = RetrofitAPIClient.getHalanxRetrofitClient().create(RetrofitAPIClient.DataInterface.class);
+        scoutDataInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
 
         getListOfAmenities();
 
@@ -137,7 +141,7 @@ public class AmenitiesOnBoardingFragment extends Fragment implements AmenityOnBo
         progressDialog.setCancelable(false);
         progressDialog.setMessage("Loading...");
         progressDialog.show();
-        dataInterface.getListOfAllAmenities()
+        halanxDataInterface.getListOfAllAmenities()
                 .enqueue(new Callback<ArrayList<AmenityOnBoarding>>() {
                     @Override
                     public void onResponse(Call<ArrayList<AmenityOnBoarding>> call, Response<ArrayList<AmenityOnBoarding>> response) {
@@ -217,7 +221,7 @@ public class AmenitiesOnBoardingFragment extends Fragment implements AmenityOnBo
                 new AmenitiesResponse.AmenityData(selectedAmenityMap)
         );
 
-        dataInterface.updateOnBoardingAmenities("Token "+key, taskId, amenityJsonData)
+        scoutDataInterface.updateOnBoardingAmenities("Token "+key, taskId, amenityJsonData)
                 .enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
