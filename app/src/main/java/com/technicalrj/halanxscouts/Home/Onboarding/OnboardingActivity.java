@@ -1,6 +1,7 @@
 package com.technicalrj.halanxscouts.Home.Onboarding;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -31,8 +32,9 @@ AmenitiesOnBoardingFragment.OnAmenitiesOnBoardingInteractionListener{
     public static final String AMENITIES_FRAGMENT_TAG = "amenities";
     public static final String ACCOMMODATION_FRAGMENT_TAG = "accommodation";
     private StateProgressBar stateProgressBar;
-    private TextView amountTv;
-    int taskId,earning;
+
+    private int taskId;
+
 
 
     @Override
@@ -40,12 +42,14 @@ AmenitiesOnBoardingFragment.OnAmenitiesOnBoardingInteractionListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
 
-        taskId = getIntent().getIntExtra(Constants.TASK_ID, -1);
-        earning = getIntent().getIntExtra(Constants.TASK_AMOUNT, 0);
+        Intent intent = getIntent();
+        taskId = intent.getIntExtra(Constants.TASK_ID, -1);
+        int earning = intent.getIntExtra(Constants.TASK_EARNING, 0);
 
         ImageView backButtonImageView = findViewById(R.id.back_button_image_view);
-        amountTv = findViewById(R.id.amount_tv);
-        amountTv.setText("₹ "+earning);
+        TextView amountTextView = findViewById(R.id.amount_tv);
+
+        amountTextView.setText("₹ "+earning);
 
         String[] descriptionData = {"Address", "Photos", "Amenities","Property Details"};
         stateProgressBar = (StateProgressBar) findViewById(R.id.your_state_progress_bar_id);
@@ -136,7 +140,7 @@ AmenitiesOnBoardingFragment.OnAmenitiesOnBoardingInteractionListener{
     public void onAmenitiesUploaded() {
         stateProgressBar.setCurrentStateNumber(StateProgressBar.StateNumber.FOUR);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_layout, AccommodationTypeFragment.newInstance(), ACCOMMODATION_FRAGMENT_TAG)
+        ft.replace(R.id.frame_layout, AccommodationTypeFragment.newInstance(taskId), ACCOMMODATION_FRAGMENT_TAG)
                 .addToBackStack(ACCOMMODATION_FRAGMENT_TAG)
                 .commit();
     }

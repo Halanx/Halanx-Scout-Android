@@ -10,6 +10,7 @@ import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.Notification.NoficationPojo.Notification;
 import com.technicalrj.halanxscouts.Pojo.AmenityOnBoarding;
 import com.technicalrj.halanxscouts.Pojo.LocationOnBoarding;
+import com.technicalrj.halanxscouts.Pojo.PropertyOnBoarding;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.BankDetail;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.Wallet.TaskPayment;
@@ -179,6 +180,11 @@ public class RetrofitAPIClient {
         Call<JsonObject> addHouseImage(@Header("Authorization") String token,
                                        @Path("task_id") int taskId,
                                        @Part MultipartBody.Part image);
+
+        @POST("scouts/tasks/{task_id}/subtask/property_onboard/house_basic_details/")
+        Call<PropertyOnBoarding> uploadOnBoardingPropertyDetails(@Header("Authorization") String token,
+                                                                 @Path("task_id") int taskId,
+                                                                 @Body PropertyOnBoarding propertyOnBoarding);
 
     }
 
