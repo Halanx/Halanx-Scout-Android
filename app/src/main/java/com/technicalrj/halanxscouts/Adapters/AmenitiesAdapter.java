@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.technicalrj.halanxscouts.Home.MoveOut.AmenitiesResponse;
@@ -46,7 +47,7 @@ public class AmenitiesAdapter extends RecyclerView.Adapter<AmenitiesAdapter.View
         holder.amenities.setText(amenity.getName());
 
         if(position%2==1){
-            holder.relativeLayout.setBackgroundColor(context.getResources().getColor(R.color.colorGrayAdapter));
+            holder.rootLayout.setBackgroundColor(context.getResources().getColor(R.color.colorGrayAdapter));
         }
 
 
@@ -59,13 +60,13 @@ public class AmenitiesAdapter extends RecyclerView.Adapter<AmenitiesAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        RelativeLayout relativeLayout;
+        ConstraintLayout rootLayout;
         TextView sn,amenities;
         RadioGroup radioGroup;
 
         public ViewHolder(final View itemView, final OnAmenityCheckedListener listener) {
             super(itemView);
-            relativeLayout = itemView.findViewById(R.id.rel_layout);
+            rootLayout = itemView.findViewById(R.id.rel_layout);
             sn = itemView.findViewById(R.id.sn1);
             amenities = itemView.findViewById(R.id.amenities1);
             radioGroup = itemView.findViewById(R.id.radiogroup);
