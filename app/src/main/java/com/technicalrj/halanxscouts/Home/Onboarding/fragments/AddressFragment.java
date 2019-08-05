@@ -165,7 +165,7 @@ public class AddressFragment extends Fragment {
 
                         //Todo handle 500 response code
 
-                        if(response.code() == 201 || response.code() == 500){
+                        if(response.code() == 201 || response.code() == 500 || response.code()==409){
                             listener.onAddressUpdated();
                         } else {
                             Log.d(TAG, "onResponse: "+response.code());

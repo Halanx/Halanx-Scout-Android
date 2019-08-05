@@ -102,8 +102,7 @@ public class MoveOutActivity extends AppCompatActivity implements PropertyDetail
                 .addToBackStack(REMARKS_FRAGMENT_TAG)
                 .commit();
 
-        stateProgressBar.setCurrentStateNumber(StateProgressBar.StateNgiumber.THREE);
-
+        stateProgressBar.setCurrentStateNumber(StateProgressBar.StateNumber.THREE);
     }
 
     @Override

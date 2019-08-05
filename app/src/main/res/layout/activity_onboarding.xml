@@ -10,13 +10,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="false"
-        >
+        android:fillViewport="true">
 
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
 
 
             <androidx.cardview.widget.CardView
@@ -176,7 +176,7 @@
                 android:paddingTop="8dp"
                 android:layout_below="@id/timeline_cardview"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="match_parent"/>
 
 
         </RelativeLayout>

@@ -1,9 +1,16 @@
 
 package com.technicalrj.halanxscouts.Home.TaskFolder;
 
+import androidx.annotation.Nullable;
+
 import java.util.List;
+
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.technicalrj.halanxscouts.Pojo.CustomData;
+
+import org.json.JSONObject;
 
 public class ScheduledTask {
 
@@ -43,7 +50,9 @@ public class ScheduledTask {
     @SerializedName("conversation")
     @Expose
     private int conversation;
-
+    @SerializedName("custom_data")
+    @Expose
+    private CustomData customData;
 
     public Integer getId() {
         return id;
@@ -139,5 +148,13 @@ public class ScheduledTask {
 
     public void setConversation(int conversation) {
         this.conversation = conversation;
+    }
+
+    public CustomData getCustomData() {
+        return customData;
+    }
+
+    public void setCustomData(CustomData customData) {
+        this.customData = customData;
     }
 }

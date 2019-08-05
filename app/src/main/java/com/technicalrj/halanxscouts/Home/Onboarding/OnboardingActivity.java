@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.kofigyan.stateprogressbar.StateProgressBar;
 import com.technicalrj.halanxscouts.Constants;
@@ -30,8 +31,8 @@ AmenitiesOnBoardingFragment.OnAmenitiesOnBoardingInteractionListener{
     public static final String AMENITIES_FRAGMENT_TAG = "amenities";
     public static final String ACCOMMODATION_FRAGMENT_TAG = "accommodation";
     private StateProgressBar stateProgressBar;
-
-    int taskId;
+    private TextView amountTv;
+    int taskId,earning;
 
 
     @Override
@@ -40,8 +41,11 @@ AmenitiesOnBoardingFragment.OnAmenitiesOnBoardingInteractionListener{
         setContentView(R.layout.activity_onboarding);
 
         taskId = getIntent().getIntExtra(Constants.TASK_ID, -1);
+        earning = getIntent().getIntExtra(Constants.TASK_AMOUNT, 0);
 
         ImageView backButtonImageView = findViewById(R.id.back_button_image_view);
+        amountTv = findViewById(R.id.amount_tv);
+        amountTv.setText("₹ "+earning);
 
         String[] descriptionData = {"Address", "Photos", "Amenities","Property Details"};
         stateProgressBar = (StateProgressBar) findViewById(R.id.your_state_progress_bar_id);
@@ -67,7 +71,7 @@ AmenitiesOnBoardingFragment.OnAmenitiesOnBoardingInteractionListener{
 
     @Override
     public void onBackPressed() {
-        FragmentManager fm = getSupportFragmentManager();
+        /*FragmentManager fm = getSupportFragmentManager();
         AddressFragment addressFragment = (AddressFragment) fm.findFragmentByTag(ADDRESS_FRAGMENT_TAG);
 
         if (addressFragment != null && addressFragment.isVisible()) {
@@ -86,7 +90,9 @@ AmenitiesOnBoardingFragment.OnAmenitiesOnBoardingInteractionListener{
             }
 
             fm.popBackStack();
-        }
+        }*/
+
+        super.onBackPressed();
 
     }
 
@@ -111,7 +117,7 @@ AmenitiesOnBoardingFragment.OnAmenitiesOnBoardingInteractionListener{
     public void onAddressUpdated() {
         stateProgressBar.setCurrentStateNumber(StateProgressBar.StateNumber.TWO);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_layout, UploadPhotosFragment.newInstance(), PHOTOS_FRAGMENT_TAG)
+        ft.replace(R.id.frame_layout, UploadPhotosFragment.newInstance(taskId), PHOTOS_FRAGMENT_TAG)
                 .addToBackStack(PHOTOS_FRAGMENT_TAG)
                 .commit();
 

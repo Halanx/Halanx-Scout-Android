@@ -16,4 +16,5 @@ public class Constants {
     public static final String RECEIVER = "receiver";
 
     public static final String TASK_ID = "task_id";
+    public static final String TASK_AMOUNT = "task_earning" ;
 }

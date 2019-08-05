@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.technicalrj.halanxscouts.Constants;
 import com.technicalrj.halanxscouts.Home.ChatWindow;
@@ -27,6 +28,7 @@ import com.technicalrj.halanxscouts.Home.Onboarding.OnboardingActivity;
 import com.technicalrj.halanxscouts.Home.TaskActivity;
 import com.technicalrj.halanxscouts.Home.TaskFolder.Category;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
+import com.technicalrj.halanxscouts.Pojo.CustomData;
 import com.technicalrj.halanxscouts.R;
 
 import java.text.ParseException;
@@ -62,40 +64,50 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
     public void onBindViewHolder(final HomesViewHolder holder, final int position) {
 
 
-        if (position >= scheduledTaskList.size())
-            return;
-
         ScheduledTask scheduledTask = scheduledTaskList.get(position);
-        holder.task_name.setText(scheduledTask.getCategory().getName());
 
 
-        if (scheduledTask != null)
-            if (scheduledTask.getHouse() == null) {
-                holder.address.setVisibility(View.INVISIBLE);
-                holder.house_location.setVisibility(View.INVISIBLE);
-            } else {
-                holder.address.setText(scheduledTaskList.get(position).getHouse().getAddress().getStreetAddress());
-            }
+        final String category = scheduledTask.getCategory().getName();
+        holder.task_name.setText(category);
+
+        CustomData customData=null;
+        if(category.equals("Property Onboarding")) {
+            customData = scheduledTask.getCustomData();
+        }
+
+
+        if(category.equals("Property Onboarding"))
+            holder.address.setText(customData.getLocation().substring(0,16)+"...");
+        else
+            holder.address.setText(scheduledTaskList.get(position).getHouse().getAddress().getStreetAddress());
+
 
         holder.earning.setText(scheduledTaskList.get(position).getEarning() + "");
         String[] parts = scheduledTaskList.get(position).getScheduledAt().split(" ");
         String date = parts[0] + " " + parts[1].substring(0, 3).toUpperCase() + " (" + parts[3] + " " + parts[4] + ")";
         holder.date_time.setText(date);
 
+        Log.i("TaskAdapter", "onBindViewHolder: "+customData);
+
+        final double latitute,longitute;
+        if(category.equals("Property Onboarding")){
+            latitute = customData.getLatitude();
+            longitute = customData.getLongitude();
+        }else {
+            latitute = scheduledTaskList.get(position).getHouse().getAddress().getLatitude();
+            longitute = scheduledTaskList.get(position).getHouse().getAddress().getLongitude();
+        }
+
 
         holder.house_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                double latitute = scheduledTaskList.get(position).getHouse().getAddress().getLatitude();
-                double longitute = scheduledTaskList.get(position).getHouse().getAddress().getLongitude();
-
                 Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:28.6514074,77.2400794?q=" + latitute + "," + longitute + "(House)"));
                 c.startActivity(intent);
-
-
             }
         });
+
+
 
         holder.lin_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,6 +127,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
                 } else if (scheduledTask.getCategory().getName().equalsIgnoreCase(Category.PROPERTY_ONBOARDING)) {
                     Intent intent = new Intent(c, OnboardingActivity.class);
                     intent.putExtra(Constants.TASK_ID, scheduledTaskList.get(position).getId());
+                    intent.putExtra(Constants.TASK_AMOUNT, scheduledTaskList.get(position).getEarning());
                     ((Activity) c).startActivityForResult(intent, TASK_CLICKED);
                 }
             }
@@ -151,17 +164,30 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
                 }
             });
 
+        }else {
+            holder.customer_name.setText(customData.getName());
+            holder.customer_img.setVisibility(View.GONE);
+            holder.chat_icon.setVisibility(View.GONE);
         }
 
+
+
+
+
+        final String tel ;
+        if(category.equals("Property Onboarding")){
+            tel = customData.getPhoneNo();
+        }else {
+            tel = scheduledTaskList.get(position).getCustomer().getPhoneNo();
+        }
 
 
         holder.call_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 try {
                     Intent callIntent = new Intent(Intent.ACTION_VIEW);
-                    callIntent.setData(Uri.parse("tel:" + scheduledTaskList.get(position).getCustomer().getPhoneNo()));
+                    callIntent.setData(Uri.parse("tel:" + tel ));
                     c.startActivity(callIntent);
                 } catch (ActivityNotFoundException activityException) {
                     Toast.makeText(c, "Calling a Phone Number Call failed", Toast.LENGTH_SHORT).show();
