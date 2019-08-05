@@ -128,28 +128,31 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
         }
 
 
-        final String firstName = scheduledTaskList.get(position).getCustomer().getUser().getFirstName();
-        final String lastName = scheduledTaskList.get(position).getCustomer().getUser().getLastName();
-
-        holder.customer_name.setText(firstName.substring(0, 1).toUpperCase() + firstName.substring(1) + " " + lastName.substring(0, 1).toUpperCase() + lastName.substring(1));
-
-
-        Picasso.get()
-                .load(scheduledTaskList.get(position).getCustomer().getProfilePicThumbnailUrl())
-                .into(holder.customer_img);
+        if(scheduledTaskList.get(position).getCustomer() != null) {
+            final String firstName = scheduledTaskList.get(position).getCustomer().getUser().getFirstName();
+            final String lastName = scheduledTaskList.get(position).getCustomer().getUser().getLastName();
+            holder.customer_name.setText(firstName.substring(0, 1).toUpperCase() + firstName.substring(1) + " " + lastName.substring(0, 1).toUpperCase() + lastName.substring(1));
 
 
-        holder.chat_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                c.startActivity(new Intent(c, ChatWindow.class)
-                        .putExtra("conversation", scheduledTaskList.get(position).getId())
-                        .putExtra("first_name", firstName)
-                        .putExtra("last_name", lastName)
-                        .putExtra("profile_pic_url", scheduledTaskList.get(position).getCustomer().getProfilePicUrl())
-                        .putExtra("phone_number", scheduledTaskList.get(position).getCustomer().getPhoneNo()));
-            }
-        });
+            Picasso.get()
+                    .load(scheduledTaskList.get(position).getCustomer().getProfilePicThumbnailUrl())
+                    .into(holder.customer_img);
+
+
+            holder.chat_icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    c.startActivity(new Intent(c, ChatWindow.class)
+                            .putExtra("conversation", scheduledTaskList.get(position).getId())
+                            .putExtra("first_name", firstName)
+                            .putExtra("last_name", lastName)
+                            .putExtra("profile_pic_url", scheduledTaskList.get(position).getCustomer().getProfilePicUrl())
+                            .putExtra("phone_number", scheduledTaskList.get(position).getCustomer().getPhoneNo()));
+                }
+            });
+
+        }
+
 
 
         holder.call_icon.setOnClickListener(new View.OnClickListener() {
