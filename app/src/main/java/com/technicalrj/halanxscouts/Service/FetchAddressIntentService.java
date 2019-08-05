@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
-import com.technicalrj.halanxscouts.utils.Constants;
+import com.technicalrj.halanxscouts.Constants;
 
 import java.io.IOException;
 import java.util.ArrayList;

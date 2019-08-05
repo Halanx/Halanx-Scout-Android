@@ -46,16 +46,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
-import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
+import com.technicalrj.halanxscouts.Constants;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.Service.FetchAddressIntentService;
-import com.technicalrj.halanxscouts.utils.Constants;
 
 
 import java.util.Arrays;
@@ -99,33 +95,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 moveToMyLocation();
             }
         });
-
-        Places.initialize(getApplicationContext(), getResources().getString(R.string.google_maps_key));
-
-        // Initialize the AutocompleteSupportFragment.
-        AutocompleteSupportFragment autocompleteFragment = (AutocompleteSupportFragment)
-                getSupportFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
-
-// Specify the types of place data to return.
-        autocompleteFragment.setPlaceFields(Arrays.asList(Place.Field.NAME, Place.Field.LAT_LNG));
-//        autocompleteFragment.setCountry("IN");
-
-// Set up a PlaceSelectionListener to handle the response.
-        autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                // TODO: Get info about the selected place.
-                Log.i(TAG, "Place: " + place.getName() + ", " + place.getLatLng().latitude);
-                moveToLocation(place.getLatLng());
-            }
-
-            @Override
-            public void onError(Status status) {
-                // TODO: Handle the error.
-                Log.i(TAG, "An error occurred: " + status);
-            }
-        });
-
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         requestingLocationUpdates = false;
