@@ -163,11 +163,23 @@ public class AddressFragment extends Fragment {
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         progressDialog.dismiss();
 
-                        //Todo handle 500 response code
-
-                        if(response.code() == 201 || response.code() == 500){
+                        if(response.code() == 201){
                             listener.onAddressUpdated();
-                        } else {
+                        } else if(response.code() == 409){
+                            AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                                    .setMessage("House location details already submitted!")
+                                    .setCancelable(false)
+                                    .setNeutralButton("Next", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                            listener.onAddressUpdated();
+                                        }
+                                    })
+                                    .create();
+                            alertDialog.show();
+                        }
+                        else {
                             Log.d(TAG, "onResponse: "+response.code());
                             showErrorDialog();
                         }
