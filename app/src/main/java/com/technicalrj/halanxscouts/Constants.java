@@ -16,4 +16,12 @@ public class Constants {
     public static final String RECEIVER = "receiver";
 
     public static final String TASK_ID = "task_id";
+
+    public static final String FURNISHED = "full";
+    public static final String SEMI_FURNISHED = "semi";
+    public static final String UNFURNISHED = "nil";
+
+    public static final String SHARED_ROOM = "shared";
+    public static final String PRIVATE_ROOM = "private";
+    public static final String FLAT = "flat";
 }

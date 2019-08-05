@@ -78,8 +78,7 @@ AmenitiesOnBoardingFragment.OnAmenitiesOnBoardingInteractionListener{
             int x = stateProgressBar.getCurrentStateNumber();
             if (x == 4) {
                 stateProgressBar.setCurrentStateNumber(StateProgressBar.StateNumber.THREE);
-            }
-            else if (x == 3) {
+            } else if (x == 3) {
                 stateProgressBar.setCurrentStateNumber(StateProgressBar.StateNumber.TWO);
             } else if (x == 2) {
                 stateProgressBar.setCurrentStateNumber(StateProgressBar.StateNumber.ONE);
@@ -130,7 +129,7 @@ AmenitiesOnBoardingFragment.OnAmenitiesOnBoardingInteractionListener{
     public void onAmenitiesUploaded() {
         stateProgressBar.setCurrentStateNumber(StateProgressBar.StateNumber.FOUR);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.frame_layout, AccommodationTypeFragment.newInstance(), ACCOMMODATION_FRAGMENT_TAG)
+        ft.replace(R.id.frame_layout, AccommodationTypeFragment.newInstance(taskId), ACCOMMODATION_FRAGMENT_TAG)
                 .addToBackStack(ACCOMMODATION_FRAGMENT_TAG)
                 .commit();
     }
