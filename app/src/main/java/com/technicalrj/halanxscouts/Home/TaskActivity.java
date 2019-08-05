@@ -63,8 +63,6 @@ public class TaskActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
-        startActivity(new Intent(this, MoveOutActivity.class));
-
         id = getIntent().getIntExtra("id",0);
 
         final SharedPreferences prefs =getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);

@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
     android:background="#F5F5F5"
+    android:id="@+id/root_card_view"
     tools:context=".Home.MoveOut.fragment.AmenitiesFragment">
 
     <LinearLayout
@@ -194,6 +195,15 @@
             android:id="@+id/amenities_recyclerview">
 
         </androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:visibility="visible"
+            android:paddingTop="16dp"
+            android:id="@+id/no_amenities_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No Amenities found!"
+            android:layout_gravity="center_horizontal"/>
 
 
 

@@ -1,15 +1,20 @@
 package com.technicalrj.halanxscouts;
 
 import com.google.gson.JsonObject;
+import com.squareup.okhttp.ResponseBody;
 import com.technicalrj.halanxscouts.Home.Chat.Messages;
 import com.technicalrj.halanxscouts.Home.Chat.Result;
+import com.technicalrj.halanxscouts.Home.MoveOut.AmenitiesResponse;
 import com.technicalrj.halanxscouts.Home.ScheduleAvailability;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.Notification.NoficationPojo.Notification;
+import com.technicalrj.halanxscouts.Pojo.AmenityOnBoarding;
+import com.technicalrj.halanxscouts.Pojo.LocationOnBoarding;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.BankDetail;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.Wallet.TaskPayment;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,7 +36,9 @@ import retrofit2.http.Query;
 public class RetrofitAPIClient {
 
     public static final String BASE_URL = "https://scout-api.halanx.com/";
+    public static final String HALANX_BASE_URL = "https://api.halanx.com/";
     private static Retrofit retrofit = null;
+    private static Retrofit retrofitHalanx = null;
 
     public static Retrofit getClient() {
         if (retrofit == null) {
@@ -41,6 +48,16 @@ public class RetrofitAPIClient {
                     .build();
         }
         return retrofit;
+    }
+
+    public static Retrofit getHalanxRetrofitClient(){
+        if(retrofitHalanx == null){
+            retrofitHalanx = new Retrofit.Builder()
+                    .baseUrl(HALANX_BASE_URL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return retrofitHalanx;
     }
 
     public interface DataInterface {
@@ -127,7 +144,32 @@ public class RetrofitAPIClient {
         @PATCH("/scouts/")
         Call<Profile> updateLocation(@Body JsonObject jsonObject , @Header("Authorization") String token);
 
+        @GET("/scouts/tasks/{task_id}/subtask/move_out/amenity_check/")
+        Call<AmenitiesResponse> getListOfAmenities(@Header("Authorization") String token,
+                                                   @Path("task_id") int taskId);
 
+        @PATCH("/scouts/tasks/{task_id}/subtask/move_out/amenity_check/")
+        Call<AmenitiesResponse> updateMoveOutAmenities(@Header("Authorization") String token,
+                                                       @Path("task_id") int taskId,
+                                                       @Body AmenitiesResponse.AmenityJsonData amenityData);
+
+        @PATCH("/scouts/tasks/{task_id}/subtask/property_onboard/house_amenities/")
+        Call<Void> updateOnBoardingAmenities(@Header("Authorization") String token,
+                                                       @Path("task_id") int taskId,
+                                                       @Body AmenitiesResponse.AmenityJsonData amenityData);
+
+        @PATCH("/scouts/tasks/{task_id}/subtask/move_out/remarks/")
+        Call<Void> updateMoveOutRemarks(@Header("Authorization") String token,
+                                                @Path("task_id") int taskId,
+                                                @Body JsonObject jsonObject);
+
+        @POST("/scouts/tasks/{task_id}/subtask/property_onboard/house_address/")
+        Call<Void> updateAddress(@Header("Authorization") String token,
+                                 @Path("task_id") int taskId,
+                                 @Body LocationOnBoarding locationOnBoarding);
+
+        @GET("homes/houses/basic_amenities/")
+        Call<ArrayList<AmenityOnBoarding>> getListOfAllAmenities();
 
     }
 

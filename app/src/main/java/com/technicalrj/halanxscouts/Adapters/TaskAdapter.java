@@ -6,6 +6,7 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -19,8 +20,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+import com.technicalrj.halanxscouts.Constants;
 import com.technicalrj.halanxscouts.Home.ChatWindow;
+import com.technicalrj.halanxscouts.Home.MoveOut.MoveOutActivity;
+import com.technicalrj.halanxscouts.Home.Onboarding.OnboardingActivity;
 import com.technicalrj.halanxscouts.Home.TaskActivity;
+import com.technicalrj.halanxscouts.Home.TaskFolder.Category;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.R;
 
@@ -57,19 +62,24 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
     public void onBindViewHolder(final HomesViewHolder holder, final int position) {
 
 
-        if(position>=scheduledTaskList.size())
+        if (position >= scheduledTaskList.size())
             return;
 
-        holder.task_name.setText(scheduledTaskList.get(position).getCategory().getName());
+        ScheduledTask scheduledTask = scheduledTaskList.get(position);
+        holder.task_name.setText(scheduledTask.getCategory().getName());
 
 
-        if(scheduledTaskList.get(position)!=null)
-            holder.address.setText(scheduledTaskList.get(position).getHouse().getAddress().getStreetAddress());
+        if (scheduledTask != null)
+            if (scheduledTask.getHouse() == null) {
+                holder.address.setVisibility(View.INVISIBLE);
+                holder.house_location.setVisibility(View.INVISIBLE);
+            } else {
+                holder.address.setText(scheduledTaskList.get(position).getHouse().getAddress().getStreetAddress());
+            }
 
-        holder.earning.setText(scheduledTaskList.get(position).getEarning()+"");
-
-        String[] parts = scheduledTaskList.get(position).getScheduledAt().split(" ") ;
-        String date = parts[0]+" "+parts[1].substring(0,3).toUpperCase() +" ("+ parts[3]+" "+parts[4]+")";
+        holder.earning.setText(scheduledTaskList.get(position).getEarning() + "");
+        String[] parts = scheduledTaskList.get(position).getScheduledAt().split(" ");
+        String date = parts[0] + " " + parts[1].substring(0, 3).toUpperCase() + " (" + parts[3] + " " + parts[4] + ")";
         holder.date_time.setText(date);
 
 
@@ -80,10 +90,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
                 double latitute = scheduledTaskList.get(position).getHouse().getAddress().getLatitude();
                 double longitute = scheduledTaskList.get(position).getHouse().getAddress().getLongitude();
 
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:28.6514074,77.2400794?q="+latitute+","+longitute+"(House)"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:28.6514074,77.2400794?q=" + latitute + "," + longitute + "(House)"));
                 c.startActivity(intent);
-
-
 
 
             }
@@ -92,43 +100,58 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
         holder.lin_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(c, TaskActivity.class);
-                intent.putExtra("id",scheduledTaskList.get(position).getId());
-               ((Activity) c).startActivityForResult(intent,TASK_CLICKED);
+//                scheduledTaskList.get(position).getCategory()
+                ScheduledTask scheduledTask = scheduledTaskList.get(position);
+
+                if (scheduledTask.getCategory().getName().equalsIgnoreCase(Category.MOVE_OUT)) {
+                    Intent intent = new Intent(c, MoveOutActivity.class);
+                    intent.putExtra("id", scheduledTaskList.get(position).getId());
+                    ((Activity) c).startActivityForResult(intent, TASK_CLICKED);
+
+                } else if (scheduledTask.getCategory().getName().equalsIgnoreCase(Category.HOUSE_VISIT)) {
+                    Intent intent = new Intent(c, TaskActivity.class);
+                    intent.putExtra("id", scheduledTaskList.get(position).getId());
+                    ((Activity) c).startActivityForResult(intent, TASK_CLICKED);
+                } else if (scheduledTask.getCategory().getName().equalsIgnoreCase(Category.PROPERTY_ONBOARDING)) {
+                    Intent intent = new Intent(c, OnboardingActivity.class);
+                    intent.putExtra(Constants.TASK_ID, scheduledTaskList.get(position).getId());
+                    ((Activity) c).startActivityForResult(intent, TASK_CLICKED);
+                }
             }
         });
 
         //if not previous day then make it invisible
-        if(!isPreviousDay(scheduledTaskList.get(position).getScheduledAt())){
+        if (!isPreviousDay(scheduledTaskList.get(position).getScheduledAt())) {
             holder.tenantLayout.setVisibility(View.GONE);
             holder.lineView.setVisibility(View.GONE);
             return;
         }
 
 
-        final String firstName = scheduledTaskList.get(position).getCustomer().getUser().getFirstName();
-        final String lastName = scheduledTaskList.get(position).getCustomer().getUser().getLastName();
-
-        holder.customer_name.setText( firstName.substring(0,1).toUpperCase() + firstName.substring(1)  +" "+ lastName.substring(0,1).toUpperCase() + lastName.substring(1) );
-
-
-
-        Picasso.get()
-                .load( scheduledTaskList.get(position).getCustomer().getProfilePicThumbnailUrl())
-                .into(holder.customer_img);
+        if(scheduledTaskList.get(position).getCustomer() != null) {
+            final String firstName = scheduledTaskList.get(position).getCustomer().getUser().getFirstName();
+            final String lastName = scheduledTaskList.get(position).getCustomer().getUser().getLastName();
+            holder.customer_name.setText(firstName.substring(0, 1).toUpperCase() + firstName.substring(1) + " " + lastName.substring(0, 1).toUpperCase() + lastName.substring(1));
 
 
-        holder.chat_icon.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                c.startActivity(new Intent(c, ChatWindow.class)
-                        .putExtra("conversation",scheduledTaskList.get(position).getId())
-                        .putExtra("first_name",firstName)
-                        .putExtra("last_name",lastName)
-                        .putExtra("profile_pic_url", scheduledTaskList.get(position).getCustomer().getProfilePicUrl())
-                        .putExtra("phone_number",scheduledTaskList.get(position).getCustomer().getPhoneNo()));
-            }
-        });
+            Picasso.get()
+                    .load(scheduledTaskList.get(position).getCustomer().getProfilePicThumbnailUrl())
+                    .into(holder.customer_img);
+
+
+            holder.chat_icon.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    c.startActivity(new Intent(c, ChatWindow.class)
+                            .putExtra("conversation", scheduledTaskList.get(position).getId())
+                            .putExtra("first_name", firstName)
+                            .putExtra("last_name", lastName)
+                            .putExtra("profile_pic_url", scheduledTaskList.get(position).getCustomer().getProfilePicUrl())
+                            .putExtra("phone_number", scheduledTaskList.get(position).getCustomer().getPhoneNo()));
+                }
+            });
+
+        }
 
 
 
@@ -137,33 +160,28 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
             public void onClick(View v) {
 
                 try {
-                    Intent callIntent = new Intent(Intent.ACTION_VIEW );
-                    callIntent.setData(Uri.parse("tel:"+scheduledTaskList.get(position).getCustomer().getPhoneNo()));
+                    Intent callIntent = new Intent(Intent.ACTION_VIEW);
+                    callIntent.setData(Uri.parse("tel:" + scheduledTaskList.get(position).getCustomer().getPhoneNo()));
                     c.startActivity(callIntent);
                 } catch (ActivityNotFoundException activityException) {
-                    Toast.makeText(c,"Calling a Phone Number Call failed",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(c, "Calling a Phone Number Call failed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
-
-
-
-
 
 
     }
 
     @Override
     public int getItemCount() {
-        return scheduledTaskList.size() ;
+        return scheduledTaskList.size();
     }
 
 
     public class HomesViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView customer_img,house_location , chat_icon ,call_icon;
-        TextView task_name,address,earning,date_time,customer_name;
+        ImageView customer_img, house_location, chat_icon, call_icon;
+        TextView task_name, address, earning, date_time, customer_name;
         LinearLayout lin_layout;
         RelativeLayout tenantLayout;
         View lineView;
@@ -188,18 +206,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
         }
 
 
-
-
     }
 
 
-    public boolean isPreviousDay(String scheduledDate){
+    public boolean isPreviousDay(String scheduledDate) {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy hh:mm a");
         try {
             Date date = dateFormat.parse(scheduledDate);
-            Log.i("TaskAdapter", "isPreviousDay: date.getTime:"+date.getTime()+" current:"+System.currentTimeMillis()+" diff:"+(date.getTime()-System.currentTimeMillis()) );
-            if(date.getTime()-System.currentTimeMillis()<=24 * 60 * 60 * 1000)
+            Log.i("TaskAdapter", "isPreviousDay: date.getTime:" + date.getTime() + " current:" + System.currentTimeMillis() + " diff:" + (date.getTime() - System.currentTimeMillis()));
+            if (date.getTime() - System.currentTimeMillis() <= 24 * 60 * 60 * 1000)
                 return true;
         } catch (ParseException e) {
             e.printStackTrace();
@@ -208,8 +224,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
 
         return false;
     }
-
-
 
 
 }
