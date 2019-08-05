@@ -1,6 +1,7 @@
 package com.technicalrj.halanxscouts.Home.Onboarding;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.kofigyan.stateprogressbar.StateProgressBar;
 import com.technicalrj.halanxscouts.Constants;
@@ -31,7 +33,7 @@ AmenitiesOnBoardingFragment.OnAmenitiesOnBoardingInteractionListener{
     public static final String ACCOMMODATION_FRAGMENT_TAG = "accommodation";
     private StateProgressBar stateProgressBar;
 
-    int taskId;
+    private int taskId;
 
 
     @Override
@@ -39,9 +41,14 @@ AmenitiesOnBoardingFragment.OnAmenitiesOnBoardingInteractionListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
 
-        taskId = getIntent().getIntExtra(Constants.TASK_ID, -1);
+        Intent intent = getIntent();
+        taskId = intent.getIntExtra(Constants.TASK_ID, -1);
+        int earning = intent.getIntExtra(Constants.TASK_EARNING, 0);
 
         ImageView backButtonImageView = findViewById(R.id.back_button_image_view);
+        TextView amountTextView = findViewById(R.id.amount_tv);
+
+        amountTextView.setText("₹ "+earning);
 
         String[] descriptionData = {"Address", "Photos", "Amenities","Property Details"};
         stateProgressBar = (StateProgressBar) findViewById(R.id.your_state_progress_bar_id);

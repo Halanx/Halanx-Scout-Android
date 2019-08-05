@@ -115,6 +115,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
                 } else if (scheduledTask.getCategory().getName().equalsIgnoreCase(Category.PROPERTY_ONBOARDING)) {
                     Intent intent = new Intent(c, OnboardingActivity.class);
                     intent.putExtra(Constants.TASK_ID, scheduledTaskList.get(position).getId());
+                    intent.putExtra(Constants.TASK_EARNING, scheduledTaskList.get(position).getEarning());
                     ((Activity) c).startActivityForResult(intent, TASK_CLICKED);
                 }
             }

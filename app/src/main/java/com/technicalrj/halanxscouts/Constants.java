@@ -17,6 +17,7 @@ public class Constants {
     public static final String LOCATION_DATA_EXTRA = "location_data";
 
     public static final String TASK_ID = "task_id";
+    public static final String TASK_EARNING = "task_earning";
 
     public static final String FURNISHED = "full";
     public static final String SEMI_FURNISHED = "semi";
