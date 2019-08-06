@@ -79,10 +79,10 @@ public class ScoutAcceptanceActivity extends AppCompatActivity {
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             // API 26 and above
-            //vibrator.vibrate(VibrationEffect.createWaveform(VIBRATE_PATTERN,0  ));
+            vibrator.vibrate(VibrationEffect.createWaveform(VIBRATE_PATTERN,0  ));
         } else {
             // Below API 26
-            //vibrator.vibrate(VIBRATE_PATTERN, 0);
+            vibrator.vibrate(VIBRATE_PATTERN, 0);
         }
 
 
@@ -115,7 +115,7 @@ public class ScoutAcceptanceActivity extends AppCompatActivity {
                 player.stop();
                 vibrator.cancel();
             }
-        }, 20*1000);
+        }, 2*60*1000);
 
 
 
