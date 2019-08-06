@@ -20,10 +20,10 @@ public class HousePhotosAdapter extends RecyclerView.Adapter<HousePhotosAdapter.
 
 
     Context context;
-    private UploadPhotosFragment.OnUploadPhotoInteractionListener listener;
+    private OnPhotoClick listener;
     private ArrayList<String> imageUrlList;
 
-    public HousePhotosAdapter(Context context, UploadPhotosFragment.OnUploadPhotoInteractionListener listener, ArrayList<String> imageUrlList) {
+    public HousePhotosAdapter(Context context,OnPhotoClick listener, ArrayList<String> imageUrlList) {
         this.context = context;
         this.listener = listener;
         this.imageUrlList = imageUrlList;
@@ -55,10 +55,23 @@ public class HousePhotosAdapter extends RecyclerView.Adapter<HousePhotosAdapter.
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
-        public ViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull final View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
+
+            imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onPhotoClick(itemView);
+                }
+            });
         }
 
+
+
+    }
+
+    public interface OnPhotoClick{
+        void onPhotoClick(View view);
     }
 }

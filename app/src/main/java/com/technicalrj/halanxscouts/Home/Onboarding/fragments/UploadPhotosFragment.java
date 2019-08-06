@@ -7,14 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -27,7 +26,7 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.JsonObject;
 import com.technicalrj.halanxscouts.Adapters.HousePhotosAdapter;
-import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
+import com.technicalrj.halanxscouts.Profile.ProfileImageActivity;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
 import com.theartofdev.edmodo.cropper.CropImage;
@@ -48,9 +47,10 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class UploadPhotosFragment extends Fragment {
+public class UploadPhotosFragment extends Fragment implements HousePhotosAdapter.OnPhotoClick {
 
     private OnUploadPhotoInteractionListener listener;
+    private HousePhotosAdapter.OnPhotoClick photoClickListener;
     private RecyclerView photosRecyclerView;
     private HousePhotosAdapter housePhotosAdapter;
     private FloatingActionButton addPhoto;
@@ -101,52 +101,6 @@ public class UploadPhotosFragment extends Fragment {
 
     }
 
-    private void uploadImage(Uri selectedImage) {
-
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
-
-        File file = new File(selectedImage.getPath());
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-
-        dataInterface.addHouseImage("Token "+key,taskId,body).enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-
-                if(response.isSuccessful()){
-                    String url = response.body().get("image").getAsString();
-                    imageUrls.add(url);
-                    housePhotosAdapter.notifyItemChanged(imageUrls.size()-1);
-                    progressDialog.dismiss();
-                }else {
-                    Log.e(TAG, "onResponse: "+response.errorBody().toString() );
-                    progressDialog.dismiss();
-                }
-
-            }
-
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                t.printStackTrace();
-                Log.e(TAG, "onFailure: "+t.getMessage());
-                Toast.makeText(getActivity(),"Error Uploading Image",Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
-
-            }
-        });
-
-
-
-
-
-
-
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -163,10 +117,10 @@ public class UploadPhotosFragment extends Fragment {
         addPhoto = view.findViewById(R.id.add_photo);
         photosRecyclerView = view.findViewById(R.id.recyclerView);
         imageUrls = new ArrayList<>();
-        housePhotosAdapter = new HousePhotosAdapter(getActivity(),listener,imageUrls);
+        housePhotosAdapter = new HousePhotosAdapter(getActivity(),photoClickListener,imageUrls);
         photosRecyclerView.setAdapter(housePhotosAdapter);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        photosRecyclerView.setLayoutManager(linearLayoutManager);
+        //photosRecyclerView.addItemDecoration(new GridSpacingItemDecoration(3, 50, true));
+        photosRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         photosRecyclerView.setNestedScrollingEnabled(false);
 
         addPhoto.setOnClickListener(new View.OnClickListener() {
@@ -222,6 +176,55 @@ public class UploadPhotosFragment extends Fragment {
     }
 
 
+
+    private void uploadImage(Uri selectedImage) {
+
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
+
+        File file = new File(selectedImage.getPath());
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
+
+        dataInterface.addHouseImage("Token "+key,taskId,body).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
+                if(response.isSuccessful()){
+                    String url = response.body().get("image").getAsString();
+                    imageUrls.add(url);
+                    housePhotosAdapter.notifyItemChanged(imageUrls.size()-1);
+                    progressDialog.dismiss();
+                }else {
+                    Log.e(TAG, "onResponse: "+response.errorBody().toString() );
+                    progressDialog.dismiss();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                t.printStackTrace();
+                Log.e(TAG, "onFailure: "+t.getMessage());
+                Toast.makeText(getActivity(),"Error Uploading Image",Toast.LENGTH_SHORT).show();
+                progressDialog.dismiss();
+
+            }
+        });
+
+
+
+
+
+
+
+    }
+
+
+
+
     private void chooseImage(int permisson) {
 
         CropImage.activity()
@@ -244,8 +247,21 @@ public class UploadPhotosFragment extends Fragment {
         listener = null;
     }
 
+
+
+    @Override
+    public void onPhotoClick(View view) {
+        int pos = photosRecyclerView.getChildAdapterPosition(view);
+
+        startActivity(new Intent(getActivity(), ProfileImageActivity.class)
+                .putExtra("profile_pic_url",imageUrls.get(pos)));
+
+    }
+
     public interface OnUploadPhotoInteractionListener{
         void onPhotoUploaded();
     }
+
+
 
 }

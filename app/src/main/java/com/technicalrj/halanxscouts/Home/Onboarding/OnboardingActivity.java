@@ -1,7 +1,6 @@
 package com.technicalrj.halanxscouts.Home.Onboarding;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -14,7 +13,6 @@ import android.widget.TextView;
 
 import com.kofigyan.stateprogressbar.StateProgressBar;
 import com.technicalrj.halanxscouts.Constants;
-import com.technicalrj.halanxscouts.Home.MoveOut.MoveOutActivity;
 import com.technicalrj.halanxscouts.Home.MoveOut.fragment.PropertyDetailsFragment;
 import com.technicalrj.halanxscouts.Home.Onboarding.fragments.AccommodationTypeFragment;
 import com.technicalrj.halanxscouts.Home.Onboarding.fragments.AddressFragment;
@@ -75,7 +73,7 @@ AmenitiesOnBoardingFragment.OnAmenitiesOnBoardingInteractionListener{
 
     @Override
     public void onBackPressed() {
-        /*FragmentManager fm = getSupportFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         AddressFragment addressFragment = (AddressFragment) fm.findFragmentByTag(ADDRESS_FRAGMENT_TAG);
 
         if (addressFragment != null && addressFragment.isVisible()) {
@@ -94,9 +92,8 @@ AmenitiesOnBoardingFragment.OnAmenitiesOnBoardingInteractionListener{
             }
 
             fm.popBackStack();
-        }*/
+        }
 
-        super.onBackPressed();
 
     }
 
