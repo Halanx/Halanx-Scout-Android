@@ -1,5 +1,6 @@
 package com.technicalrj.halanxscouts.Home;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
@@ -18,27 +19,34 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Vibrator;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.google.gson.JsonObject;
+import com.squareup.okhttp.ResponseBody;
 import com.technicalrj.halanxscouts.Adapters.AvailabilityAdapter;
 import com.technicalrj.halanxscouts.Adapters.TaskAdapter;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
+import com.technicalrj.halanxscouts.utlis.MyDateUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -84,6 +92,7 @@ public class HomeFragment extends Fragment {
     private HorizontalScrollView horizontalScrollView;
     private ConstraintLayout addScheduleEmpty;
     private boolean isScheduleLoaded , isTaskLoaded;
+    private RetrofitAPIClient.DataInterface retrofitAPIClient;
 
 
     public HomeFragment() {
@@ -121,15 +130,15 @@ public class HomeFragment extends Fragment {
         noTasksImg = v.findViewById(R.id.no_tasks_img);
         addScheduleEmpty = v.findViewById(R.id.add_schedule_empty);
         horizontalScrollView = v.findViewById(R.id.horizontal_scroll);
+        Button propertyOnBoardButton = v.findViewById(R.id.property_onboard_button);
+        avalabilityLayout = v.findViewById(R.id.availability);
 
         prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
         Log.d(TAG, "onCreateView: token: "+key);
         onlineStatus = prefs.getBoolean("online_status", false);
 
-
-        avalabilityLayout = v.findViewById(R.id.availability);
-
+        retrofitAPIClient = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
 
         if (onlineStatus) {
             //button tells now to get offline
@@ -142,13 +151,14 @@ public class HomeFragment extends Fragment {
 
         final ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Loading...");
+        progressDialog.setCancelable(false);
 
         refreshAddButton();
 
         //Get all available scheudle
 
         RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
-        Call<List<ScheduleAvailability>> call1 = availabilityInterface.getSchedule("Token " + key);
+        final Call<List<ScheduleAvailability>> call1 = availabilityInterface.getSchedule("Token " + key);
 
         call1.enqueue(new retrofit2.Callback<List<ScheduleAvailability>>() {
             @Override
@@ -179,7 +189,7 @@ public class HomeFragment extends Fragment {
 
 
         //Save gcm id to server everytime from shared prefs
-        SharedPreferences prefs2 = getActivity().getSharedPreferences("firebase_id", MODE_PRIVATE);
+        final SharedPreferences prefs2 = getActivity().getSharedPreferences("firebase_id", MODE_PRIVATE);
         gcmId = prefs2.getString("gcm_id", "");
         Log.i("InfoText", "Home : gcm_id:" + gcmId);
         sendRegistrationToServer(gcmId);
@@ -535,6 +545,132 @@ public class HomeFragment extends Fragment {
 
 
                 dialog.show();
+            }
+        });
+
+
+        propertyOnBoardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                View view = getLayoutInflater().inflate(R.layout.property_details_for_onboarding_layout,
+                        null);
+
+                final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                        .setView(view)
+                        .setCancelable(false)
+                        .create();
+
+                alertDialog.show();
+
+                final Button submitButton = view.findViewById(R.id.submit_button);
+                TextView cancelTextView = view.findViewById(R.id.cancel_text_view);
+                final ProgressBar progressBar = view.findViewById(R.id.progressBar);
+                final EditText addressEditText = view.findViewById(R.id.address_edit_text);
+                final EditText nameEditText = view.findViewById(R.id.name_edit_text);
+                final EditText mobileEditText = view.findViewById(R.id.mobile_edit_text);
+
+                cancelTextView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(progressBar.getVisibility() != View.VISIBLE) {
+                            alertDialog.dismiss();
+                        }
+                    }
+                });
+
+                submitButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String address = addressEditText.getText().toString().trim();
+                        String ownerName = nameEditText.getText().toString().trim();
+                        String mobileNumber = mobileEditText.getText().toString().trim();
+
+                        if(address.isEmpty()){
+                           Toast.makeText(getActivity(), "Please enter address of the property!",
+                                   Toast.LENGTH_SHORT).show();
+                           return;
+                        }
+
+                        if(ownerName.isEmpty()){
+                            Toast.makeText(getActivity(), "Please enter name of the owner of the property!",
+                                    Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        if(mobileNumber.isEmpty()){
+                            Toast.makeText(getActivity(), "Please enter mobile number of the owner!",
+                                    Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        hideKeyboard(mobileEditText);
+
+                        final JsonObject jsonObject = new JsonObject();
+                        jsonObject.addProperty("location", address);
+                        jsonObject.addProperty("scheduled_at", MyDateUtils.
+                                epochToFormattedDate(System.currentTimeMillis(), "yyyy-MM-dd HH:mm"));
+                        jsonObject.addProperty("name", ownerName);
+                        jsonObject.addProperty("phone_no", mobileNumber);
+
+
+                        AlertDialog alertDialog1 = new AlertDialog.Builder(getActivity())
+                                .setMessage("You will receive a call, once you accept the task you will be " +
+                                        "able to on-board the property!")
+                                .setCancelable(false)
+                                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+
+                                        submitButton.setVisibility(View.INVISIBLE);
+                                        progressBar.setVisibility(View.VISIBLE);
+
+                                        retrofitAPIClient.createPropertyOnBoardingTask("Token " + key, jsonObject)
+                                                .enqueue(new Callback<JsonObject>() {
+                                                    @Override
+                                                    public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                                                        progressBar.setVisibility(View.INVISIBLE);
+
+                                                        if(response.body() != null && response.code()== 200 &&
+                                                                response.body().has("status") &&
+                                                                response.body().get("status").getAsString().equals("success")){
+
+                                                            alertDialog.dismiss();
+
+                                                            Toast.makeText(getActivity(), "You will receive a call in a while!", Toast.LENGTH_SHORT).show();
+
+                                                        } else {
+                                                            submitButton.setVisibility(View.VISIBLE);
+                                                            Toast.makeText(getActivity(), "Error, Try Again!", Toast.LENGTH_SHORT).show();
+                                                            Log.d(TAG, "onResponse: code: "+response.code());
+                                                            try {
+                                                                Log.d(TAG, "onResponse: error: "+response.errorBody().string());
+                                                            } catch (IOException e) {
+                                                                e.printStackTrace();
+                                                            }
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void onFailure(Call<JsonObject> call, Throwable t) {
+                                                        progressBar.setVisibility(View.INVISIBLE);
+                                                        submitButton.setVisibility(View.VISIBLE);
+                                                        Log.d(TAG, "onFailure: ");
+                                                        t.printStackTrace();
+                                                        Toast.makeText(getActivity(), "Error, Try Again!", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
+                                    }
+                                }).setCancelable(false)
+                                .create();
+                        alertDialog1.show();
+
+
+
+                    }
+                });
+
             }
         });
 
@@ -1309,7 +1445,7 @@ public class HomeFragment extends Fragment {
         HashMap<String, String> map = new HashMap<>();
         map.put("gcm_id", token);
 
-        final RetrofitAPIClient.DataInterface retrofitAPIClient = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
+
         Call<Profile> call2 = retrofitAPIClient.updateProfileGcmId(map, "Token " + key);
         call2.enqueue(new Callback<Profile>() {
             @Override
@@ -1358,6 +1494,16 @@ public class HomeFragment extends Fragment {
             addScheduleEmpty.setVisibility(View.GONE);
             horizontalScrollView.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void hideKeyboard(View view) {
+        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(getActivity());
+        }
+        inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 

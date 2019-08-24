@@ -15,5 +15,9 @@
     <color name="colorEnabled">#EF3939</color>
     <color name="colorGrayAdapter">#FAFAFA</color>
 
+    <color name="text_color_extra_dark">#5a5858</color>
+    <color name="text_color_dark">#373737</color>
+    <color name="text_color_light">#828282</color>
+
 
 </resources>

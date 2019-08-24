@@ -35,6 +35,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by Nishant on 19/12/17.
@@ -44,8 +45,9 @@ import java.util.Date;
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolder> {
 
     private static final int TASK_CLICKED = 12;
-    Context c;
-    ArrayList<ScheduledTask> scheduledTaskList;
+    private Context c;
+    private ArrayList<ScheduledTask> scheduledTaskList;
+    double latitute = 0,longitute =0;
 
     public TaskAdapter(Context context, ArrayList<ScheduledTask> scheduledTaskList) {
         c = context;
@@ -67,42 +69,64 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
         ScheduledTask scheduledTask = scheduledTaskList.get(position);
 
 
+        String tel = "";
+
         final String category = scheduledTask.getCategory().getName();
         holder.task_name.setText(category);
 
         CustomData customData=null;
-        if(category.equals("Property Onboarding")) {
+        if(category.equals(Category.PROPERTY_ONBOARDING)) {
             customData = scheduledTask.getCustomData();
+            holder.address.setText(customData.getLocation());
+
+            if(customData.getLatitude() != null){
+                latitute = customData.getLatitude();
+            } else {
+                holder.house_location.setVisibility(View.INVISIBLE);
+            }
+
+            if(customData.getLongitude() != null){
+                longitute = customData.getLongitude();
+            } else {
+                holder.house_location.setVisibility(View.INVISIBLE);
+            }
+
+            if(customData.getPhoneNo() == null){
+                holder.call_icon.setVisibility(View.GONE);
+            } else {
+                tel = customData.getPhoneNo();
+            }
+
+            if(customData.getName() == null){
+                holder.customer_name.setVisibility(View.GONE);
+            }
+
+            holder.chat_icon.setVisibility(View.GONE);
+        } else {
+            holder.address.setText(scheduledTaskList.get(position).getHouse().getAddress().getStreetAddress());
+            latitute = scheduledTaskList.get(position).getHouse().getAddress().getLatitude();
+            longitute = scheduledTaskList.get(position).getHouse().getAddress().getLongitude();
+            tel = scheduledTaskList.get(position).getCustomer().getPhoneNo();
         }
 
 
-        if(category.equals("Property Onboarding"))
-            holder.address.setText(customData.getLocation().substring(0,16)+"...");
-        else
-            holder.address.setText(scheduledTaskList.get(position).getHouse().getAddress().getStreetAddress());
+//        if(category.equals("Property Onboarding"))
+//            holder.address.setText(customData.getLocation());
+//        else
+//            holder.address.setText(scheduledTaskList.get(position).getHouse().getAddress().getStreetAddress());
 
 
         holder.earning.setText(scheduledTaskList.get(position).getEarning() + "");
-        String[] parts = scheduledTaskList.get(position).getScheduledAt().split(" ");
-        String date = parts[0] + " " + parts[1].substring(0, 3).toUpperCase() + " (" + parts[3] + " " + parts[4] + ")";
-        holder.date_time.setText(date);
-
-        Log.i("TaskAdapter", "onBindViewHolder: "+customData);
-
-        final double latitute,longitute;
-        if(category.equals("Property Onboarding")){
-            latitute = customData.getLatitude();
-            longitute = customData.getLongitude();
-        }else {
-            latitute = scheduledTaskList.get(position).getHouse().getAddress().getLatitude();
-            longitute = scheduledTaskList.get(position).getHouse().getAddress().getLongitude();
-        }
+//        String[] parts = scheduledTaskList.get(position).getScheduledAt().split(" ");
+//        String date = parts[0] + " " + parts[1].substring(0, 3).toUpperCase() + " (" + parts[3] + " " + parts[4] + ")";
+        holder.date_time.setText(scheduledTaskList.get(position).getScheduledAt());
 
 
         holder.house_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:28.6514074,77.2400794?q=" + latitute + "," + longitute + "(House)"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:28.6514074,77.2400794?q=" +
+                        latitute + "," + longitute + "(House)"));
                 c.startActivity(intent);
             }
         });
@@ -144,7 +168,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
         if(scheduledTaskList.get(position).getCustomer() != null) {
             final String firstName = scheduledTaskList.get(position).getCustomer().getUser().getFirstName();
             final String lastName = scheduledTaskList.get(position).getCustomer().getUser().getLastName();
-            holder.customer_name.setText(firstName.substring(0, 1).toUpperCase() + firstName.substring(1) + " " + lastName.substring(0, 1).toUpperCase() + lastName.substring(1));
+            holder.customer_name.setText(firstName+ " "+lastName);
 
 
             Picasso.get()
@@ -165,7 +189,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
             });
 
         }else {
-            holder.customer_name.setText(customData.getName());
+            if (customData != null && customData.getName() != null) {
+                holder.customer_name.setText(customData.getName());
+            }
             holder.customer_img.setVisibility(View.GONE);
             holder.chat_icon.setVisibility(View.GONE);
         }
@@ -174,20 +200,21 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
 
 
 
-        final String tel ;
-        if(category.equals("Property Onboarding")){
-            tel = customData.getPhoneNo();
-        }else {
-            tel = scheduledTaskList.get(position).getCustomer().getPhoneNo();
-        }
+//        final String tel ;
+//        if(category.equals("Property Onboarding")){
+//            tel = customData.getPhoneNo();
+//        }else {
+//            tel = scheduledTaskList.get(position).getCustomer().getPhoneNo();
+//        }
 
 
+        final String finalTel = tel;
         holder.call_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     Intent callIntent = new Intent(Intent.ACTION_VIEW);
-                    callIntent.setData(Uri.parse("tel:" + tel ));
+                    callIntent.setData(Uri.parse("tel:" + finalTel));
                     c.startActivity(callIntent);
                 } catch (ActivityNotFoundException activityException) {
                     Toast.makeText(c, "Calling a Phone Number Call failed", Toast.LENGTH_SHORT).show();
@@ -237,7 +264,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
 
     public boolean isPreviousDay(String scheduledDate) {
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy hh:mm a");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy hh:mm a", Locale.getDefault());
         try {
             Date date = dateFormat.parse(scheduledDate);
             Log.i("TaskAdapter", "isPreviousDay: date.getTime:" + date.getTime() + " current:" + System.currentTimeMillis() + " diff:" + (date.getTime() - System.currentTimeMillis()));

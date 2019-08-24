@@ -186,6 +186,10 @@ public class RetrofitAPIClient {
                                                                  @Path("task_id") int taskId,
                                                                  @Body PropertyOnBoarding propertyOnBoarding);
 
+        @POST("scouts/tasks//subtask/property_onboard/self_task/")
+        Call<JsonObject> createPropertyOnBoardingTask(@Header("Authorization") String token,
+                                                    @Body JsonObject jsonObject);
+
     }
 
 
