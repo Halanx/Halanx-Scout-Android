@@ -3,36 +3,55 @@ package com.technicalrj.halanxscouts.Home.Onboarding.fragments;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.flexbox.FlexDirection;
+import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.flexbox.JustifyContent;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.JsonObject;
 import com.technicalrj.halanxscouts.Adapters.HousePhotosAdapter;
+import com.technicalrj.halanxscouts.Home.TaskFolder.House;
+import com.technicalrj.halanxscouts.Pojo.HouseImage;
 import com.technicalrj.halanxscouts.Profile.ProfileImageActivity;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
+import com.technicalrj.halanxscouts.utlis.FileSaver;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -49,12 +68,13 @@ import static android.content.Context.MODE_PRIVATE;
  */
 public class UploadPhotosFragment extends Fragment implements HousePhotosAdapter.OnPhotoClick {
 
+    private static final int REQUEST_TAKE_PHOTO = 123;
     private OnUploadPhotoInteractionListener listener;
-    private HousePhotosAdapter.OnPhotoClick photoClickListener;
     private RecyclerView photosRecyclerView;
     private HousePhotosAdapter housePhotosAdapter;
     private FloatingActionButton addPhoto;
     private ArrayList<String> imageUrls;
+    private ArrayList<HouseImage> houseImageArrayList;
     private static final int PICK_IMAGE = 12;
     private RetrofitAPIClient.DataInterface dataInterface;
     private String key;
@@ -62,6 +82,16 @@ public class UploadPhotosFragment extends Fragment implements HousePhotosAdapter
     private String TAG=getClass().getName();
     private ProgressDialog progressDialog;
 
+    private Queue<Integer> imageUploadQueue;
+
+    private FileSaver fileSaver;
+    private File photoFile;
+
+    private Handler imageUploadHandler;
+    private Runnable imageUploadRunnable;
+    private boolean isUploading = false;
+    private boolean isUploadingHandlerAttached = false;
+    private Button doneButton;
 
     public UploadPhotosFragment() {
         // Required empty public constructor
@@ -81,17 +111,28 @@ public class UploadPhotosFragment extends Fragment implements HousePhotosAdapter
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+        if(requestCode == REQUEST_TAKE_PHOTO){
             if (resultCode == RESULT_OK) {
 
-                Uri selectedImage = result.getUri();
-                uploadImage(selectedImage);
+                int position = houseImageArrayList.size();
 
+                Bitmap thumbImage = ThumbnailUtils.extractThumbnail(
+                        BitmapFactory.decodeFile(photoFile.getAbsolutePath()),
+                        128,
+                        128);
 
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
-                error.printStackTrace();
+                houseImageArrayList.add(position, new HouseImage(String.valueOf(Uri.fromFile(photoFile)),
+                        HouseImage.UPLOADING, thumbImage));
+                housePhotosAdapter.notifyItemInserted(position);
+
+                imageUploadQueue.add(position);
+
+                if(!isUploadingHandlerAttached){
+                    attachUploadHandler();
+                }
+
+            } else { // Result was a failure
+                Toast.makeText(getActivity(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -113,21 +154,57 @@ public class UploadPhotosFragment extends Fragment implements HousePhotosAdapter
         key = prefs.getString("login_key", null);
         dataInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
 
-        Button doneButton = view.findViewById(R.id.done_button);
+        doneButton = view.findViewById(R.id.done_button);
         addPhoto = view.findViewById(R.id.add_photo);
         photosRecyclerView = view.findViewById(R.id.recyclerView);
         imageUrls = new ArrayList<>();
-        housePhotosAdapter = new HousePhotosAdapter(getActivity(),photoClickListener,imageUrls);
+        houseImageArrayList = new ArrayList<>();
+        housePhotosAdapter = new HousePhotosAdapter(getActivity(),this,houseImageArrayList);
         photosRecyclerView.setAdapter(housePhotosAdapter);
-        //photosRecyclerView.addItemDecoration(new GridSpacingItemDecoration(3, 50, true));
-        photosRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getActivity());
+        layoutManager.setFlexDirection(FlexDirection.ROW);
+        layoutManager.setJustifyContent(JustifyContent.SPACE_AROUND);
+        photosRecyclerView.setLayoutManager(layoutManager);
+        photosRecyclerView.setHasFixedSize(true);
         photosRecyclerView.setNestedScrollingEnabled(false);
+
+        imageUploadQueue = new LinkedList<>();
+        imageUploadHandler = new Handler(Looper.myLooper());
+        imageUploadRunnable = new Runnable() {
+            @Override
+            public void run() {
+                uploadImage();
+            }
+        };
+
 
         addPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(isStoragePermissionGranted(PICK_IMAGE)){
-                    chooseImage(PICK_IMAGE);
+
+                if(fileSaver == null){
+                    fileSaver = new FileSaver(getActivity(), false, true);
+                }
+
+                if(fileSaver.getGalleryFolder() != null && fileSaver.getGalleryFolder().exists()){
+                    try {
+                        photoFile = fileSaver.createImageFile(fileSaver.getGalleryFolder());
+                        if (photoFile != null) {
+                            Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                                    getResources().getString(R.string.file_provider_authority),
+                                    photoFile);
+                            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                        } else {
+                            Log.d(TAG, "onClick: photoFile is null");
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Log.d(TAG, "onClick: documnet is null");
                 }
             }
         });
@@ -135,101 +212,62 @@ public class UploadPhotosFragment extends Fragment implements HousePhotosAdapter
         doneButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(imageUrls.size()>0){
-                    listener.onPhotoUploaded();
-                }else {
-                    Toast.makeText(getActivity(),"Please Upload Atleast One Image",Toast.LENGTH_SHORT).show();
-                }
+                listener.onPhotoUploaded();
             }
         });
 
         return view;
     }
 
-    public  boolean isStoragePermissionGranted(int permissionCode) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (getActivity().checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED
-                    && getActivity().checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED ) {
-                return true;
-            } else {
+    private void uploadImage(){
+        Log.d(TAG, "uploadImage: ");
+        if(!imageUploadQueue.isEmpty() && !isUploading){
+            Log.d(TAG, "uploadImage: really uploading");
+            isUploading = true;
+            final int position = imageUploadQueue.remove();
+            final HouseImage houseImage = houseImageArrayList.get(position);
 
-                ActivityCompat.requestPermissions(getActivity(), new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE,
-                                Manifest.permission.CAMERA},
-                        permissionCode);
-                return false;
-            }
-        }
-        else { //permission is automatically granted on sdk<23 upon installation
-            return true;
-        }
-    }
+            File file = new File(Uri.parse(houseImage.getUrl()).getPath());
+            RequestBody requestFile = RequestBody.create(file, MediaType.parse("multipart/form-data"));
+            MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
-            //resume tasks needing this permission
-            if(requestCode==PICK_IMAGE)
-                chooseImage(PICK_IMAGE);
+            dataInterface.addHouseImage("Token "+key,taskId,body).enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
 
-        }
-    }
+                    isUploading = false;
 
+                    if(response.isSuccessful()){
+                        String url = response.body().get("image").getAsString();
+                        houseImage.setStatus(HouseImage.UPLOADED);
+                        imageUploadSuccessful(position);
 
+                        doneButton.setEnabled(true);
 
-    private void uploadImage(Uri selectedImage) {
+                        attachUploadHandler();
+                    }else {
+                        Log.e(TAG, "onResponse: message: "+response.errorBody().toString() );
+                        Log.e(TAG, "onResponse: code: "+response.code());
+                        imageUploadFailed(position);
+                    }
 
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Loading...");
-        progressDialog.show();
-
-        File file = new File(selectedImage.getPath());
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestFile);
-
-        dataInterface.addHouseImage("Token "+key,taskId,body).enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-
-                if(response.isSuccessful()){
-                    String url = response.body().get("image").getAsString();
-                    imageUrls.add(url);
-                    housePhotosAdapter.notifyItemChanged(imageUrls.size()-1);
-                    progressDialog.dismiss();
-                }else {
-                    Log.e(TAG, "onResponse: "+response.errorBody().toString() );
-                    progressDialog.dismiss();
                 }
 
-            }
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
 
-            @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+                    isUploading = false;
 
-                t.printStackTrace();
-                Log.e(TAG, "onFailure: "+t.getMessage());
-                Toast.makeText(getActivity(),"Error Uploading Image",Toast.LENGTH_SHORT).show();
-                progressDialog.dismiss();
+                    t.printStackTrace();
+                    Log.e(TAG, "onFailure: "+t.getMessage());
+                    imageUploadFailed(position);
 
-            }
-        });
+                }
+            });
 
-
-
-
-
-
-
-    }
-
-
-
-
-    private void chooseImage(int permisson) {
-
-        CropImage.activity()
-                .start(getContext(), this);
-
+        } else {
+            removeUploadHandler();
+        }
     }
 
 
@@ -253,10 +291,60 @@ public class UploadPhotosFragment extends Fragment implements HousePhotosAdapter
     public void onPhotoClick(View view) {
         int pos = photosRecyclerView.getChildAdapterPosition(view);
 
-        startActivity(new Intent(getActivity(), ProfileImageActivity.class)
-                .putExtra("profile_pic_url",imageUrls.get(pos)));
+        HouseImage houseImage = houseImageArrayList.get(pos);
+
+        if(houseImage.getStatus() == HouseImage.ERROR){
+            imageUploadQueue.add(pos);
+            houseImage.setStatus(HouseImage.UPLOADING);
+            houseImageArrayList.set(pos, houseImage);
+            housePhotosAdapter.notifyDataSetChanged();
+            attachUploadHandler();
+        } else if(houseImage.getStatus() == HouseImage.UPLOADED){
+            startActivity(new Intent(getActivity(), ProfileImageActivity.class)
+                    .putExtra("profile_pic_url",houseImage.getUrl()));
+        } else if(houseImage.getStatus() == HouseImage.UPLOADING){
+            Toast.makeText(getActivity(), "Image is being uploaded!", Toast.LENGTH_SHORT).show();
+        }
 
     }
+
+    private void removeUploadHandler(){
+        isUploadingHandlerAttached = false;
+        imageUploadHandler.removeCallbacks(imageUploadRunnable);
+    }
+
+    private void attachUploadHandler(){
+        isUploadingHandlerAttached = true;
+        imageUploadHandler.post(imageUploadRunnable);
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        attachUploadHandler();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        removeUploadHandler();
+    }
+
+    private void imageUploadSuccessful(int position){
+        HouseImage houseImage = houseImageArrayList.get(position);
+        houseImage.setStatus(HouseImage.UPLOADED);
+        houseImageArrayList.set(position, houseImage);
+        housePhotosAdapter.notifyDataSetChanged();
+    }
+
+    private void imageUploadFailed(int position){
+        HouseImage houseImage = houseImageArrayList.get(position);
+        houseImage.setStatus(HouseImage.ERROR);
+        houseImageArrayList.set(position, houseImage);
+        housePhotosAdapter.notifyDataSetChanged();
+    }
+
 
     public interface OnUploadPhotoInteractionListener{
         void onPhotoUploaded();

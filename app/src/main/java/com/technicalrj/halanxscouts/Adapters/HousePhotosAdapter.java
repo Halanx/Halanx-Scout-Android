@@ -1,16 +1,20 @@
 package com.technicalrj.halanxscouts.Adapters;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.squareup.picasso.Picasso;
 import com.technicalrj.halanxscouts.Home.Onboarding.fragments.UploadPhotosFragment;
+import com.technicalrj.halanxscouts.Pojo.HouseImage;
 import com.technicalrj.halanxscouts.R;
 
 import java.io.File;
@@ -21,12 +25,18 @@ public class HousePhotosAdapter extends RecyclerView.Adapter<HousePhotosAdapter.
 
     Context context;
     private OnPhotoClick listener;
-    private ArrayList<String> imageUrlList;
+    private ArrayList<HouseImage> houseImagesArrayList;
 
-    public HousePhotosAdapter(Context context,OnPhotoClick listener, ArrayList<String> imageUrlList) {
+//    public HousePhotosAdapter(Context context,OnPhotoClick listener, ArrayList<String> imageUrlList) {
+//        this.context = context;
+//        this.listener = listener;
+//        this.imageUrlList = imageUrlList;
+//    }
+
+    public HousePhotosAdapter(Context context, OnPhotoClick listener, ArrayList<HouseImage> houseImagesArrayList) {
         this.context = context;
         this.listener = listener;
-        this.imageUrlList = imageUrlList;
+        this.houseImagesArrayList = houseImagesArrayList;
     }
 
     @NonNull
@@ -34,37 +44,54 @@ public class HousePhotosAdapter extends RecyclerView.Adapter<HousePhotosAdapter.
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.house_pic_layout, parent, false);
-        HousePhotosAdapter.ViewHolder holder = new HousePhotosAdapter.ViewHolder(view);
-        return holder;
+        return new ViewHolder(view, listener);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        Picasso.get()
-                .load(imageUrlList.get(position))
-                .into(holder.imageView);
+        HouseImage houseImage = houseImagesArrayList.get(position);
+
+        if(houseImage.getStatus() == HouseImage.UPLOADING){
+            holder.progressBar.setVisibility(View.VISIBLE);
+            holder.retryLayout.setVisibility(View.INVISIBLE);
+        } else if(houseImage.getStatus() == HouseImage.ERROR){
+            holder.progressBar.setVisibility(View.INVISIBLE);
+            holder.retryLayout.setVisibility(View.VISIBLE);
+        } else if(houseImage.getStatus() == HouseImage.UPLOADED){
+            holder.progressBar.setVisibility(View.INVISIBLE);
+            holder.retryLayout.setVisibility(View.INVISIBLE);
+        }
+
+        holder.imageView.setImageBitmap(houseImage.getBitmap());
 
     }
 
     @Override
     public int getItemCount() {
-        return imageUrlList.size();
+        return houseImagesArrayList.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imageView;
-        public ViewHolder(@NonNull final View itemView) {
+        LinearLayout retryLayout;
+        ProgressBar progressBar;
+
+
+        public ViewHolder(@NonNull final View itemView, final OnPhotoClick listener) {
             super(itemView);
             imageView = itemView.findViewById(R.id.imageView);
+            retryLayout = itemView.findViewById(R.id.retry_layout);
+            progressBar = itemView.findViewById(R.id.progressBar2);
 
-            imageView.setOnClickListener(new View.OnClickListener() {
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     listener.onPhotoClick(itemView);
                 }
             });
+
         }
 
 
