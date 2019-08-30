@@ -13,7 +13,7 @@ public class AmenitiesResponse {
     public static final String STATUS_OK = "ok";
     public static final String STATUS_MISSING = "missing";
     public static final String STATUS_DAMAGED = "damaged";
-    public static final String STATUS_NOT_SELECTED = "not_selected";
+    public static final String STATUS_NOT_SELECTED = "Select";
     public static final String AMENITY_KEY = "amenity_key";
 
     private int id;
@@ -145,20 +145,24 @@ public class AmenitiesResponse {
 
         private String name;
 
+        private int quantity;
+
         public Amenity(int id) {
             this.id = id;
         }
 
-        public Amenity(int id, String status, String name) {
+        public Amenity(int id, String status, String name, int quantity) {
             this.id = id;
             this.status = status;
             this.name = name;
+            this.quantity = quantity;
         }
 
         protected Amenity(Parcel in) {
             id = in.readInt();
             status = in.readString();
             name = in.readString();
+            quantity = in.readInt();
         }
 
         public static final Creator<Amenity> CREATOR = new Creator<Amenity>() {
@@ -197,6 +201,14 @@ public class AmenitiesResponse {
             this.name = name;
         }
 
+        public int getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(int quantity) {
+            this.quantity = quantity;
+        }
+
         @Override
         public int describeContents() {
             return 0;
@@ -207,6 +219,7 @@ public class AmenitiesResponse {
             dest.writeInt(id);
             dest.writeString(status);
             dest.writeString(name);
+            dest.writeInt(quantity);
         }
     }
 

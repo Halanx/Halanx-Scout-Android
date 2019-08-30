@@ -27,6 +27,7 @@ import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -80,6 +81,8 @@ public class AmenitiesFragment extends Fragment implements AmenitiesAdapter.OnAm
 
         SharedPreferences prefs = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE);
         key = prefs.getString("login_key", null);
+
+        Log.d(TAG, "onCreateView: token: "+key);
 
         rootCardView = view.findViewById(R.id.root_card_view);
         done_button   = view.findViewById(R.id.done_button);
@@ -230,25 +233,55 @@ public class AmenitiesFragment extends Fragment implements AmenitiesAdapter.OnAm
     }
 
     @Override
-    public void onAmenityChecked(final RadioGroup radioGroup, final int radioButtonId, final View rootView) {
+    public void onAmenityStatusSelected(View rootView, int selectedPosition) {
         int position = amenitiesRecycler.getChildAdapterPosition(rootView);
         AmenitiesResponse.Amenity amenity = amenityArrayList.get(position);
-        if(radioButtonId == R.id.ok1){
+
+        if(selectedPosition == 1){
             amenity.setStatus(AmenitiesResponse.STATUS_OK);
-        } else if(radioButtonId == R.id.damaged1){
+        } else if(selectedPosition == 2){
             amenity.setStatus(AmenitiesResponse.STATUS_DAMAGED);
-        } else if(radioButtonId == R.id.missing1){
+        } else if(selectedPosition == 3){
             amenity.setStatus(AmenitiesResponse.STATUS_MISSING);
         } else {
             amenity.setStatus(AmenitiesResponse.STATUS_NOT_SELECTED);
         }
+
         amenityArrayList.set(position, amenity);
 
         if(checkIfAllAmenitiesSelected()){
             enableButton(true);
+        } else {
+            enableButton(false);
         }
 
     }
+
+    @Override
+    public void onPlusClicked(View rootView) {
+        int position = amenitiesRecycler.getChildAdapterPosition(rootView);
+        AmenitiesResponse.Amenity amenity = amenityArrayList.get(position);
+
+        amenity.setQuantity(amenity.getQuantity()+1);
+        amenityArrayList.set(position, amenity);
+
+        amenitiesAdapter.notifyItemChanged(position);
+
+    }
+
+    @Override
+    public void onMinusClicked(View rootView) {
+        int position = amenitiesRecycler.getChildAdapterPosition(rootView);
+        AmenitiesResponse.Amenity amenity = amenityArrayList.get(position);
+
+        if(amenity.getQuantity() > 0) {
+            amenity.setQuantity(amenity.getQuantity() - 1);
+            amenityArrayList.set(position, amenity);
+
+            amenitiesAdapter.notifyItemChanged(position);
+        }
+    }
+
 
     private boolean checkIfAllAmenitiesSelected(){
         for(AmenitiesResponse.Amenity amenity : amenityArrayList){

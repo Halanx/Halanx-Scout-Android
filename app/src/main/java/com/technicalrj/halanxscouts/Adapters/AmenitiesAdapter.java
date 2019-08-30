@@ -1,11 +1,16 @@
 package com.technicalrj.halanxscouts.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -45,7 +50,19 @@ public class AmenitiesAdapter extends RecyclerView.Adapter<AmenitiesAdapter.View
         AmenitiesResponse.Amenity amenity = amenityArrayList.get(position);
         holder.sn.setText(""+amenity.getId());
         holder.amenities.setText(amenity.getName());
+        holder.quantityTextView.setText("" + amenity.getQuantity());
 
+        if(amenity.getStatus().equalsIgnoreCase(AmenitiesResponse.STATUS_OK)){
+            holder.spinner.setSelection(1);
+        } else if(amenity.getStatus().equalsIgnoreCase(AmenitiesResponse.STATUS_DAMAGED)){
+            holder.spinner.setSelection(2);
+        } else if(amenity.getStatus().equalsIgnoreCase(AmenitiesResponse.STATUS_MISSING)){
+            holder.spinner.setSelection(3);
+        } else {
+            holder.spinner.setSelection(0);
+        }
+
+//
         if(position%2==1){
             holder.rootLayout.setBackgroundColor(context.getResources().getColor(R.color.colorGrayAdapter));
         }
@@ -62,19 +79,50 @@ public class AmenitiesAdapter extends RecyclerView.Adapter<AmenitiesAdapter.View
 
         ConstraintLayout rootLayout;
         TextView sn,amenities;
-        RadioGroup radioGroup;
+        Spinner spinner;
+        Button plusButton, minusButton;
+        TextView quantityTextView;
 
         public ViewHolder(final View itemView, final OnAmenityCheckedListener listener) {
             super(itemView);
             rootLayout = itemView.findViewById(R.id.rel_layout);
             sn = itemView.findViewById(R.id.sn1);
             amenities = itemView.findViewById(R.id.amenities1);
-            radioGroup = itemView.findViewById(R.id.radiogroup);
+            spinner = itemView.findViewById(R.id.spinner);
+            plusButton = itemView.findViewById(R.id.plus_button);
+            minusButton = itemView.findViewById(R.id.minus_button);
+            quantityTextView = itemView.findViewById(R.id.count_text_view);
 
-            radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(context,
+                    R.array.item_status_array,
+                    R.layout.my_spinner_item_text_view);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+
+            spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void onCheckedChanged(RadioGroup radioGroup, int i){
-                    listener.onAmenityChecked(radioGroup, i, itemView);
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    Log.d(TAG, "onItemSelected: "+parent.getItemAtPosition(position).toString());
+                    listener.onAmenityStatusSelected(itemView, position);
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    Log.d(TAG, "onNothingSelected: ");
+                }
+            });
+
+            plusButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onPlusClicked(itemView);
+                }
+            });
+
+            minusButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onMinusClicked(itemView);
                 }
             });
 
@@ -85,6 +133,11 @@ public class AmenitiesAdapter extends RecyclerView.Adapter<AmenitiesAdapter.View
 
 
     public interface OnAmenityCheckedListener{
-        void onAmenityChecked(RadioGroup radioGroup, int radioButtonId, View rootView);
+
+        void onAmenityStatusSelected(View rootView, int selectedPosition);
+
+        void onPlusClicked(View rootView);
+
+        void onMinusClicked(View rootView);
     }
 }

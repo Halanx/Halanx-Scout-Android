@@ -9,4 +9,12 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_maps">Map</string>
     <string name="file_provider_authority">com.technicalrj.halanxscouts.provider</string>
+
+    <string-array name="item_status_array">
+        <item>Select</item>
+        <item>OK</item>
+        <item>Damaged</item>
+        <item>Missing</item>
+    </string-array>
+
 </resources>

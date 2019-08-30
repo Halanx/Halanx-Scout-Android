@@ -84,43 +84,29 @@
 
             <TextView
                 android:id="@+id/ok"
-                android:layout_width="30dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Ok"
+                android:text="Quantity"
                 android:textColor="#4D4D4D"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/damaged"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintEnd_toStartOf="@+id/guideline2"
                 app:layout_constraintStart_toStartOf="@+id/guideline"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/damaged"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Damaged"
-                android:textColor="#4D4D4D"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/ok"
-                app:layout_constraintEnd_toStartOf="@+id/missing"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/ok"
-                app:layout_constraintTop_toTopOf="@+id/ok"
-                tools:layout_conversion_wrapHeight="52"
-                tools:layout_conversion_wrapWidth="197" />
 
             <TextView
                 android:id="@+id/missing"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Missing"
+                android:layout_marginStart="8dp"
+                android:text="Status"
                 android:textColor="#4D4D4D"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/ok"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/damaged"
+                app:layout_constraintStart_toStartOf="@+id/guideline2"
                 app:layout_constraintTop_toTopOf="@+id/ok" />
 
             <androidx.constraintlayout.widget.Guideline
@@ -128,7 +114,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                app:layout_constraintGuide_percent="0.5" />
+                app:layout_constraintGuide_percent="0.45" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.7" />
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
