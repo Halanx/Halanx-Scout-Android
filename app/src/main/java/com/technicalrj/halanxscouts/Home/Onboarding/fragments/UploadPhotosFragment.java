@@ -2,9 +2,11 @@ package com.technicalrj.halanxscouts.Home.Onboarding.fragments;
 
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -16,7 +18,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -92,6 +96,8 @@ public class UploadPhotosFragment extends Fragment implements HousePhotosAdapter
     private boolean isUploading = false;
     private boolean isUploadingHandlerAttached = false;
     private Button doneButton;
+
+    private static final int CAMERA_PERMISSION_REQ_CODE = 11;
 
     public UploadPhotosFragment() {
         // Required empty public constructor
@@ -182,30 +188,7 @@ public class UploadPhotosFragment extends Fragment implements HousePhotosAdapter
             @Override
             public void onClick(View v) {
 
-                if(fileSaver == null){
-                    fileSaver = new FileSaver(getActivity(), false, true);
-                }
-
-                if(fileSaver.getGalleryFolder() != null && fileSaver.getGalleryFolder().exists()){
-                    try {
-                        photoFile = fileSaver.createImageFile(fileSaver.getGalleryFolder());
-                        if (photoFile != null) {
-                            Uri photoURI = FileProvider.getUriForFile(getActivity(),
-                                    getResources().getString(R.string.file_provider_authority),
-                                    photoFile);
-                            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                            startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-                        } else {
-                            Log.d(TAG, "onClick: photoFile is null");
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Log.d(TAG, "onClick: documnet is null");
-                }
+                checkCameraPermissionAndGetPhoto();
             }
         });
 
@@ -351,5 +334,66 @@ public class UploadPhotosFragment extends Fragment implements HousePhotosAdapter
     }
 
 
+    private void checkCameraPermissionAndGetPhoto(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            switch (getActivity().checkSelfPermission(Manifest.permission.CAMERA)) {
+                case PackageManager.PERMISSION_DENIED :
+                    if(shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)){
+                        AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                                .setMessage("Need camera permission to click photos!")
+                                .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        requestPermissions(new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQ_CODE);
+                                    }
+                                })
+                                .create();
+                        alertDialog.show();
+                    }
+                    break;
+                case PackageManager.PERMISSION_GRANTED :
+                    startCameraIntent();
+            }
+        } else {
+            startCameraIntent();
+        }
+    }
 
+    private void startCameraIntent() {
+        if(fileSaver == null){
+            fileSaver = new FileSaver(getActivity(), false, true);
+        }
+
+        if(fileSaver.getGalleryFolder() != null && fileSaver.getGalleryFolder().exists()){
+            try {
+                photoFile = fileSaver.createImageFile(fileSaver.getGalleryFolder());
+                if (photoFile != null) {
+                    Uri photoURI = FileProvider.getUriForFile(getActivity(),
+                            getResources().getString(R.string.file_provider_authority),
+                            photoFile);
+                    Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
+                } else {
+                    Log.d(TAG, "onClick: photoFile is null");
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            Log.d(TAG, "onClick: documnet is null");
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if(requestCode == CAMERA_PERMISSION_REQ_CODE) {
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                startCameraIntent();
+            } else {
+                Toast.makeText(getActivity(), "Permission denied!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 }
