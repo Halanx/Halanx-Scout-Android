@@ -150,6 +150,32 @@ public class FileSaver {
         return null;
     }
 
+    public File saveBitmap(Bitmap bitmap, File file) {
+        Uri uri = null;
+        FileOutputStream outputPhoto = null;
+        try {
+            outputPhoto = new FileOutputStream(file);
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputPhoto);
+//            MediaStore.Images.Media.insertImage(getContentResolver(), imageFile.getAbsolutePath(), imageFile.getName(), "");
+            galleryAddPic(file);
+            return file;
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+//                    unlock();
+            try {
+                if (outputPhoto != null) {
+                    outputPhoto.flush();
+                    outputPhoto.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
 
     public Uri saveBitmapTemp(Bitmap bitmap){
         Uri uri = null;

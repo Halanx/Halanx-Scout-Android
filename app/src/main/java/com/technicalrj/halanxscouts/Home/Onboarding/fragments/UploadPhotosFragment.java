@@ -2,6 +2,7 @@ package com.technicalrj.halanxscouts.Home.Onboarding.fragments;
 
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -13,8 +14,11 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -52,7 +56,9 @@ import com.technicalrj.halanxscouts.utlis.FileSaver;
 import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -83,7 +89,7 @@ public class UploadPhotosFragment extends Fragment implements HousePhotosAdapter
     private RetrofitAPIClient.DataInterface dataInterface;
     private String key;
     private int taskId;
-    private String TAG=getClass().getName();
+    private String TAG = UploadPhotosFragment.class.getSimpleName();
     private ProgressDialog progressDialog;
 
     private Queue<Integer> imageUploadQueue;
@@ -96,6 +102,8 @@ public class UploadPhotosFragment extends Fragment implements HousePhotosAdapter
     private boolean isUploading = false;
     private boolean isUploadingHandlerAttached = false;
     private Button doneButton;
+
+    private float rotateAngle = 0;
 
     private static final int CAMERA_PERMISSION_REQ_CODE = 11;
 
@@ -112,41 +120,6 @@ public class UploadPhotosFragment extends Fragment implements HousePhotosAdapter
         return fragment;
     }
 
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if(requestCode == REQUEST_TAKE_PHOTO){
-            if (resultCode == RESULT_OK) {
-
-                int position = houseImageArrayList.size();
-
-                Bitmap thumbImage = ThumbnailUtils.extractThumbnail(
-                        BitmapFactory.decodeFile(photoFile.getAbsolutePath()),
-                        128,
-                        128);
-
-                houseImageArrayList.add(position, new HouseImage(String.valueOf(Uri.fromFile(photoFile)),
-                        HouseImage.UPLOADING, thumbImage));
-                housePhotosAdapter.notifyItemInserted(position);
-
-                imageUploadQueue.add(position);
-
-                if(!isUploadingHandlerAttached){
-                    attachUploadHandler();
-                }
-
-            } else { // Result was a failure
-                Toast.makeText(getActivity(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
-            }
-        }
-
-
-
-
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -200,6 +173,137 @@ public class UploadPhotosFragment extends Fragment implements HousePhotosAdapter
         });
 
         return view;
+    }
+
+
+    @SuppressLint("StaticFieldLeak")
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(requestCode == REQUEST_TAKE_PHOTO){
+            if (resultCode == RESULT_OK) {
+
+                final int position = houseImageArrayList.size();
+
+                try {
+                    ExifInterface ei = new ExifInterface(photoFile.getAbsolutePath());
+
+                    int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                            ExifInterface.ORIENTATION_UNDEFINED);
+
+                    switch (orientation) {
+
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            Log.d(TAG, "onActivityResult: 90");
+                            rotateAngle = 90;
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            Log.d(TAG, "onActivityResult: 180");
+                            rotateAngle = 180;
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            Log.d(TAG, "onActivityResult: 270");
+                            rotateAngle = 270;
+                            break;
+
+                        case ExifInterface.ORIENTATION_NORMAL:
+                        default:
+                            rotateAngle = 0;
+
+                    }
+
+                    final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+                    progressDialog.setMessage("Loading...");
+                    progressDialog.setCancelable(false);
+
+                    if(rotateAngle != 0) {
+
+                        new AsyncTask<File, Void, File>() {
+
+                            @Override
+                            protected void onPreExecute() {
+                                super.onPreExecute();
+                                progressDialog.show();
+                            }
+
+                            @Override
+                            protected File doInBackground(File... files) {
+                                return rotateImage(files[0], rotateAngle);
+                            }
+
+                            @Override
+                            protected void onPostExecute(File file) {
+                                super.onPostExecute(file);
+
+                                Bitmap thumbImage = ThumbnailUtils.extractThumbnail(
+                                        BitmapFactory.decodeFile(file.getAbsolutePath()),
+                                        128,
+                                        128);
+
+                                progressDialog.dismiss();
+
+
+                                houseImageArrayList.add(position, new HouseImage(String.valueOf(Uri.fromFile(file)),
+                                        HouseImage.UPLOADING, thumbImage));
+                                housePhotosAdapter.notifyItemInserted(position);
+
+                                imageUploadQueue.add(position);
+
+                                if (!isUploadingHandlerAttached) {
+                                    attachUploadHandler();
+                                }
+                            }
+                        }.execute(photoFile);
+                    } else {
+                        Bitmap thumbImage = ThumbnailUtils.extractThumbnail(
+                                BitmapFactory.decodeFile(photoFile.getAbsolutePath()),
+                                128,
+                                128);
+
+                        houseImageArrayList.add(position, new HouseImage(String.valueOf(Uri.fromFile(photoFile)),
+                                HouseImage.UPLOADING, thumbImage));
+                        housePhotosAdapter.notifyItemInserted(position);
+
+                        imageUploadQueue.add(position);
+
+                        if (!isUploadingHandlerAttached) {
+                            attachUploadHandler();
+                        }
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(getActivity(), "Error taking photo! ", Toast.LENGTH_SHORT).show();
+                }
+
+
+            } else { // Result was a failure
+                Toast.makeText(getActivity(), "Picture wasn't taken!", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    }
+
+    private File rotateImage(File imageFile, float angle){
+        Log.d(TAG, "rotateImage: "+angle);
+        // Rotate the Bitmap thanks to a rotated matrix. This seems to work.
+        Bitmap bitmap = null;
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(getContext().getContentResolver(), Uri.fromFile(imageFile));
+            Matrix matrix = new Matrix();
+            matrix.postRotate(angle);
+            Bitmap rotatedBitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            //learn content provider for more info
+            FileOutputStream outputStream = new FileOutputStream(imageFile);
+            rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            Log.d(TAG, "rotateImage: file is rotated");
+        } catch (IOException e) {
+            Log.d(TAG, "rotateImage: file is null");
+            e.printStackTrace();
+        }
+        return imageFile;
     }
 
     private void uploadImage(){
