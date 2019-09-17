@@ -453,6 +453,8 @@ public class UploadPhotosFragment extends Fragment implements HousePhotosAdapter
                                 })
                                 .create();
                         alertDialog.show();
+                    } else {
+                        requestPermissions(new String[] {Manifest.permission.CAMERA}, CAMERA_PERMISSION_REQ_CODE);
                     }
                     break;
                 case PackageManager.PERMISSION_GRANTED :
