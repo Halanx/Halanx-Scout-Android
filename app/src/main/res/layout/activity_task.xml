@@ -358,6 +358,7 @@
 
 
                         <RelativeLayout
+                            android:visibility="gone"
                             android:layout_width="wrap_content"
                             android:layout_toLeftOf="@id/chat_layout"
                             android:layout_height="wrap_content"

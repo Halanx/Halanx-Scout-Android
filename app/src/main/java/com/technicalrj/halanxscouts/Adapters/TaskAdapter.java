@@ -222,6 +222,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
             }
         });
 
+        holder.call_icon.setVisibility(View.GONE);
+
 
     }
 
