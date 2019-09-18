@@ -110,15 +110,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
         }
 
 
-//        if(category.equals("Property Onboarding"))
-//            holder.address.setText(customData.getLocation());
-//        else
-//            holder.address.setText(scheduledTaskList.get(position).getHouse().getAddress().getStreetAddress());
-
-
         holder.earning.setText(scheduledTaskList.get(position).getEarning() + "");
-//        String[] parts = scheduledTaskList.get(position).getScheduledAt().split(" ");
-//        String date = parts[0] + " " + parts[1].substring(0, 3).toUpperCase() + " (" + parts[3] + " " + parts[4] + ")";
         holder.date_time.setText(scheduledTaskList.get(position).getScheduledAt());
 
 
@@ -136,7 +128,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
         holder.lin_layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                scheduledTaskList.get(position).getCategory()
                 ScheduledTask scheduledTask = scheduledTaskList.get(position);
 
                 if (scheduledTask.getCategory().getName().equalsIgnoreCase(Category.MOVE_OUT)) {
@@ -157,12 +148,12 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
             }
         });
 
-        //if not previous day then make it invisible
-        if (!isPreviousDay(scheduledTaskList.get(position).getScheduledAt())) {
-            holder.tenantLayout.setVisibility(View.GONE);
-            holder.lineView.setVisibility(View.GONE);
-            return;
-        }
+//        //if not previous day then make it invisible
+//        if (!isPreviousDay(scheduledTaskList.get(position).getScheduledAt())) {
+//            holder.tenantLayout.setVisibility(View.GONE);
+//            holder.lineView.setVisibility(View.GONE);
+//            return;
+//        }
 
 
         if(scheduledTaskList.get(position).getCustomer() != null) {
@@ -195,18 +186,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
             holder.customer_img.setVisibility(View.GONE);
             holder.chat_icon.setVisibility(View.GONE);
         }
-
-
-
-
-
-//        final String tel ;
-//        if(category.equals("Property Onboarding")){
-//            tel = customData.getPhoneNo();
-//        }else {
-//            tel = scheduledTaskList.get(position).getCustomer().getPhoneNo();
-//        }
-
 
         final String finalTel = tel;
         holder.call_icon.setOnClickListener(new View.OnClickListener() {
