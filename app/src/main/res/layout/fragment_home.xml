@@ -36,13 +36,12 @@
 
             <Button
                 android:id="@+id/property_onboard_button"
-                android:layout_width="wrap_content"
+                android:layout_width="170dp"
                 android:layout_height="53dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:text="Onboard Property"
                 android:layout_alignParentRight="true"
-                android:layout_toRightOf="@id/go_online"
                 android:textColor="@color/colorTextButtonColor"
                 android:fontFamily="@font/montserrat_regular"
                 android:textStyle="bold"
