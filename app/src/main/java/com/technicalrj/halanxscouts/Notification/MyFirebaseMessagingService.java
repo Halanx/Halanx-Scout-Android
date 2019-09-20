@@ -161,11 +161,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         String title="",content="",imageUrl="";
         Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
         intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        PendingIntent pendingIntent=PendingIntent.getActivity(this, 0, intent, 0);;
+        PendingIntent pendingIntent=PendingIntent.getActivity(this, 0, intent, 0);
+
+        String category = "";
+        int taskId = 0;
 
         try {
 
-            String category = json.getJSONObject("category").getString("name");
+            category = json.getJSONObject("category").getString("name");
             if(category.equals("NewPaymentReceived")){
                 title = "Payment Received";
                 content = json.getJSONObject("payload").getString("description");
@@ -184,16 +187,15 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 intent.setFlags(FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 pendingIntent = PendingIntent.getActivity(this, (int) Calendar.getInstance().getTimeInMillis(), intent, 0);
             }else if(category.equals("NewMessageReceived")){
-                title =   json.getJSONObject("payload").getString("customer_name") +" Send you a Message";
+                title =   json.getJSONObject("payload").getString("customer_name") +" sent you a Message";
                 content = json.getJSONObject("payload").getString("content");
-
-
                 Log.i(TAG, "handleDataMessage: taskId in notification:"+json.getJSONObject("payload").getInt("task_id"));
+                taskId = json.getJSONObject("payload").getInt("task_id");
                 intent = new Intent(this, ChatWindow.class);
-                intent.putExtra("conversation",json.getJSONObject("payload").getInt("task_id"));
+                intent.putExtra("conversation",taskId);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-                pendingIntent = PendingIntent.getActivity(this, (int) Calendar.getInstance().getTimeInMillis(), intent, 0);
+                pendingIntent = PendingIntent.getActivity(this, taskId, intent, PendingIntent.FLAG_UPDATE_CURRENT);
             }
 
             imageUrl = json.getJSONObject("category").getString("image");
@@ -232,7 +234,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
 
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(Unique_Integer_Number, builder.build());
+
+        if(category.equals("NewMessageReceived")) {
+            notificationManager.notify(taskId, builder.build());
+        } else {
+            notificationManager.notify(Unique_Integer_Number, builder.build());
+        }
 
 
         try {
