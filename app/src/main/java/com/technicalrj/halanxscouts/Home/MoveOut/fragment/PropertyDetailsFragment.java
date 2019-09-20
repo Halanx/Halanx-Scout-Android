@@ -212,20 +212,13 @@ public class PropertyDetailsFragment extends Fragment {
         address2.setText(scheduledTask.getHouse().getAddress().getCity() +", "+ scheduledTask.getHouse().getAddress().getState());
         address3.setText(scheduledTask.getHouse().getAddress().getPincode());
 
-        //if not previous day then make it invisible
-        if(!isPreviousDay(scheduledTask.getScheduledAt())){
-            customer_card.setVisibility(View.GONE);
-        }else {
+        firstName = scheduledTask.getCustomer().getUser().getFirstName();
+        lastName = scheduledTask.getCustomer().getUser().getLastName();
+        customer_name.setText(firstName.substring(0,1).toUpperCase() + firstName.substring(1)  +" "+ lastName.substring(0,1).toUpperCase() + lastName.substring(1));
 
-            firstName = scheduledTask.getCustomer().getUser().getFirstName();
-            lastName = scheduledTask.getCustomer().getUser().getLastName();
-            customer_name.setText(firstName.substring(0,1).toUpperCase() + firstName.substring(1)  +" "+ lastName.substring(0,1).toUpperCase() + lastName.substring(1));
-
-            Picasso.get()
-                    .load( scheduledTask.getCustomer().getProfilePicThumbnailUrl())
-                    .into(customer_img);
-
-        }
+        Picasso.get()
+                .load( scheduledTask.getCustomer().getProfilePicThumbnailUrl())
+                .into(customer_img);
 
     }
 
