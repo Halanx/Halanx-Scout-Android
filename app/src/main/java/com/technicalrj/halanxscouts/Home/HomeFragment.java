@@ -42,6 +42,10 @@ import com.google.gson.JsonObject;
 import com.squareup.okhttp.ResponseBody;
 import com.technicalrj.halanxscouts.Adapters.AvailabilityAdapter;
 import com.technicalrj.halanxscouts.Adapters.TaskAdapter;
+import com.technicalrj.halanxscouts.Constants;
+import com.technicalrj.halanxscouts.Home.MoveOut.MoveOutActivity;
+import com.technicalrj.halanxscouts.Home.Onboarding.OnboardingActivity;
+import com.technicalrj.halanxscouts.Home.TaskFolder.Category;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.R;
@@ -78,7 +82,7 @@ public class HomeFragment extends Fragment {
     String key;
     Button go_online;
     Dialog dialog;
-    ArrayList<ScheduledTask> scheduledTaskList;
+
     LinearLayout avalabilityLayout;
     LayoutInflater inflater;
     public static boolean onlineStatus = false;
@@ -93,6 +97,10 @@ public class HomeFragment extends Fragment {
     private ConstraintLayout addScheduleEmpty;
     private boolean isScheduleLoaded , isTaskLoaded;
     private RetrofitAPIClient.DataInterface retrofitAPIClient;
+
+    ArrayList<ScheduledTask> scheduledTaskList;
+    private RecyclerView task_recycler;
+    private TaskAdapter taskAdapter;
 
 
     public HomeFragment() {
@@ -116,10 +124,10 @@ public class HomeFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         this.inflater = inflater;
 
-        RecyclerView task_recycler = v.findViewById(R.id.task_recycler);
+        task_recycler = v.findViewById(R.id.task_recycler);
         LinearLayoutManager lm = new LinearLayoutManager(getActivity());
         scheduledTaskList = new ArrayList<>();
-        final TaskAdapter taskAdapter = new TaskAdapter(getActivity(), scheduledTaskList);
+        taskAdapter = new TaskAdapter(getActivity(), scheduledTaskList);
         task_recycler.setLayoutManager(lm);
         task_recycler.setAdapter(taskAdapter);
         task_recycler.setNestedScrollingEnabled(false);

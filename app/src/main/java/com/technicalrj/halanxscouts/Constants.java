@@ -18,6 +18,11 @@ public class Constants {
 
     public static final String TASK_ID = "task_id";
     public static final String TASK_EARNING = "task_earning";
+    public static final String CONVERSATION = "conversation";
+    public static final String FIRST_NAME = "first_name";
+    public static final String LAST_NAME = "last_name";
+    public static final String PROFILE_PIC_URL = "profile_pic_url";
+    public static final String PHONE_NUMBER = "phone_number";
 
     public static final String FURNISHED = "full";
     public static final String SEMI_FURNISHED = "semi";
@@ -27,4 +32,5 @@ public class Constants {
     public static final String PRIVATE_ROOM = "private";
     public static final String FLAT = "flat";
     public static final String TASK_AMOUNT = "task_earning" ;
+
 }

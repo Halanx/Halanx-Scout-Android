@@ -128,8 +128,7 @@
                 android:layout_width="45dp"
                 android:layout_height="46dp"
                 android:layout_marginTop="5dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/profile_icon" />
+                android:src="@drawable/user" />
 
 
             <TextView

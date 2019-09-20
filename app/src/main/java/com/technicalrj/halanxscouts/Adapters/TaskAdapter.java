@@ -9,6 +9,7 @@ import android.net.Uri;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,9 +49,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
     private Context c;
     private ArrayList<ScheduledTask> scheduledTaskList;
     double latitute = 0,longitute =0;
+    private String tel = "";
 
-    public TaskAdapter(Context context, ArrayList<ScheduledTask> scheduledTaskList) {
-        c = context;
+    public TaskAdapter(Context c, ArrayList<ScheduledTask> scheduledTaskList) {
+        this.c = c;
         this.scheduledTaskList = scheduledTaskList;
 
     }
@@ -66,27 +68,27 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
     public void onBindViewHolder(final HomesViewHolder holder, final int position) {
 
 
-        ScheduledTask scheduledTask = scheduledTaskList.get(position);
-
-
-        String tel = "";
+        final ScheduledTask scheduledTask = scheduledTaskList.get(position);
 
         final String category = scheduledTask.getCategory().getName();
         holder.task_name.setText(category);
+        holder.earning.setText(scheduledTask.getEarning() + "");
+        holder.date_time.setText(scheduledTask.getScheduledAt());
 
-        CustomData customData=null;
+
+//        customer is null in onboarding and custom data field is available only with onboarding
+//        custom data contains name, phone, lat, lng, address if task is assigned by halanx
+//                                OR
+//        custom data only contains address
         if(category.equals(Category.PROPERTY_ONBOARDING)) {
-            customData = scheduledTask.getCustomData();
+
+            CustomData customData = scheduledTask.getCustomData();
             holder.address.setText(customData.getLocation());
 
-            if(customData.getLatitude() != null){
+            if(customData.getLatitude() != null && customData.getLongitude() != null){
                 latitute = customData.getLatitude();
-            } else {
-                holder.house_location.setVisibility(View.INVISIBLE);
-            }
-
-            if(customData.getLongitude() != null){
                 longitute = customData.getLongitude();
+                holder.house_location.setVisibility(View.VISIBLE);
             } else {
                 holder.house_location.setVisibility(View.INVISIBLE);
             }
@@ -94,36 +96,71 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
             if(customData.getPhoneNo() == null){
                 holder.call_icon.setVisibility(View.GONE);
             } else {
+                holder.call_icon.setVisibility(View.VISIBLE);
                 tel = customData.getPhoneNo();
             }
 
             if(customData.getName() == null){
                 holder.customer_name.setVisibility(View.GONE);
+                holder.customer_img.setVisibility(View.GONE);
+                holder.lineView.setVisibility(View.GONE);
+            } else {
+                holder.customer_name.setVisibility(View.VISIBLE);
+                holder.customer_img.setVisibility(View.VISIBLE);
+                holder.customer_name.setText(customData.getName());
             }
 
             holder.chat_icon.setVisibility(View.GONE);
-        } else {
+
+        } else if(category.equals(Category.HOUSE_VISIT)) {
+
             holder.address.setText(scheduledTaskList.get(position).getHouse().getAddress().getStreetAddress());
             latitute = scheduledTaskList.get(position).getHouse().getAddress().getLatitude();
             longitute = scheduledTaskList.get(position).getHouse().getAddress().getLongitude();
             tel = scheduledTaskList.get(position).getCustomer().getPhoneNo();
+
+            holder.call_icon.setVisibility(View.GONE);
+
+            if(scheduledTask.getCustomer() != null) {
+
+                holder.chat_icon.setVisibility(View.VISIBLE);
+
+                final String firstName = scheduledTask.getCustomer().getUser().getFirstName();
+                final String lastName = scheduledTask.getCustomer().getUser().getLastName();
+                holder.customer_name.setText(firstName+ " "+lastName);
+
+                Picasso.get()
+                        .load(scheduledTaskList.get(position).getCustomer().getProfilePicThumbnailUrl())
+                        .into(holder.customer_img);
+
+
+                holder.chat_icon.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        c.startActivity(new Intent(c, ChatWindow.class)
+                                .putExtra("conversation", scheduledTask.getId())
+                                .putExtra("first_name", firstName)
+                                .putExtra("last_name", lastName)
+                                .putExtra("profile_pic_url", scheduledTask.getCustomer().getProfilePicUrl())
+                                .putExtra("phone_number", scheduledTask.getCustomer().getPhoneNo()));
+                    }
+                });
+            } else {
+                holder.customer_img.setVisibility(View.GONE);
+                holder.chat_icon.setVisibility(View.GONE);
+                holder.lineView.setVisibility(View.GONE);
+            }
+
         }
-
-
-        holder.earning.setText(scheduledTaskList.get(position).getEarning() + "");
-        holder.date_time.setText(scheduledTaskList.get(position).getScheduledAt());
-
 
         holder.house_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:28.6514074,77.2400794?q=" +
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("geo:0,0?q=" +
                         latitute + "," + longitute + "(House)"));
                 c.startActivity(intent);
             }
         });
-
-
 
         holder.lin_layout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,60 +185,18 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.HomesViewHolde
             }
         });
 
-//        //if not previous day then make it invisible
-//        if (!isPreviousDay(scheduledTaskList.get(position).getScheduledAt())) {
-//            holder.tenantLayout.setVisibility(View.GONE);
-//            holder.lineView.setVisibility(View.GONE);
-//            return;
-//        }
-
-
-        if(scheduledTaskList.get(position).getCustomer() != null) {
-            final String firstName = scheduledTaskList.get(position).getCustomer().getUser().getFirstName();
-            final String lastName = scheduledTaskList.get(position).getCustomer().getUser().getLastName();
-            holder.customer_name.setText(firstName+ " "+lastName);
-
-
-            Picasso.get()
-                    .load(scheduledTaskList.get(position).getCustomer().getProfilePicThumbnailUrl())
-                    .into(holder.customer_img);
-
-
-            holder.chat_icon.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    c.startActivity(new Intent(c, ChatWindow.class)
-                            .putExtra("conversation", scheduledTaskList.get(position).getId())
-                            .putExtra("first_name", firstName)
-                            .putExtra("last_name", lastName)
-                            .putExtra("profile_pic_url", scheduledTaskList.get(position).getCustomer().getProfilePicUrl())
-                            .putExtra("phone_number", scheduledTaskList.get(position).getCustomer().getPhoneNo()));
-                }
-            });
-
-        }else {
-            if (customData != null && customData.getName() != null) {
-                holder.customer_name.setText(customData.getName());
-            }
-            holder.customer_img.setVisibility(View.GONE);
-            holder.chat_icon.setVisibility(View.GONE);
-        }
-
-        final String finalTel = tel;
         holder.call_icon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
                     Intent callIntent = new Intent(Intent.ACTION_VIEW);
-                    callIntent.setData(Uri.parse("tel:" + finalTel));
+                    callIntent.setData(Uri.parse("tel:" + tel));
                     c.startActivity(callIntent);
                 } catch (ActivityNotFoundException activityException) {
                     Toast.makeText(c, "Calling a Phone Number Call failed", Toast.LENGTH_SHORT).show();
                 }
             }
         });
-
-        holder.call_icon.setVisibility(View.GONE);
 
 
     }

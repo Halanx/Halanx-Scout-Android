@@ -29,6 +29,7 @@ import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 import com.technicalrj.halanxscouts.Adapters.ChatAdapter;
+import com.technicalrj.halanxscouts.Constants;
 import com.technicalrj.halanxscouts.Home.Chat.Messages;
 import com.technicalrj.halanxscouts.Home.Chat.Result;
 import com.technicalrj.halanxscouts.Home.TaskFolder.ScheduledTask;
@@ -36,12 +37,14 @@ import com.technicalrj.halanxscouts.Profile.ProfileImageActivity;
 import com.technicalrj.halanxscouts.Profile.ProfilePojo.Profile;
 import com.technicalrj.halanxscouts.R;
 import com.technicalrj.halanxscouts.RetrofitAPIClient;
+import com.technicalrj.halanxscouts.utlis.EndlessRecyclerOnScrollListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -61,7 +64,6 @@ public class ChatWindow extends AppCompatActivity {
     String key;
     EditText chat_text;
     LinearLayoutManager lm;
-    int page=1;
     private Socket mSocket;
     private TextView nameTv;
     ImageView customerImg;
@@ -70,6 +72,9 @@ public class ChatWindow extends AppCompatActivity {
     Button sendButton;
     public final static String nodeBaseUrl = "https://share.halanx.com/";
     RecyclerView rv_chat;
+
+    private RetrofitAPIClient.DataInterface dataInterface;
+    private String TAG = ChatWindow.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +90,7 @@ public class ChatWindow extends AppCompatActivity {
 
 
 
-
+        dataInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
 
 
 
@@ -107,6 +112,13 @@ public class ChatWindow extends AppCompatActivity {
         lm.setStackFromEnd(false);
         rv_chat.setAdapter(adapter);
         rv_chat.setLayoutManager(lm);
+
+        rv_chat.addOnScrollListener(new EndlessRecyclerOnScrollListener(lm) {
+            @Override
+            public void onLoadMore(int current_page) {
+                updateChat(current_page);
+            }
+        });
 
 
 
@@ -133,42 +145,49 @@ public class ChatWindow extends AppCompatActivity {
 
 
         progressDialog.show();
-        RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
-        Call<ScheduledTask> call = availabilityInterface.getTasksById(Integer.valueOf(taskId),"Token "+key);
+
+        Call<ScheduledTask> call = dataInterface.getTasksById(Integer.valueOf(taskId),"Token "+key);
         call.enqueue(new Callback<ScheduledTask>() {
             @Override
             public void onResponse(Call<ScheduledTask> call, Response<ScheduledTask> response) {
                 //Get task details
-                firstName = response.body().getCustomer().getUser().getFirstName();
-                lastName = response.body().getCustomer().getUser().getLastName();
-                profilePicUrl = response.body().getCustomer().getProfilePicUrl();
-                phoneNumber = response.body().getCustomer().getPhoneNo();
-                conversationId = response.body().getConversation()+"";
 
-                nameTv.setText( firstName.substring(0,1).toUpperCase() + firstName.substring(1)  +" "+ lastName.substring(0,1).toUpperCase() + lastName.substring(1) );
-                Picasso.get()
-                        .load( profilePicUrl)
-                        .into(customerImg);
+                if(response.isSuccessful() && response.body() != null) {
+                    firstName = response.body().getCustomer().getUser().getFirstName();
+                    lastName = response.body().getCustomer().getUser().getLastName();
+                    profilePicUrl = response.body().getCustomer().getProfilePicUrl();
+                    phoneNumber = response.body().getCustomer().getPhoneNo();
+                    conversationId = response.body().getConversation() + "";
 
-                updateChat(page);
+                    nameTv.setText(firstName.substring(0, 1).toUpperCase() + firstName.substring(1) + " " + lastName.substring(0, 1).toUpperCase() + lastName.substring(1));
+                    Picasso.get()
+                            .load(profilePicUrl)
+                            .into(customerImg);
+
+                    updateChat(1);
 
 
+                    //For Socket pusposes send id of scout
+                    JSONObject json = new JSONObject();
+                    try {
+                        json.put("id", response.body().getScout());
+                        json.put("chat_type", "chat_between_scout_and_customer");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 
-                //For Socket pusposes send id of scout
-                JSONObject json = new JSONObject();
-                try {
-                    json.put("id", response.body().getScout());
-                    json.put("chat_type","chat_between_scout_and_customer");
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    mSocket.emit("setCache", json);
+                } else {
+                    Toast.makeText(ChatWindow.this, "Error, Try Again!", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
-
-                mSocket.emit("setCache", json);
             }
 
             @Override
             public void onFailure(Call<ScheduledTask> call, Throwable t) {
                 t.printStackTrace();
+                Toast.makeText(ChatWindow.this, "Error, Try Again!", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 
@@ -187,28 +206,30 @@ public class ChatWindow extends AppCompatActivity {
 
     private void updateChat(final int currentPage) {
 
-        RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
-        Call<Messages> call = availabilityInterface.getMessages(conversationId,currentPage,"Token "+key,"scout");
+        Log.d(TAG, "updateChat: page: "+currentPage);
+
+        Call<Messages> call = dataInterface.getMessages(conversationId,currentPage,"Token "+key,"scout");
         call.enqueue(new Callback<Messages>() {
             @Override
             public void onResponse(Call<Messages> call, Response<Messages> response) {
 
-                Messages messages= response.body();
-                if(messages==null || messages.getCount()==0)
-                    return;
+                progressDialog.dismiss();
 
-                ArrayList<Result> newResults=(ArrayList<Result>) messages.getResults();
-                results.addAll(newResults);
-                adapter.notifyDataSetChanged();
+                if(response.isSuccessful()) {
 
-                if(messages.getNext()==null){
-                    progressDialog.dismiss();
-                    return;
+                    Messages messages = response.body();
+
+                    results.addAll(messages.getResults());
+                    adapter.notifyDataSetChanged();
+
+                } else {
+                    if(currentPage == 1){
+                        Toast.makeText(ChatWindow.this, "Error, Try Again!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
                 }
 
 
-                updateChat(currentPage+1);
-                page++;
 
             }
 
@@ -216,6 +237,10 @@ public class ChatWindow extends AppCompatActivity {
             public void onFailure(Call<Messages> call, Throwable t) {
                 t.printStackTrace();
                 progressDialog.dismiss();
+                if(currentPage == 1){
+                    Toast.makeText(ChatWindow.this, "Error, Try Again!", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
             }
         });
 
@@ -234,8 +259,8 @@ public class ChatWindow extends AppCompatActivity {
 
         HashMap<String,String> map  = new HashMap<>();
         map.put("content",text);
-        RetrofitAPIClient.DataInterface availabilityInterface = RetrofitAPIClient.getClient().create(RetrofitAPIClient.DataInterface.class);
-        Call<Result> call = availabilityInterface.createMessage(map,conversationId,"Token "+key,"scout","application/json");
+
+        Call<Result> call = dataInterface.createMessage(map,conversationId,"Token "+key,"scout","application/json");
         call.enqueue(new Callback<Result>() {
             @Override
             public void onResponse(Call<Result> call, Response<Result> response) {
@@ -287,7 +312,8 @@ public class ChatWindow extends AppCompatActivity {
                     JSONObject json = null;
                     try {
                         json = new JSONObject(String.valueOf(args[0]));
-                        Log.i("InfoText","done");
+                        Log.i("onChat:InfoText","done");
+                        Log.i("onChat:InfoText","done: "+json.toString());
                         Result result = new Result();
 
                         result.setId(json.getInt("id"));
@@ -326,7 +352,8 @@ public class ChatWindow extends AppCompatActivity {
 
                         Gson gson = new Gson();
                         Result result = gson.fromJson(json.getJSONObject("message_data").toString(),Result.class);
-                        Log.i("InfoText","done");
+                        Log.i("onChat:InfoText","done");
+                        Log.i("onChat:InfoText","done: "+json.toString());
 
                         /*result.setId(json.getInt("id"));
                         result.setCreatedAt(json.getString("created_at"));
@@ -446,7 +473,6 @@ public class ChatWindow extends AppCompatActivity {
     }
 
     public void profileImage(View view) {
-
         Intent intent = new Intent(this, ProfileImageActivity.class);
         intent.putExtra("profile_pic_url",profilePicUrl);
         startActivity(intent);
@@ -461,37 +487,6 @@ public class ChatWindow extends AppCompatActivity {
             startActivity(callIntent);
         } catch (ActivityNotFoundException activityException) {
             Toast.makeText(this,"Calling a Phone Number Call failed",Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-    private static void dsf(){
-        Scanner scanner = new Scanner(System.in);
-        int T = scanner.nextInt();
-
-        while (T-->0){
-
-            int n= scanner.nextInt();
-            int[] A = new int[n];
-
-            for (int i = 0; i <n ; i++) {
-                A[i] = scanner.nextInt();
-            }
-
-            int max = Integer.MIN_VALUE,mul=1;
-            for (int i = 0; i < n; i++) {
-
-                if(A[i]==0){
-                    mul=1;
-                    continue;
-                }
-
-                mul = A[i]*mul;
-                max = Math.max(max,mul);
-            }
-
-            System.out.println(max);
-
         }
     }
 
