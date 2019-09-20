@@ -574,8 +574,6 @@ public class HomeFragment extends Fragment {
                 TextView cancelTextView = view.findViewById(R.id.cancel_text_view);
                 final ProgressBar progressBar = view.findViewById(R.id.progressBar);
                 final EditText addressEditText = view.findViewById(R.id.address_edit_text);
-                final EditText nameEditText = view.findViewById(R.id.name_edit_text);
-                final EditText mobileEditText = view.findViewById(R.id.mobile_edit_text);
 
                 cancelTextView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -590,8 +588,6 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         String address = addressEditText.getText().toString().trim();
-                        String ownerName = nameEditText.getText().toString().trim();
-                        String mobileNumber = mobileEditText.getText().toString().trim();
 
                         if(address.isEmpty()){
                            Toast.makeText(getActivity(), "Please enter address of the property!",
@@ -599,27 +595,12 @@ public class HomeFragment extends Fragment {
                            return;
                         }
 
-                        if(ownerName.isEmpty()){
-                            Toast.makeText(getActivity(), "Please enter name of the owner of the property!",
-                                    Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        if(mobileNumber.isEmpty()){
-                            Toast.makeText(getActivity(), "Please enter mobile number of the owner!",
-                                    Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-
-                        hideKeyboard(mobileEditText);
+                        hideKeyboard(submitButton);
 
                         final JsonObject jsonObject = new JsonObject();
                         jsonObject.addProperty("location", address);
                         jsonObject.addProperty("scheduled_at", MyDateUtils.
                                 epochToFormattedDate(System.currentTimeMillis(), "yyyy-MM-dd HH:mm"));
-                        jsonObject.addProperty("name", ownerName);
-                        jsonObject.addProperty("phone_no", mobileNumber);
-
 
                         AlertDialog alertDialog1 = new AlertDialog.Builder(getActivity())
                                 .setMessage("You will receive a call, once you accept the task you will be " +

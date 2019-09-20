@@ -61,7 +61,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/cancel_text_view"
-        app:layout_constraintTop_toBottomOf="@+id/mobile_edit_text" />
+        app:layout_constraintTop_toBottomOf="@+id/address_edit_text" />
 
     <TextView
         android:id="@+id/cancel_text_view"
@@ -76,34 +76,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/submit_button" />
 
-    <EditText
-        android:id="@+id/mobile_edit_text"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="16dp"
-        android:inputType="phone"
-        android:maxLength="10"
-        android:background="@drawable/edittext_border"
-        android:hint="Mobile number of the owner"
-        android:paddingStart="8dp"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toEndOf="@+id/name_edit_text"
-        app:layout_constraintStart_toStartOf="@+id/name_edit_text"
-        app:layout_constraintTop_toBottomOf="@+id/name_edit_text" />
 
-    <EditText
-        android:id="@+id/name_edit_text"
-        android:layout_width="0dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="16dp"
-        android:ems="10"
-        android:inputType="textCapWords"
-        android:background="@drawable/edittext_border"
-        android:hint="Name of the owner"
-        android:paddingStart="8dp"
-        android:textSize="13sp"
-        app:layout_constraintEnd_toEndOf="@+id/address_edit_text"
-        app:layout_constraintStart_toStartOf="@+id/address_edit_text"
-        app:layout_constraintTop_toBottomOf="@+id/address_edit_text" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
