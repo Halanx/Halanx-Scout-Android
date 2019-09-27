@@ -23,7 +23,7 @@
 
             <Button
                 android:id="@+id/go_online"
-                android:layout_width="200dp"
+                android:layout_width="0dp"
                 android:layout_height="53dp"
                 android:background="@drawable/go_online_shape"
                 android:elevation="9dp"
@@ -40,10 +40,11 @@
 
             <Button
                 android:id="@+id/property_onboard_button"
-                android:layout_width="170dp"
+                android:layout_width="0dp"
                 android:layout_height="53dp"
                 android:background="@drawable/property_onboard_border"
                 android:elevation="9dp"
+                android:layout_marginStart="8dp"
                 android:fontFamily="@font/montserrat_regular"
                 android:text="Onboard Property"
                 android:textAllCaps="false"
