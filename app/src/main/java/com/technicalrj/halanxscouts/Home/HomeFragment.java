@@ -671,6 +671,11 @@ public class HomeFragment extends Fragment {
 
     private void changeOnlineStatus() {
 
+        final ProgressDialog progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCancelable(false);
+        progressDialog.setMessage("Loading");
+        progressDialog.show();
+
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("active", !onlineStatus);
 
@@ -679,56 +684,57 @@ public class HomeFragment extends Fragment {
         call.enqueue(new Callback<Profile>() {
             @Override
             public void onResponse(Call<Profile> call, final Response<Profile> response) {
+                progressDialog.dismiss();
                 if (response.isSuccessful()) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                    onlineStatus = !onlineStatus;
 
-                            onlineStatus = !onlineStatus;
+                    String status;
+                    if (onlineStatus) {
+                        status = "Online";
+                        setButtonState(false);
+                    } else {
+                        status = "Offline";
+                        setButtonState(true);
+                    }
 
-                            String status;
-                            if (onlineStatus) {
-                                status = "Online";
-                                setButtonState(false);
-                            } else {
-                                status = "Offline";
-                                setButtonState(true);
-                            }
-
-                            SharedPreferences.Editor editor = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE).edit();
-                            editor.putBoolean("online_status", onlineStatus);
-                            editor.apply();
+                    SharedPreferences.Editor editor = getActivity().getSharedPreferences("login_user_halanx_scouts", MODE_PRIVATE).edit();
+                    editor.putBoolean("online_status", onlineStatus);
+                    editor.apply();
 
 
-                            Toast.makeText(getActivity(), "Status " + status, Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
+                    Toast.makeText(getActivity(), "Status " + status, Toast.LENGTH_SHORT).show();
                 } else {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
+                    try {
+                        JSONObject jsonObject1 = new JSONObject(response.errorBody().string());
+                        if (jsonObject1.has("status") && jsonObject1.getString("status").equals("error")) {
 
-                            try {
-                                JSONObject jsonObject1 = new JSONObject(response.errorBody().string());
-                                if (jsonObject1.has("status") && jsonObject1.getString("status").equals("error")) {
-                                    Toast.makeText(getActivity(), jsonObject1.getString("message"), Toast.LENGTH_SHORT).show();
-                                }
+                            String message = jsonObject1.getString("message");
 
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-
+                            AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                                    .setMessage(message)
+                                    .setCancelable(false)
+                                    .setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .create();
+                            alertDialog.show();
                         }
-                    });
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<Profile> call, Throwable t) {
                 t.printStackTrace();
+                progressDialog.dismiss();
             }
         });
 
